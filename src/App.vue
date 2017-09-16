@@ -1,16 +1,22 @@
 <template>
   <div id="app">
-    <el-menu :default-active="activeIndex" :router="true" class="menu" mode="vertical">
-      <el-menu-item index="/selected">
-        首页
-      </el-menu-item>
-      <el-menu-item index="/discovery">
-        发现
-      </el-menu-item>
-      <el-menu-item index="/follow">
-        关注
-      </el-menu-item>
-    </el-menu>
+    <el-col :span="3">
+      <el-menu :router="true" :default-active="activeIndex" class="menu el-menu-vertical-demo">
+        <el-menu-item index="/selected">
+          <i class="el-icon-star-off"></i>首页</el-menu-item>
+        <el-submenu index="/discovery">
+          <template slot="title">
+            <i class="el-icon-menu"></i>发现</template>
+          <el-menu-item-group>
+            <el-menu-item index="/hot">热门</el-menu-item>
+            <el-menu-item index="/category">分类</el-menu-item>
+            <el-menu-item index="/author">作者</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <el-menu-item index="/follow">
+          <i class="el-icon-more"></i>关注</el-menu-item>
+      </el-menu>
+    </el-col>
     <player></player>
     <keep-alive>
       <router-view class="container"></router-view>
@@ -47,9 +53,11 @@ a {
 }
 
 #app .menu {
-  float: left;
-  width: 100px;
   height: 800px;
+}
+
+.el-submenu .el-menu-item {
+  min-width: 0;
 }
 
 #app .container {

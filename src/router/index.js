@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import selected from '@/components/selected'
-import discovery from '@/components/discovery'
+import hot from '@/components/hot'
 import follow from '@/components/follow'
 import app from '../App.vue'
 Vue.use(Router)
@@ -11,14 +11,15 @@ export default new Router({
     {
       path: '/',
       component: selected,
+      redirect: selected
     },
     {
       path: '/selected',
       component: selected,
     },
     {
-      path: '/discovery',
-      component: discovery,
+      path: '/hot',
+      component: hot,
     },
     {
       path: '/follow',

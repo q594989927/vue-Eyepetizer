@@ -1,5 +1,5 @@
 <template>
-  <div class="discovery">
+  <div class="hot">
     <div class="list">
       <el-card class="card" :body-style="{ padding: '0px'}" v-for="(item,index) in lastList" :key="index">
         <div @click='_play(item)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
@@ -19,13 +19,13 @@
 </template>
 
 <script>
-import { getDiscovery } from '@/assets/api/getDatas'
+import { getHot, getCategory, getAuthor } from '@/assets/api/getDatas'
 import { mapGetters, mapState, mapMutations } from 'vuex'
 export default {
-  name: 'discovery',
+  name: 'hot',
   data() {
     return {
-      itemList: [],
+      title: ['热门', '分类', '作者'],
       lastList: [],
       duration: [],
       num: -1,
@@ -39,7 +39,7 @@ export default {
     ]),
     _getList() {
       this.lastList = this.itemList.filter(obj => {
-        return obj.type == 'video' && obj.tag == '1'
+        return obj.type == 'video'
       })
       this.lastList.forEach(ele => {
         this.duration.push(ele.data.duration)
@@ -69,10 +69,10 @@ export default {
 
   },
   created() {
-    getDiscovery().then(res => {
+    getHot().then(res => {
       console.log(res)
-      // this.itemList = res.itemList
-      // this._getList();
+      this.itemList = res.itemList
+      this._getList();
     })
   }
 
@@ -80,15 +80,18 @@ export default {
 </script>
 
 <style scoped>
-.discovery {
+.hot {
   box-sizing: border-box;
   padding: 10px;
+  overflow: auto;
 }
 
 .list {
   width: 100%;
-  height: 520px;
-  overflow: auto;
+}
+
+.title {
+  text-align: center;
 }
 
 .card {
