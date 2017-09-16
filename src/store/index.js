@@ -18,7 +18,6 @@ const store = new Vuex.Store({
       state.videoSrc = res
     },
   },
-
   getters: {
 
   },

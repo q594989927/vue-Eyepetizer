@@ -1,14 +1,5 @@
 <template>
-  <div class="selected">
-    <el-carousel :interval="4000" type="card" trigger="click" height="240px">
-      <el-carousel-item v-for="(item,index) in newList" :key="index">
-        <div class="cover" @click='_play(item)'>
-          <img :src="item.data.cover.feed" alt="">
-          <h3>{{item.data.title}}</h3>
-          <p>{{item.data.slogan}}</p>
-        </div>
-      </el-carousel-item>
-    </el-carousel>
+  <div class="discovery">
     <div class="list">
       <el-card class="card" :body-style="{ padding: '0px'}" v-for="(item,index) in lastList" :key="index">
         <div @click='_play(item)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
@@ -28,14 +19,13 @@
 </template>
 
 <script>
-import { getSelected } from '@/assets/api/getDatas'
+import { getDiscovery } from '@/assets/api/getDatas'
 import { mapGetters, mapState, mapMutations } from 'vuex'
 export default {
-  name: 'selected',
+  name: 'discovery',
   data() {
     return {
       itemList: [],
-      newList: [],
       lastList: [],
       duration: [],
       num: -1,
@@ -48,9 +38,6 @@ export default {
       'setIsTap'
     ]),
     _getList() {
-      this.newList = this.itemList.filter(obj => {
-        return obj.type == 'video' && obj.tag == '0'
-      })
       this.lastList = this.itemList.filter(obj => {
         return obj.type == 'video' && obj.tag == '1'
       })
@@ -82,9 +69,10 @@ export default {
 
   },
   created() {
-    getSelected().then(res => {
-      this.itemList = res.itemList
-      this._getList();
+    getDiscovery().then(res => {
+      console.log(res)
+      // this.itemList = res.itemList
+      // this._getList();
     })
   }
 
@@ -92,42 +80,9 @@ export default {
 </script>
 
 <style scoped>
-.selected {
+.discovery {
   box-sizing: border-box;
   padding: 10px;
-}
-
-.el-carousel__item .cover {
-  position: relative;
-  color: #fff;
-  text-align: center
-}
-
-.el-carousel__item .cover img {
-  width: 100%;
-}
-
-.el-carousel__item .cover h3 {
-  position: absolute;
-  bottom: 20%;
-  left: calc( 50% - 170px);
-  width: 340px;
-}
-
-.el-carousel__item .cover p {
-  position: absolute;
-  bottom: 10%;
-  left: calc( 50% - 170px);
-  font-size: 14px;
-  width: 340px;
-}
-
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
-}
-
-.el-carousel__item:nth-child(2n+1) {
-  background-color: #d3dce6;
 }
 
 .list {

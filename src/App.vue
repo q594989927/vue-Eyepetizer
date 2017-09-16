@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-menu :default-active="activeIndex" :router="true" class="menu" mode="vertical" @select="handleSelect">
+    <el-menu :default-active="activeIndex" :router="true" class="menu" mode="vertical">
       <el-menu-item index="/selected">
         首页
       </el-menu-item>
@@ -11,9 +11,10 @@
         关注
       </el-menu-item>
     </el-menu>
-
     <player></player>
-    <router-view class="container"></router-view>
+    <keep-alive>
+      <router-view class="container"></router-view>
+    </keep-alive>
   </div>
 </template>
 
@@ -24,11 +25,6 @@ export default {
   data() {
     return {
       activeIndex: '/selected'
-
-    }
-  },
-  methods: {
-    handleSelect(tab, event) {
     }
   },
   components: {
