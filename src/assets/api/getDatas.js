@@ -4,5 +4,4 @@ export function getSelected() {
   return fetch(url).then(response => {
     return response.json();
   })
-
 }

@@ -11,11 +11,14 @@
         关注
       </el-menu-item>
     </el-menu>
+
+    <player></player>
     <router-view class="container"></router-view>
   </div>
 </template>
 
 <script>
+import player from './components/player'
 export default {
   name: 'app',
   data() {
@@ -27,11 +30,22 @@ export default {
   methods: {
     handleSelect(tab, event) {
     }
+  },
+  components: {
+    player
   }
 }
 </script>
 
 <style>
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0
+}
+
 a {
   text-decoration: none;
 }
