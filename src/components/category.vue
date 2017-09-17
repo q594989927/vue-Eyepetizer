@@ -8,21 +8,17 @@
         <p v-if="item.data.text" v-html="item.data.text"></p>
       </div>
     </div>
-
     <div class="classify" v-for="(item,index) in videoCollection" :key="index">
       <h4 class="card" v-html="item.data.header.title"></h4>
       <el-card class="card" :body-style="{ padding: '0px'}" v-for="(el,i) in item.data.itemList" :key="i">
         <div>
-          <!-- @click='_play(item)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut" -->
-          <!-- <video v-if="index===num" width="260" class="mouseShow" autoplay muted="muted" :src="src"></video> -->
           <img class="image" v-lazy='el.data.cover.detail' src="">
         </div>
         <div style="padding: 8px;">
           <p class="txt">{{el.data.title}}</p>
           <div class="bottom clearfix">
-            <img v-if="el.data.author" class="icon" :src="el.data.author.icon">
+            <img v-if="el.data.author" class="icon" v-lazy='el.data.author.icon'>
             <div class="desc">
-
               <p v-if="el.data.author" class="author">{{el.data.author.name}}</p>
               <span class="time">
                 {{_duration(el.data.duration)}}
@@ -76,13 +72,18 @@ export default {
 
 <style scoped>
 .list {
-  text-align: center
+  text-align: center;
+  margin: 10px 0;
+}
+
+.list>h4 {
+  margin: 10px 0;
 }
 
 .submenu {
   position: relative;
   display: inline-block;
-  width: 125px;
+  width: 128px;
   margin: 5px;
 }
 

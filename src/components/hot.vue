@@ -1,38 +1,34 @@
 <template>
-  <div v-loading="!lastList.length">
-    <div class="list">
-      <el-card class="card" :body-style="{ padding: '0px'}" v-for="(item,index) in lastList" :key="index">
-        <div @click='_play(item)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
-          <video v-if="index===num" width="260" class="mouseShow" autoplay muted="muted" :src="src"></video>
-          <img class="image" v-lazy='item.data.cover.detail' src="">
-        </div>
-        <div style="padding: 8px;">
-          <p class="txt">{{item.data.title}}</p>
-          <div class="bottom clearfix">
-            <img class="icon" :src="item.data.author.icon" alt="">
-            <div class="desc">
-              <p class="author">{{item.data.author.name}}</p>
-              <span class="time">
-                {{_duration(item.data.duration)}} / {{item.data.category}}
-              </span>
-            </div>
-          </div>
-        </div>
-      </el-card>
-    </div>
+  <div v-loading="!newList.length">
+    <card :datas="lastList"></card>
     <div v-show="lastList.length" class="loadMore" @click="_currentChange">加载更多</div>
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
 import { getHot, getCategory, getAuthor } from '@/assets/api/getDatas'
 import { add2Zero } from '@/assets/js/add2Zero'
-import { mapState, mapMutations } from 'vuex'
+import card from './card'
 export default {
+  props: {
+    // start: {
+    //   type: Number,
+    //   default: 1
+    // },
+    // count: {
+    //   type: Number,
+    //   default: 15
+    // }
+  },
   name: 'hot',
+  components: {
+    card
+  },
   data() {
     return {
       lastList: [],
+      newList: [],
       num: -1,
       src: '',
       timer: null,
@@ -48,29 +44,12 @@ export default {
     ]),
     _getList(start, count) {
       getHot(start, count).then(res => {
-        let newList = res.itemList
-        this.lastList = this.lastList.concat(newList)
+        this.newList = res.itemList
+        this.lastList = this.lastList.concat(this.newList)
       })
     },
-    _play(i) {
-      let url = i.data.playUrl
-      this.setVideoSrc(url)
-      this.setTap(false)
-    },
-    _mouseEnter(item, index) {
-      this.timer = setTimeout(() => {
-        this.num = index
-        this.src = item.data.playUrl
-      }, 1000)
-    },
-    _mouseOut() {
-      clearTimeout(this.timer)
-      this.num = -1
-    },
-    _duration(v) {
-      return add2Zero(v)
-    },
     _currentChange() {
+      this.newList = []
       this.n++
       this.start = this.n * this.count
     },
