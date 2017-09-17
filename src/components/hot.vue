@@ -1,146 +1,115 @@
 <template>
-  <div class="hot">
+  <div v-loading="!lastList.length">
     <div class="list">
       <el-card class="card" :body-style="{ padding: '0px'}" v-for="(item,index) in lastList" :key="index">
         <div @click='_play(item)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
           <video v-if="index===num" width="260" class="mouseShow" autoplay muted="muted" :src="src"></video>
-          <img class="image" :src="item.data.cover.feed">
+          <img class="image" v-lazy='item.data.cover.detail' src="">
         </div>
         <div style="padding: 8px;">
           <p class="txt">{{item.data.title}}</p>
           <div class="bottom clearfix">
-            <span class="time">{{_duration(index)}}</span>
-            <el-button type="text" class="button">{{item.data.category}}</el-button>
+            <img class="icon" :src="item.data.author.icon" alt="">
+            <div class="desc">
+              <p class="author">{{item.data.author.name}}</p>
+              <span class="time">
+                {{_duration(item.data.duration)}} / {{item.data.category}}
+              </span>
+            </div>
           </div>
         </div>
       </el-card>
     </div>
+    <div v-show="lastList.length" class="loadMore" @click="_currentChange">加载更多</div>
   </div>
 </template>
 
 <script>
 import { getHot, getCategory, getAuthor } from '@/assets/api/getDatas'
-import { mapGetters, mapState, mapMutations } from 'vuex'
+import { add2Zero } from '@/assets/js/add2Zero'
+import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'hot',
   data() {
     return {
-      title: ['热门', '分类', '作者'],
       lastList: [],
-      duration: [],
       num: -1,
-      src: ''
+      src: '',
+      timer: null,
+      start: 1,
+      count: 15,
+      n: 0
     }
   },
   methods: {
     ...mapMutations([
       'setVideoSrc',
-      'setIsTap'
+      'setTap'
     ]),
-    _getList() {
-      this.lastList = this.itemList.filter(obj => {
-        return obj.type == 'video'
+    _getList(start, count) {
+      getHot(start, count).then(res => {
+        let newList = res.itemList
+        this.lastList = this.lastList.concat(newList)
       })
-      this.lastList.forEach(ele => {
-        this.duration.push(ele.data.duration)
-      });
     },
     _play(i) {
-      this.setVideoSrc(i.data.playInfo[1].url)
-      this.setIsTap(false)
+      let url = i.data.playUrl
+      this.setVideoSrc(url)
+      this.setTap(false)
     },
     _mouseEnter(item, index) {
-      this.num = index
-      this.src = item.data.playInfo[1].url
+      this.timer = setTimeout(() => {
+        this.num = index
+        this.src = item.data.playUrl
+      }, 1000)
     },
     _mouseOut() {
+      clearTimeout(this.timer)
       this.num = -1
-      this.src = ''
     },
-    _duration(index) {
-      let m = (this.duration[index] / 60 | 0)
-      m = m < 10 ? '0' + m : '' + m
-      let s = this.duration[index] % 60
-      s = s < 10 ? '0' + s : '' + s
-      return m + "'" + s + "''"
+    _duration(v) {
+      return add2Zero(v)
+    },
+    _currentChange() {
+      this.n++
+      this.start = this.n * this.count
     },
   },
   computed: {
 
   },
+  watch: {
+    start: function() {
+      this._getList(this.start, this.count);
+    },
+  },
   created() {
-    getHot().then(res => {
-      console.log(res)
-      this.itemList = res.itemList
-      this._getList();
-    })
+    this._getList(this.start, this.count);
   }
 
 }
 </script>
 
 <style scoped>
-.hot {
-  box-sizing: border-box;
-  padding: 10px;
-  overflow: auto;
-}
-
 .list {
   width: 100%;
+  overflow: hidden;
 }
 
 .title {
   text-align: center;
 }
 
-.card {
-  position: relative;
-  width: 260px;
-  height: 240px;
-  margin: 9px;
-  float: left;
-}
-
-.txt {
-  height: 50px;
-}
-
-.time {
-  font-size: 13px;
-  color: #999;
-}
-
-.bottom {
-  margin-top: 5px;
-  line-height: 12px;
-}
-
-.button {
-  padding: 0;
-  float: right;
-}
-
-.mouseShow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
-.image {
-  width: 100%;
-  height: 145px;
-  display: block;
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-
-.clearfix:after {
-  clear: both
+.loadMore {
+  margin: 0 auto;
+  width: 400px;
+  height: 40px;
+  font-size: 14px;
+  line-height: 40px;
+  text-align: center;
+  color: #b7b7b7;
+  background: #f3f3f3;
+  border-radius: 5px;
+  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
 }
 </style>

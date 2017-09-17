@@ -23,10 +23,10 @@ export default {
   methods: {
     ...mapMutations([
       'setVideoSrc',
-      'setIsTap'
+      'setTap'
     ]),
     _closed() {
-      this.setIsTap(true)
+      this.setTap(true)
     }
   },
 }
@@ -36,11 +36,11 @@ export default {
 .playVideo {
   position: fixed;
   z-index: 999;
-  top: 10px;
-  left: 110px;
+  top: 0;
+  left: 120px;
   width: 860px;
-  height: 800px;
-  background: #fff;
+  height: 810px;
+  background: rgba(0, 0, 0, .6)
 }
 
 .playVideo video {

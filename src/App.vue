@@ -1,22 +1,22 @@
 <template>
   <div id="app">
-    <el-col :span="3">
-      <el-menu :router="true" :default-active="activeIndex" class="menu el-menu-vertical-demo">
-        <el-menu-item index="/selected">
-          <i class="el-icon-star-off"></i>首页</el-menu-item>
-        <el-submenu index="/discovery">
-          <template slot="title">
-            <i class="el-icon-menu"></i>发现</template>
-          <el-menu-item-group>
-            <el-menu-item index="/hot">热门</el-menu-item>
-            <el-menu-item index="/category">分类</el-menu-item>
-            <el-menu-item index="/author">作者</el-menu-item>
-          </el-menu-item-group>
-        </el-submenu>
-        <el-menu-item index="/follow">
-          <i class="el-icon-more"></i>关注</el-menu-item>
-      </el-menu>
-    </el-col>
+    <el-menu :router="true" :default-active="activeIndex" class="menu el-menu-vertical-demo">
+      <el-menu-item index="/selected">
+        <i class="el-icon-star-off"></i>首页</el-menu-item>
+      <el-submenu index="/discovery">
+        <template slot="title">
+          <i class="el-icon-menu"></i>发现</template>
+        <el-menu-item-group>
+          <el-menu-item index="/hot">热门</el-menu-item>
+          <el-menu-item index="/category">分类</el-menu-item>
+          <el-menu-item index="/author">作者</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
+      <el-menu-item index="/follow">
+        <i class="el-icon-more"></i>关注</el-menu-item>
+      <el-menu-item index="/search">
+        <i class="el-icon-search"></i>搜索</el-menu-item>
+    </el-menu>
     <player></player>
     <keep-alive>
       <router-view class="container"></router-view>
@@ -40,6 +40,11 @@ export default {
 </script>
 
 <style>
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+
 h1,
 h2,
 h3,
@@ -52,19 +57,94 @@ a {
   text-decoration: none;
 }
 
-#app .menu {
-  height: 800px;
+#app {
+  width: 980px;
+  height: 810px;
+  overflow: hidden;
+  box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
 }
 
-.el-submenu .el-menu-item {
-  min-width: 0;
+#app .menu {
+  float: left;
+  width: 120px;
+  height: 810px;
 }
 
 #app .container {
-  height: 800px;
-  width: 860px;
-  background-color: rgba(255, 255, 255, 1);
-  box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.12);
   float: left;
+  height: 810px;
+  width: 860px;
+  box-sizing: border-box;
+  padding: 10px;
+  overflow: auto;
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.el-submenu .el-menu-item,
+.el-submenu__title {
+  padding: 0;
+  min-width: 0;
+}
+
+.card:hover {
+  transition: .5s;
+  transform: scale3d(1.05, 1.05, 1.05)
+}
+
+.card {
+  position: relative;
+  width: 260px;
+  height: 240px;
+  margin: 9px;
+  float: left;
+}
+
+.txt {
+  height: 50px;
+}
+
+.time {
+  font-size: 13px;
+  color: #999;
+}
+
+.mouseShow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.image {
+  width: 100%;
+  height: 145px;
+  display: block;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+
+.clearfix:after {
+  clear: both
+}
+
+.icon {
+  width: 30px;
+  border-radius: 50%;
+  vertical-align: top;
+}
+
+.desc {
+  line-height: 16px;
+  padding-left: 10px;
+  display: inline-block;
+}
+
+.desc .author {
+  font-size: 14px
 }
 </style>

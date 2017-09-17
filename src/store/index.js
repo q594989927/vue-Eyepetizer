@@ -11,7 +11,7 @@ const store = new Vuex.Store({
     closed: true,
   },
   mutations: {
-    setIsTap(state, res) {
+    setTap(state, res) {
       state.closed = res
     },
     setVideoSrc(state, res) {

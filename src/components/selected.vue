@@ -1,5 +1,5 @@
 <template>
-  <div class="selected">
+  <div>
     <el-carousel :interval="4000" type="card" trigger="click" height="240px">
       <el-carousel-item v-for="(item,index) in newList" :key="index">
         <div class="cover" @click='_play(item)'>
@@ -18,7 +18,7 @@
         <div style="padding: 8px;">
           <p class="txt">{{item.data.title}}</p>
           <div class="bottom clearfix">
-            <span class="time">{{_duration(index)}}</span>
+            <span class="time">{{_duration(item.data.duration)}}</span>
             <el-button type="text" class="button">{{item.data.category}}</el-button>
           </div>
         </div>
@@ -29,6 +29,7 @@
 
 <script>
 import { getSelected } from '@/assets/api/getDatas'
+import { add2Zero } from '@/assets/js/add2Zero'
 import { mapGetters, mapState, mapMutations } from 'vuex'
 export default {
   name: 'selected',
@@ -37,15 +38,15 @@ export default {
       itemList: [],
       newList: [],
       lastList: [],
-      duration: [],
       num: -1,
-      src: ''
+      src: '',
+      timer: null
     }
   },
   methods: {
     ...mapMutations([
       'setVideoSrc',
-      'setIsTap'
+      'setTap'
     ]),
     _getList() {
       this.newList = this.itemList.filter(obj => {
@@ -54,28 +55,23 @@ export default {
       this.lastList = this.itemList.filter(obj => {
         return obj.type == 'video' && obj.tag == '1'
       })
-      this.lastList.forEach(ele => {
-        this.duration.push(ele.data.duration)
-      });
     },
     _play(i) {
-      this.setVideoSrc(i.data.playInfo[1].url)
-      this.setIsTap(false)
+      this.setVideoSrc(i.data.playUrl)
+      this.setTap(false)
     },
     _mouseEnter(item, index) {
-      this.num = index
-      this.src = item.data.playInfo[1].url
+      this.timer = setTimeout(() => {
+        this.num = index
+        this.src = item.data.playUrl
+      }, 1000)
     },
     _mouseOut() {
+      clearTimeout(this.timer)
       this.num = -1
-      this.src = ''
     },
-    _duration(index) {
-      let m = (this.duration[index] / 60 | 0)
-      m = m < 10 ? '0' + m : '' + m
-      let s = this.duration[index] % 60
-      s = s < 10 ? '0' + s : '' + s
-      return m + "'" + s + "''"
+    _duration(v) {
+      return add2Zero(v)
     },
   },
   computed: {
@@ -92,11 +88,6 @@ export default {
 </script>
 
 <style scoped>
-.selected {
-  box-sizing: border-box;
-  padding: 10px;
-}
-
 .el-carousel__item .cover {
   position: relative;
   color: #fff;
@@ -136,53 +127,7 @@ export default {
   overflow: auto;
 }
 
-.card {
-  position: relative;
-  width: 260px;
-  height: 240px;
-  margin: 9px;
-  float: left;
-}
-
-.txt {
-  height: 50px;
-}
-
-.time {
-  font-size: 13px;
-  color: #999;
-}
-
-.bottom {
-  margin-top: 5px;
-  line-height: 12px;
-}
-
 .button {
-  padding: 0;
   float: right;
-}
-
-.mouseShow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
-.image {
-  width: 100%;
-  height: 145px;
-  display: block;
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-
-.clearfix:after {
-  clear: both
 }
 </style>

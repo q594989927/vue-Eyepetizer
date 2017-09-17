@@ -10,8 +10,8 @@ export function getDiscovery() {
     return response.json();
   })
 }
-export function getHot() {
-  let url = '/api/v4/discovery/hot'
+export function getHot(start, count) {
+  let url = '/api/v4/discovery/hot?start=' + start + '&num=' + count
   return fetch(url).then(response => {
     return response.json();
   })
@@ -22,9 +22,21 @@ export function getCategory() {
     return response.json();
   })
 }
+export function getDetailCategory(id) {
+  let url = '/api/v3/videos?&categoryId=' + id
+  return fetch(url).then(response => {
+    return response.json();
+  })
+}
 export function getAuthor() {
   let url = '/api/v4/pgcs/all'
   return fetch(url).then(response => {
     return response.json();
   })
 }
+
+//http://baobab.kaiyanapp.com/api/v3/videos?&categoryId=
+// 2 创意
+// 4 开胃
+// 6 旅行
+// 8 预告
