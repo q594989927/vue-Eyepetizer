@@ -130,4 +130,65 @@ export default {
 .button {
   float: right;
 }
+
+.card:hover {
+  transition: .5s;
+  transform: scale3d(1.05, 1.05, 1.05)
+}
+
+.card {
+  position: relative;
+  width: 260px;
+  height: 240px;
+  margin: 9px;
+  float: left;
+}
+
+.txt {
+  height: 50px;
+}
+
+.time {
+  font-size: 13px;
+  color: #999;
+}
+
+.mouseShow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.image {
+  width: 100%;
+  height: 145px;
+  display: block;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+
+.clearfix:after {
+  clear: both
+}
+
+.icon {
+  width: 30px;
+  border-radius: 50%;
+  vertical-align: top;
+}
+
+.desc {
+  line-height: 16px;
+  padding-left: 10px;
+  display: inline-block;
+}
+
+.desc .author {
+  font-size: 14px
+}
 </style>

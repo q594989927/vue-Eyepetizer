@@ -16,8 +16,8 @@ export function getHot(start, count) {
     return response.json();
   })
 }
-export function getCategory() {
-  let url = '/api/v4/discovery/category'
+export function getCategory(start, count) {
+  let url = '/api/v4/discovery/category?start=' + start + '&num=' + count
   return fetch(url).then(response => {
     return response.json();
   })

@@ -1,7 +1,7 @@
 <template>
-  <div v-loading="!newList.length">
+  <div class="list" v-loading="!newList.length">
     <card :datas="lastList"></card>
-    <div v-show="lastList.length" class="loadMore" @click="_currentChange">加载更多</div>
+    <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
   </div>
 </template>
 
@@ -10,28 +10,17 @@ import { mapState, mapMutations } from 'vuex'
 import { getHot, getCategory, getAuthor } from '@/assets/api/getDatas'
 import { add2Zero } from '@/assets/js/add2Zero'
 import card from './card'
+import loadMore from './loadMore'
 export default {
-  props: {
-    // start: {
-    //   type: Number,
-    //   default: 1
-    // },
-    // count: {
-    //   type: Number,
-    //   default: 15
-    // }
-  },
   name: 'hot',
   components: {
-    card
+    card,
+    loadMore
   },
   data() {
     return {
       lastList: [],
       newList: [],
-      num: -1,
-      src: '',
-      timer: null,
       start: 1,
       count: 15,
       n: 0
@@ -55,7 +44,6 @@ export default {
     },
   },
   computed: {
-
   },
   watch: {
     start: function() {

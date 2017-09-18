@@ -1,54 +1,59 @@
 <template>
-  <div class="category">
-    <div class="list">
-      <h4 v-if="squareCardCollection.header" v-html="squareCardCollection.header.title"></h4>
-      <div class="submenu" v-for="(item,index) in squareCardCollection.itemList" :key="index">
-        <img :src="item.data.image">
-        <p v-if="item.data.title" v-html="item.data.title"></p>
-        <p v-if="item.data.text" v-html="item.data.text"></p>
-      </div>
+  <div class="category" v-loading="!newList.length">
+    <!-- <div class="list">
+                    <h4 v-if="squareCardCollection.header" v-html="squareCardCollection.header.title"></h4>
+                    <div class="submenu" v-for="(item,index) in squareCardCollection.itemList" :key="index">
+                      <img :src="item.data.image">
+                      <p v-if="item.data.title" v-html="item.data.title"></p>
+                      <p v-if="item.data.text" v-html="item.data.text"></p>
+                    </div>
+                  </div> -->
+    <div class="classify" v-for="(item,index) in lastList" :key="index">
+      <card :datas="item.data.itemList" :titles="item.data.header.title" :subTitle="item.data.header.subTitle"></card>
     </div>
-    <div class="classify" v-for="(item,index) in videoCollection" :key="index">
-      <h4 class="card" v-html="item.data.header.title"></h4>
-      <el-card class="card" :body-style="{ padding: '0px'}" v-for="(el,i) in item.data.itemList" :key="i">
-        <div>
-          <img class="image" v-lazy='el.data.cover.detail' src="">
-        </div>
-        <div style="padding: 8px;">
-          <p class="txt">{{el.data.title}}</p>
-          <div class="bottom clearfix">
-            <img v-if="el.data.author" class="icon" v-lazy='el.data.author.icon'>
-            <div class="desc">
-              <p v-if="el.data.author" class="author">{{el.data.author.name}}</p>
-              <span class="time">
-                {{_duration(el.data.duration)}}
-              </span>
-            </div>
-          </div>
-        </div>
-      </el-card>
-    </div>
+    <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
   </div>
 </template>
 
 <script>
 import { add2Zero } from '@/assets/js/add2Zero'
 import { getCategory } from '@/assets/api/getDatas'
+import card from './card'
+import loadMore from './loadMore'
 export default {
   name: 'selected',
+  components: {
+    card,
+    loadMore
+  },
   data() {
     return {
-      itemList: [],
       squareCardCollection: [],  //热门分类
-      videoCollection: []
+      lastList: [],
+      newList: [],
+      start: 1,
+      count: 15,
+      n: 0
     }
   },
   methods: {
-    _getList() {
-      this.squareCardCollection = this.itemList[0].data
-      this.videoCollection = this.itemList.filter(obj => {
-        return obj.type == 'videoCollectionOfHorizontalScrollCard'
+    _getList(start, count) {
+      // this.squareCardCollection = this.itemList.filter(obj => {
+      //   return obj.type == 'squareCardCollection'
+      // })
+      // this.videoCollection = this.itemList.filter(obj => {
+      //   return obj.type == 'videoCollectionOfHorizontalScrollCard'
+      // })
+      getCategory(start, count).then(res => {
+        this.newList = res.itemList
+        console.log(this.newList)
+        this.lastList = this.lastList.concat(this.newList)
       })
+    },
+    _currentChange() {
+      this.newList = []
+      this.n++
+      this.start = this.n * this.count
     },
     _into() {
 
@@ -57,14 +62,13 @@ export default {
       return add2Zero(v)
     },
   },
-  computed: {
-
+  watch: {
+    start: function() {
+      this._getList(this.start, this.count);
+    },
   },
   created() {
-    getCategory().then(res => {
-      this.itemList = res.itemList
-      this._getList();
-    })
+    this._getList(this.start, this.count);
   }
 
 }
@@ -104,19 +108,6 @@ export default {
 }
 
 .classify {
-  overflow: hidden;
-}
-
-.classify>h4 {
-  color: #fff;
-  background: rgba(0, 0, 0, .3);
-  text-align: center;
-  line-height: 240px
-}
-
-.classify>h4,
-.content {
-  border-radius: 10px;
   overflow: hidden;
 }
 
