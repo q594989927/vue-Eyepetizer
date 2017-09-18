@@ -41,6 +41,7 @@ export default {
 
 <style>
 body {
+  user-select: none;
   margin: 0;
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
@@ -79,6 +80,16 @@ a {
   padding: 10px;
   overflow: auto;
   background-color: rgba(255, 255, 255, 1);
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+
+.clearfix:after {
+  clear: both
 }
 
 .el-submenu .el-menu-item,

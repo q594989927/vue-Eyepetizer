@@ -1,6 +1,7 @@
 <template>
-  <div class="loadMore" @click="_currentChange">
-    加载更多</div>
+  <transition name="el-zoom-in-bottom">
+    <div @click="_currentChange" class="loadMore transition-box">加载更多</div>
+  </transition>
 </template>
 
 <script>

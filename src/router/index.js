@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import selected from '@/components/selected'
 import hot from '@/components/hot'
 import category from '@/components/category'
+import author from '@/components/author'
 import follow from '@/components/follow'
 import app from '../App.vue'
 Vue.use(Router)
@@ -25,6 +26,10 @@ export default new Router({
     {
       path: '/category',
       component: category,
+    },
+    {
+      path: '/author',
+      component: author,
     },
     {
       path: '/follow',

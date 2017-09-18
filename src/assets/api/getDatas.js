@@ -22,21 +22,22 @@ export function getCategory(start, count) {
     return response.json();
   })
 }
-export function getDetailCategory(id) {
-  let url = '/api/v3/videos?&categoryId=' + id
+export function getDetailCategory(start, count, id) {
+  let url = '/api/v3/videos?start=' + start + '&num=' + count + '&categoryId=' + id + '&strategy=date'
   return fetch(url).then(response => {
     return response.json();
   })
 }
-export function getAuthor() {
-  let url = '/api/v4/pgcs/all'
+export function getDefaultAuthor() {
+  let url = '/api/v4/pgcs/all?'
   return fetch(url).then(response => {
     return response.json();
   })
 }
-
-//http://baobab.kaiyanapp.com/api/v3/videos?&categoryId=
-// 2 创意
-// 4 开胃
-// 6 旅行
-// 8 预告
+export function getAuthor(start, count) {
+  console.log(start, count)
+  let url = '/api/v4/pgcs/all?start=' + start + '&num=' + count
+  return fetch(url).then(response => {
+    return response.json();
+  })
+}

@@ -133,16 +133,6 @@ export default {
   display: block;
 }
 
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-
-.clearfix:after {
-  clear: both
-}
-
 .icon {
   width: 30px;
   border-radius: 50%;

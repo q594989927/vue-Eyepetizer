@@ -1,5 +1,5 @@
 <template>
-  <div class="list" v-loading="!newList.length">
+  <div class="list" v-loading="!lastList.length">
     <card :datas="lastList"></card>
     <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
   </div>
@@ -22,7 +22,7 @@ export default {
       lastList: [],
       newList: [],
       start: 1,
-      count: 15,
+      count: 18,
       n: 0
     }
   },
@@ -65,18 +65,5 @@ export default {
 
 .title {
   text-align: center;
-}
-
-.loadMore {
-  margin: 0 auto;
-  width: 400px;
-  height: 40px;
-  font-size: 14px;
-  line-height: 40px;
-  text-align: center;
-  color: #b7b7b7;
-  background: #f3f3f3;
-  border-radius: 5px;
-  box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.1);
 }
 </style>
