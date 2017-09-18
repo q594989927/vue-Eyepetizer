@@ -3,41 +3,53 @@
     <div>
       <div :class="{'author':!item.data.text}" v-for="(item,index)  in lastList" :key="index">
         <h3 class="title" v-if="item.data.text" v-html="item.data.text"></h3>
-        <div v-if="item.data.title">
-          <img @click="_info(item.data.id)" class="icon" v-lazy="item.data.icon" alt="">
-          <div class="text clearfix">
+        <div class="clearfix" v-if="item.data.title">
+          <img @mouseenter="_info(item.data.id)" class="icon" v-lazy="item.data.icon">
+          <div class="text">
             <p class="name" v-html="item.data.title"></p>
             <p class="txt" v-html="item.data.description"></p>
             <el-button>
               <span class="add">+</span>关注
             </el-button>
           </div>
+          <transition v-if="!item.data.text" name="el-zoom-in-top">
+            <div v-show="item.data.id==id" @mouseleave="_out()" class="introWrap" ref="Intro">
+              <div v-if="intro.tabInfo" class="intro">
+                <p v-html="intro.pgcInfo.name"></p>
+                <p v-html="intro.pgcInfo.brief"></p>
+                <el-button :plain="true" type="info" v-for="(el,index) in  intro.tabInfo.tabList" :key="index" v-html="el.name"></el-button>
+              </div>
+            </div>
+          </transition>
         </div>
-        <div v-if="item.data.header">
-          <img @click="_info(item.data.header.id)" class="icon" v-lazy="item.data.header.icon" alt="">
-          <div class="text clearfix">
+        <div class="clearfix" v-if="item.data.header">
+          <img @mouseenter="_info(item.data.header.id)" class="icon" v-lazy="item.data.header.icon" alt="">
+          <div class="text">
             <p class="name" v-html="item.data.header.title"></p>
             <p class="txt" v-html="item.data.header.description"></p>
             <el-button>
               <span class="add">+</span>关注
             </el-button>
           </div>
+          <transition v-if="!item.data.text" name="el-zoom-in-top">
+            <div v-show="item.data.header.id==id" @mouseleave="_out()" class="introWrap" ref="Intro">
+              <div v-if="intro.tabInfo" class="intro">
+                <p v-html="intro.pgcInfo.name"></p>
+                <p v-html="intro.pgcInfo.brief"></p>
+                <el-button :plain="true" type="info" v-for="(el,index) in  intro.tabInfo.tabList" :key="index" v-html="el.name"></el-button>
+              </div>
+            </div>
+          </transition>
         </div>
+
       </div>
     </div>
-    <div v-if="intro.tabInfo" class="intro">
-      <p v-html="intro.pgcInfo.name"></p>
-      <p v-html="intro.pgcInfo.brief"></p>
-      <p v-html="intro.pgcInfo.description"></p>
-      <el-button :plain="true" type="info" v-for="(el,index) in  intro.tabInfo.tabList" :key="index" v-html="el.name"></el-button>
-    </div>
     <!-- <div class="detail">
-      <div class="coverPhoto"></div>
-    </div> -->
+        <div class="coverPhoto"></div>
+        </div> -->
     <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
   </div>
 </template>
-
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { getDefaultAuthor, getAuthor, getAuthorDetail } from '@/assets/api/getDatas'
@@ -56,10 +68,11 @@ export default {
       textHeader: [],
       detail: {},
       intro: {},
-      id: null,
+      id: -1,
       start: 0,
       count: 9,
-      n: 0
+      n: 0,
+      timer: null
     }
   },
   methods: {
@@ -86,10 +99,13 @@ export default {
     },
     _info(v) {
       this.id = v
+      this._getAuthorDetail(this.id)
+    },
+    _out() {
+      this.id = -1
     },
     _getAuthorDetail(id) {
       getAuthorDetail(id).then(res => {
-        console.log(res)
         this.intro = res
       })
     },
@@ -104,9 +120,6 @@ export default {
   watch: {
     start: function() {
       this._getAuthor(this.start, this.count)
-    },
-    id: function() {
-      this._getAuthorDetail(this.id)
     },
   },
   created() {
@@ -128,6 +141,7 @@ export default {
 }
 
 .author {
+  position: relative;
   display: inline-block;
   margin: 9px;
   width: 260px;
@@ -172,32 +186,41 @@ export default {
 
 .add {
   position: relative;
+  z-index: 0;
   top: -1px;
   font-size: 16px;
 }
 
-.intro {
-  position: fixed;
-  top: 200px;
+.introWrap {
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  height: auto;
+  width: 270px;
+  height: 130px;
   background: #fff;
-  width: 240px;
-  padding: 10px;
-  text-align: center;
   border: 1px solid #d1dbe5;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12), 0 0 6px 0 rgba(0, 0, 0, .04);
 }
 
+.intro {
+  width: 240px;
+  padding: 10px;
+  text-align: center;
+}
+
 .intro>p {
   font-size: 12px;
-  line-height: 20px;
+  line-height: 30px;
+  margin-bottom: 5px;
 }
 
 .intro>p:nth-child(1) {
-  font-size: 16px;
+  font-size: 20px;
 }
 
-.intro>p:nth-child(3) {
-  margin-bottom: 5px;
+.intro>p:nth-child(2) {
+  margin-bottom: 15px;
 }
 
 .el-button {
