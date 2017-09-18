@@ -56,6 +56,7 @@ p {
 
 a {
   text-decoration: none;
+  color: #000;
 }
 
 #app {

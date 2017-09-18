@@ -4,34 +4,43 @@
       <div :class="{'author':!item.data.text}" v-for="(item,index)  in lastList" :key="index">
         <h3 class="title" v-if="item.data.text" v-html="item.data.text"></h3>
         <div v-if="item.data.title">
-          <img class="icon" v-lazy="item.data.icon" alt="">
+          <img @click="_info(item.data.id)" class="icon" v-lazy="item.data.icon" alt="">
           <div class="text clearfix">
             <p class="name" v-html="item.data.title"></p>
             <p class="txt" v-html="item.data.description"></p>
-            <span class="follow">
+            <el-button>
               <span class="add">+</span>关注
-            </span>
+            </el-button>
           </div>
         </div>
         <div v-if="item.data.header">
-          <img class="icon" v-lazy="item.data.header.icon" alt="">
+          <img @click="_info(item.data.header.id)" class="icon" v-lazy="item.data.header.icon" alt="">
           <div class="text clearfix">
             <p class="name" v-html="item.data.header.title"></p>
             <p class="txt" v-html="item.data.header.description"></p>
-            <span class="follow">
+            <el-button>
               <span class="add">+</span>关注
-            </span>
+            </el-button>
           </div>
         </div>
       </div>
     </div>
+    <div v-if="intro.tabInfo" class="intro">
+      <p v-html="intro.pgcInfo.name"></p>
+      <p v-html="intro.pgcInfo.brief"></p>
+      <p v-html="intro.pgcInfo.description"></p>
+      <el-button :plain="true" type="info" v-for="(el,index) in  intro.tabInfo.tabList" :key="index" v-html="el.name"></el-button>
+    </div>
+    <!-- <div class="detail">
+      <div class="coverPhoto"></div>
+    </div> -->
     <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import { getDefaultAuthor, getAuthor } from '@/assets/api/getDatas'
+import { getDefaultAuthor, getAuthor, getAuthorDetail } from '@/assets/api/getDatas'
 import { add2Zero } from '@/assets/js/add2Zero'
 
 import loadMore from './loadMore'
@@ -45,6 +54,9 @@ export default {
       lastList: [],
       newList: [],
       textHeader: [],
+      detail: {},
+      intro: {},
+      id: null,
       start: 0,
       count: 9,
       n: 0
@@ -72,11 +84,19 @@ export default {
         this.lastList = this.lastList.concat(this.newList)
       })
     },
+    _info(v) {
+      this.id = v
+    },
+    _getAuthorDetail(id) {
+      getAuthorDetail(id).then(res => {
+        console.log(res)
+        this.intro = res
+      })
+    },
     _currentChange() {
       this.newList = []
       this.n++
       this.start = this.n * this.count
-
     },
   },
   computed: {
@@ -84,6 +104,9 @@ export default {
   watch: {
     start: function() {
       this._getAuthor(this.start, this.count)
+    },
+    id: function() {
+      this._getAuthorDetail(this.id)
     },
   },
   created() {
@@ -147,19 +170,53 @@ export default {
   line-height: 50px;
 }
 
-.follow {
-  display: block;
-  width: 50px;
-  height: 24px;
-  padding: 0 5px;
-  line-height: 24px;
-  border: 1px solid #000;
-  border-radius: 5px;
+.add {
+  position: relative;
+  top: -1px;
+  font-size: 16px;
 }
 
-.add {
+.intro {
+  position: fixed;
+  top: 200px;
+  background: #fff;
+  width: 240px;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #d1dbe5;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12), 0 0 6px 0 rgba(0, 0, 0, .04);
+}
+
+.intro>p {
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.intro>p:nth-child(1) {
   font-size: 16px;
-  line-height: 22px;
-  vertical-align: top;
+}
+
+.intro>p:nth-child(3) {
+  margin-bottom: 5px;
+}
+
+.el-button {
+  font-size: 14px;
+  line-height: 10px;
+  height: 30px;
+}
+
+.detail {
+  position: fixed;
+  top: 200px;
+  width: 860px;
+  height: 810px;
+  background: #fff;
+}
+
+.coverPhoto {
+  width: 472px;
+  height: 241px;
+  background-image: linear-gradient(90deg)
 }
 </style>

@@ -55,7 +55,7 @@ export default {
         this.detailCategory = this.detailCategory.concat(this.newList)
       })
     },
-    _changeId(tab, even) {
+    _changeId(tab) {
       this.detailCategory = []
       this.newList = []
       this.start = 0

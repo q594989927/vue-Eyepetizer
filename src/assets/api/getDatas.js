@@ -35,8 +35,13 @@ export function getDefaultAuthor() {
   })
 }
 export function getAuthor(start, count) {
-  console.log(start, count)
   let url = '/api/v4/pgcs/all?start=' + start + '&num=' + count
+  return fetch(url).then(response => {
+    return response.json();
+  })
+}
+export function getAuthorDetail(id) {
+  let url = '/api/v4/pgcs/detail/tab?id=' + id
   return fetch(url).then(response => {
     return response.json();
   })
