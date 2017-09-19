@@ -9,6 +9,7 @@ const store = new Vuex.Store({
   state: {
     videoSrc: '',
     closed: true,
+    loading: true,
     badge: 0,
   },
   mutations: {
@@ -20,6 +21,9 @@ const store = new Vuex.Store({
     },
     setBadge(state, num) {
       state.badge += num
+    },
+    setLoading(state, res) {
+      state.loading = res
     },
   },
   getters: {

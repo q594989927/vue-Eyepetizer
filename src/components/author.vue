@@ -24,26 +24,8 @@
               @click="_add(data-id,data-is)">关注
             </el-button>
           </div>
-          <transition v-if="!item.data.text"   name="el-zoom-in-top">
-            <div v-loading='item.data.id==id' v-show="item.data.id==id" @mouseleave="_out()" class="introWrap" ref="Intro">
-              <div v-if="intro.tabInfo" class="intro">
-                <p v-html="intro.pgcInfo.name"></p>
-                <p v-html="intro.pgcInfo.brief"></p>
-                <el-button :plain="true" type="info" v-for="(el,index) in  intro.tabInfo.tabList" :key="index" v-html="el.name"></el-button>
-              </div>
-            </div>
-          </transition>
-        </div>
-        <div class="clearfix" v-if="item.data.header">
-          <img class="icon" v-lazy="item.data.header.icon">
-          <div class="text">
-            <p class="name" @mouseenter="_info(item.data.header.id)" @mouseleave="_out()" v-html="item.data.header.title"></p>
-            <p class="txt" v-html="item.data.header.description"></p>
-            <el-button v-if="item.data.header.id==focusOn" @click="_add(item.data.header.id)">已关注</el-button>
-            <el-button v-else @click="_add(item.data.header.id)">关注</el-button>
-          </div>
-          <transition v-if="!item.data.text" name="el-zoom-in-top">
-            <div v-loading='!intro.tabInfo' v-show="item.data.header.id==id" @mouseleave="_out()" class="introWrap" ref="Intro">
+          <transition v-if="!item.data.text"  name="el-zoom-in-top">
+            <div v-loading=loading  v-if="item.data.id==id"  @mouseleave="_out()" class="introWrap" ref="Intro">
               <div v-if="intro.tabInfo" class="intro">
                 <p v-html="intro.pgcInfo.name"></p>
                 <p v-html="intro.pgcInfo.brief"></p>
@@ -86,9 +68,15 @@ export default {
       focusOn: 0,
     }
   },
+  computed:{
+    ...mapState({
+     loading: state => state.loading,
+    })
+  },
   methods: {
     ...mapMutations([
-      'setBadge'
+      'setBadge',
+      'setLoading'
     ]),
     _getList() {
       getDefaultAuthor().then(res => {
@@ -108,9 +96,10 @@ export default {
       })
     },
     _info(v) {
+        console.log(this.loading)
       this.timer = setTimeout(() => {
         this.id = v
-        this._getAuthorDetail(this.id)
+       this._getAuthorDetail(this.id)
       }, 1000);
     },
     _out() {
@@ -120,6 +109,7 @@ export default {
     _getAuthorDetail(id) {
       getAuthorDetail(id).then(res => {
         this.intro = res
+        this.setLoading(false)
       })
     },
     _currentChange() {
@@ -133,14 +123,13 @@ export default {
       this.setBadge(1)
     },
   },
-  computed: {
-  },
   watch: {
     start: function() {
       this._getAuthor(this.start, this.count)
     },
   },
   created() {
+    console.log(this.loading)
     this._getList()
   }
 
