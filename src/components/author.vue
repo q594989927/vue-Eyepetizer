@@ -4,16 +4,28 @@
       <div :class="{'author':!item.data.text}" v-for="(item,index)  in lastList" :key="index">
         <h3 class="title" v-if="item.data.text" v-html="item.data.text"></h3>
         <div class="clearfix" v-if="item.data.title">
-          <img @mouseenter="_info(item.data.id)" class="icon" v-lazy="item.data.icon">
+          <img class="icon" v-lazy="item.data.icon">
           <div class="text">
-            <p class="name" v-html="item.data.title"></p>
+            <p class="name" 
+              @mouseenter="_info(item.data.id)" 
+              @mouseleave="_out()" 
+              v-html="item.data.title"
+            ></p>
             <p class="txt" v-html="item.data.description"></p>
-            <el-button>
-              <span class="add">+</span>关注
+            <el-button v-if="arr.is" 
+              :data-is="false" 
+              :data-id="item.data.id" 
+              @click="_add(data-id,data-is)"
+               >已关注
+            </el-button>
+            <el-button 
+              v-else :data-is="false" 
+              :data-id="item.data.id" 
+              @click="_add(data-id,data-is)">关注
             </el-button>
           </div>
-          <transition v-if="!item.data.text" name="el-zoom-in-top">
-            <div v-show="item.data.id==id" @mouseleave="_out()" class="introWrap" ref="Intro">
+          <transition v-if="!item.data.text"   name="el-zoom-in-top">
+            <div v-loading='item.data.id==id' v-show="item.data.id==id" @mouseleave="_out()" class="introWrap" ref="Intro">
               <div v-if="intro.tabInfo" class="intro">
                 <p v-html="intro.pgcInfo.name"></p>
                 <p v-html="intro.pgcInfo.brief"></p>
@@ -23,16 +35,15 @@
           </transition>
         </div>
         <div class="clearfix" v-if="item.data.header">
-          <img @mouseenter="_info(item.data.header.id)" class="icon" v-lazy="item.data.header.icon" alt="">
+          <img class="icon" v-lazy="item.data.header.icon">
           <div class="text">
-            <p class="name" v-html="item.data.header.title"></p>
+            <p class="name" @mouseenter="_info(item.data.header.id)" @mouseleave="_out()" v-html="item.data.header.title"></p>
             <p class="txt" v-html="item.data.header.description"></p>
-            <el-button>
-              <span class="add">+</span>关注
-            </el-button>
+            <el-button v-if="item.data.header.id==focusOn" @click="_add(item.data.header.id)">已关注</el-button>
+            <el-button v-else @click="_add(item.data.header.id)">关注</el-button>
           </div>
           <transition v-if="!item.data.text" name="el-zoom-in-top">
-            <div v-show="item.data.header.id==id" @mouseleave="_out()" class="introWrap" ref="Intro">
+            <div v-loading='!intro.tabInfo' v-show="item.data.header.id==id" @mouseleave="_out()" class="introWrap" ref="Intro">
               <div v-if="intro.tabInfo" class="intro">
                 <p v-html="intro.pgcInfo.name"></p>
                 <p v-html="intro.pgcInfo.brief"></p>
@@ -41,12 +52,11 @@
             </div>
           </transition>
         </div>
-
       </div>
     </div>
     <!-- <div class="detail">
-        <div class="coverPhoto"></div>
-        </div> -->
+            <div class="coverPhoto"></div>
+          </div> -->
     <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
   </div>
 </template>
@@ -63,22 +73,22 @@ export default {
   },
   data() {
     return {
+      arr: {},
       lastList: [],
       newList: [],
       textHeader: [],
-      detail: {},
-      intro: {},
-      id: -1,
+      intro: {}, //作者简介
+      id: null,
       start: 0,
       count: 9,
       n: 0,
-      timer: null
+      timer: null,
+      focusOn: 0,
     }
   },
   methods: {
     ...mapMutations([
-      'setVideoSrc',
-      'setTap'
+      'setBadge'
     ]),
     _getList() {
       getDefaultAuthor().then(res => {
@@ -98,11 +108,14 @@ export default {
       })
     },
     _info(v) {
-      this.id = v
-      this._getAuthorDetail(this.id)
+      this.timer = setTimeout(() => {
+        this.id = v
+        this._getAuthorDetail(this.id)
+      }, 1000);
     },
     _out() {
-      this.id = -1
+      clearTimeout(this.timer)
+      this.id = null
     },
     _getAuthorDetail(id) {
       getAuthorDetail(id).then(res => {
@@ -113,6 +126,11 @@ export default {
       this.newList = []
       this.n++
       this.start = this.n * this.count
+    },
+    _add(v, b) {
+      //this.focusOn = v
+      console.log(v, b)
+      this.setBadge(1)
     },
   },
   computed: {
@@ -184,13 +202,6 @@ export default {
   line-height: 50px;
 }
 
-.add {
-  position: relative;
-  z-index: 0;
-  top: -1px;
-  font-size: 16px;
-}
-
 .introWrap {
   position: absolute;
   left: -5px;
@@ -216,7 +227,7 @@ export default {
 }
 
 .intro>p:nth-child(1) {
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .intro>p:nth-child(2) {

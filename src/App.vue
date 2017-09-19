@@ -13,7 +13,11 @@
         </el-menu-item-group>
       </el-submenu>
       <el-menu-item index="/follow">
-        <i class="el-icon-more"></i>关注</el-menu-item>
+        <el-badge :value="badge" :max="99" class="item">
+          <i class="el-icon-more"></i>
+          关注
+        </el-badge>
+      </el-menu-item>
       <el-menu-item index="/search">
         <i class="el-icon-search"></i>搜索</el-menu-item>
     </el-menu>
@@ -24,14 +28,21 @@
   </div>
 </template>
 
+
 <script>
 import player from './components/player'
+import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'app',
   data() {
     return {
       activeIndex: '/selected'
     }
+  },
+  computed: {
+    ...mapState({
+      badge: state => state.badge,
+    })
   },
   components: {
     player
@@ -81,6 +92,16 @@ a {
   padding: 10px;
   overflow: auto;
   background-color: rgba(255, 255, 255, 1);
+}
+
+.item {
+  margin-top: 10px;
+  margin-right: 40px;
+}
+
+.el-badge__content.is-fixed {
+  top: 18px;
+  right: 5px;
 }
 
 .clearfix:before,
