@@ -108,7 +108,7 @@ export default {
       this.timer = setTimeout(() => {
         this.id = v
         this._getAuthorDetail(this.id)
-      }, 20)
+      }, 100)
     },
     _out() {
       this.show = null

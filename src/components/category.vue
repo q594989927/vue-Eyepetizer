@@ -1,15 +1,15 @@
 <template>
-  <div class="category" v-loading="!lastList.length">
-    <div class="list">
-      <el-tabs type="card" @tab-click="_changeId">
-        <el-tab-pane v-for="(item,index) in categoryNav" :key="index" :name="ids[index]" :label="item.title">
-          <card :datas="detailCategory"></card>
-          <div v-show="id==0" class="classify" v-for="(item,index) in lastList" :key="index">
-            <card :datas="item.data.itemList" :titles="item.data.header.title" :subTitle="item.data.header.subTitle"></card>
-          </div>
-          <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
-        </el-tab-pane>
-      </el-tabs>
+  <div v-loading="!lastList.length">
+    <el-tabs class="fixedTop" type="card" @tab-click="_changeId">
+      <el-tab-pane v-for="(item,index) in categoryNav" :key="index" :name="ids[index]" :label="item.title">
+      </el-tab-pane>
+    </el-tabs>
+    <div class="conWrapper">
+      <card :datas="detailCategory"></card>
+      <div v-show="id==0" class="classify" v-for="(item,index) in lastList" :key="index">
+        <card :datas="item.data.itemList" :titles="item.data.header.title" :subTitle="item.data.header.subTitle"></card>
+      </div>
+      <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
     </div>
   </div>
 </template>
@@ -88,15 +88,6 @@ export default {
 </script>
 
 <style scoped>
-.list {
-  margin: 10px 0;
-  overflow: hidden;
-}
-
-.list>h4 {
-  margin: 10px 0;
-}
-
 .classify {
   overflow: hidden;
 }

@@ -5,6 +5,7 @@ import hot from '@/components/hot'
 import category from '@/components/category'
 import author from '@/components/author'
 import follow from '@/components/follow'
+import search from '@/components/search'
 import app from '../App.vue'
 Vue.use(Router)
 
@@ -35,6 +36,9 @@ export default new Router({
       path: '/follow',
       component: follow,
     },
-
+    {
+      path: '/search',
+      component: search,
+    },
   ]
 })

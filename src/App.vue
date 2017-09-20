@@ -72,7 +72,7 @@ a {
 
 #app {
   width: 980px;
-  height: 810px;
+  height: 880px;
   overflow: hidden;
   box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
@@ -81,17 +81,34 @@ a {
 #app .menu {
   float: left;
   width: 120px;
-  height: 810px;
+  height: 880px;
 }
 
 #app .container {
   float: left;
-  height: 810px;
+  height: 880px;
   width: 860px;
   box-sizing: border-box;
   padding: 10px;
   overflow: auto;
   background-color: rgba(255, 255, 255, 1);
+}
+
+.fixedTop {
+  position: fixed;
+  top: 0;
+  width: 840px;
+  height: 50px;
+  background: #fff;
+  z-index: 99;
+}
+
+.conWrapper {
+  width: 840px;
+  height: 830px;
+  position: absolute;
+  top: 50px;
+  overflow: auto;
 }
 
 .item {

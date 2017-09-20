@@ -1,16 +1,7 @@
 <template>
   <div>
-    <div class="hint" v-if="!badge">-_-你没有关注任何内容,快去关注喜欢的作者吧~</div>
-    <div v-loading='loading&&newList.length'>
-      <el-tabs class="fixedTop" v-model="name" v-if="follow[0]" type="card" closable @tab-remove="_remove" @tab-click="_tabClick">
-        <el-tab-pane :key="item.name" v-for="(item, index) in follow" :label="item.name" :name="item.itemId.toString()">
-        </el-tab-pane>
-      </el-tabs>
-      <div class="conWrapper">
-        <card :datas="lastList"></card>
-        <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
-      </div>
-    </div>
+    <el-input placeholder="请输入" icon="search" v-model="input" :on-icon-click="handleIconClick">
+    </el-input>
   </div>
 </template>
 
@@ -33,6 +24,7 @@ export default {
       count: 9,
       n: 0,
       id: null,
+      input: null,
       name: '',
     }
   },
@@ -52,12 +44,12 @@ export default {
       'setLoading'
     ]),
     _getList(start, count, id) {
-      //this.setLoading(true)
       apiAuthorVideoList(start, count, id).then(res => {
         this.lastList = res.itemList
-        //this.setLoading(false)
-        this.newList = !res.nextPageUrl ? [] : " "
       })
+    },
+    handleIconClick(ev) {
+      console.log(ev, Boolean(" "));
     },
     _into(start, count, id) {
       apiAuthorVideoList(start, count, id).then(res => {
