@@ -1,44 +1,29 @@
 <template>
   <div class="list" v-loading="!lastList.length">
     <div>
-      <div :class="{'author':!item.data.text}" v-for="(item,index)  in lastList" :key="index">
-        <h3 class="title" v-if="item.data.text" v-html="item.data.text"></h3>
-        <div class="clearfix" v-if="item.data.title">
-          <img class="icon" v-lazy="item.data.icon">
+      <div :class="{'author':!item.text}" v-for="(item,index)  in lastList" :key="index">
+        <h3 class="title" v-if="item.text" v-html="item.text"></h3>
+        <div class="clearfix" @mouseenter="_info(item.id,index)" v-if="item.title">
+          <img class="icon" v-lazy="item.icon">
           <div class="text">
-            <p class="name" 
-              @mouseenter="_info(item.data.id)" 
-              @mouseleave="_out()" 
-              v-html="item.data.title"
-            ></p>
-            <p class="txt" v-html="item.data.description"></p>
-            <el-button v-if="arr.is" 
-              :data-is="false" 
-              :data-id="item.data.id" 
-              @click="_add(data-id,data-is)"
-               >已关注
-            </el-button>
-            <el-button 
-              v-else :data-is="false" 
-              :data-id="item.data.id" 
-              @click="_add(data-id,data-is)">关注
-            </el-button>
+            <p class="name" v-html="item.title"></p>
+            <p class="txt" v-html="item.description"></p>
           </div>
-          <transition v-if="!item.data.text"  name="el-zoom-in-top">
-            <div v-loading=loading  v-if="item.data.id==id"  @mouseleave="_out()" class="introWrap" ref="Intro">
-              <div v-if="intro.tabInfo" class="intro">
-                <p v-html="intro.pgcInfo.name"></p>
-                <p v-html="intro.pgcInfo.brief"></p>
-                <el-button :plain="true" type="info" v-for="(el,index) in  intro.tabInfo.tabList" :key="index" v-html="el.name"></el-button>
-              </div>
-            </div>
-          </transition>
         </div>
+        <transition v-if="!item.text" name="el-zoom-in-top">
+          <div v-loading="loading" v-if="item.title&&index==show" @mouseenter="_stay(index)" @mouseleave="_out()" class="introWrap" ref="Intro">
+            <div v-if="intro.tabInfo" class="intro">
+              <p v-html="intro.pgcInfo.name"></p>
+              <p v-html="intro.pgcInfo.brief"></p>
+              <a class="tabList" href="javasript:;" v-for="(el,index) in  intro.tabInfo.tabList" :key="index" v-html="el.name"></a>
+              <el-button type="text" size="small" class="focusOn" v-if="item.follow.followed" @click="_setFollows(item.id,item.follow.followed)">已关注</el-button>
+              <el-button type="text" size="small" class="focusOn" v-else @click="_setFollows(item.id,item.follow.followed)">关注</el-button>
+            </div>
+          </div>
+        </transition>
       </div>
     </div>
-    <!-- <div class="detail">
-            <div class="coverPhoto"></div>
-          </div> -->
+    <!-- <div class="detail"><div class="coverPhoto"></div></div> -->
     <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
   </div>
 </template>
@@ -55,22 +40,20 @@ export default {
   },
   data() {
     return {
-      arr: {},
-      lastList: [],
-      newList: [],
-      textHeader: [],
-      intro: {}, //作者简介
-      id: null,
+      lastList: [],    //总数据
+      newList: [],     //每次获取新数据
+      intro: {},       //作者简介
+      id: null,        //作者id
       start: 0,
       count: 9,
-      n: 0,
+      n: 0,            //加载更多计数
       timer: null,
-      focusOn: 0,
+      show: null
     }
   },
-  computed:{
+  computed: {
     ...mapState({
-     loading: state => state.loading,
+      loading: state => state.loading,
     })
   },
   methods: {
@@ -84,6 +67,7 @@ export default {
           return item.type != "blankCard"
         })
         this.newList.pop()
+        this._getNewList()
         this.lastList = this.lastList.concat(this.newList)
       })
     },
@@ -92,24 +76,42 @@ export default {
         this.newList = res.itemList.filter(item => {
           return item.type != "blankCard"
         })
+        this._getNewList()
         this.lastList = this.lastList.concat(this.newList)
       })
     },
-    _info(v) {
-        console.log(this.loading)
+    _getNewList() {
+      let arr = []
+      this.newList.forEach(el => {
+        if (el.data && !el.data.header) {
+          arr.push(el.data)
+        } else if (el.data.header) {
+          arr.push(el.data.header)
+        }
+      })
+      this.newList = arr
+    },
+    _info(v, index) {
+      this.id = v
+      this._getAuthorDetail(this.id)
       this.timer = setTimeout(() => {
-        this.id = v
-       this._getAuthorDetail(this.id)
-      }, 1000);
+        this.show = index
+        this.setLoading(false)
+      }, 500);
     },
     _out() {
-      clearTimeout(this.timer)
+      this.show = null
       this.id = null
+      this.setLoading(true)
+      clearTimeout(this.timer)
+    },
+    _stay(index) {
+      this.setLoading(false)
+      this.show = index
     },
     _getAuthorDetail(id) {
       getAuthorDetail(id).then(res => {
         this.intro = res
-        this.setLoading(false)
       })
     },
     _currentChange() {
@@ -117,10 +119,17 @@ export default {
       this.n++
       this.start = this.n * this.count
     },
-    _add(v, b) {
-      //this.focusOn = v
-      console.log(v, b)
-      this.setBadge(1)
+    _setFollows(id, boo) {
+      this.lastList.forEach(item => {
+        if (item.follow && item.follow.itemId == id) {
+          item.follow.followed = !boo
+        }
+      })
+      if (!boo) {
+        this.setBadge(1)
+      } else {
+        this.setBadge(-1)
+      }
     },
   },
   watch: {
@@ -129,10 +138,9 @@ export default {
     },
   },
   created() {
-    console.log(this.loading)
+
     this._getList()
   }
-
 }
 </script>
 
@@ -188,6 +196,7 @@ export default {
 
 .name {
   font-size: 18px;
+  margin-top: 15px;
   line-height: 50px;
 }
 
@@ -223,10 +232,19 @@ export default {
   margin-bottom: 15px;
 }
 
-.el-button {
+.focusOn {
+  color: #FFB8FA;
+}
+
+.tabList {
   font-size: 14px;
-  line-height: 10px;
-  height: 30px;
+  line-height: 20px;
+  margin: 0 15px;
+}
+
+.tabList {
+  display: inline-block;
+  border-bottom: 1px solid #0E1142;
 }
 
 .detail {
