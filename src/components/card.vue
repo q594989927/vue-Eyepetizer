@@ -9,17 +9,26 @@
         <video v-if="index===num" width="260" class="mouseShow" autoplay muted="muted" :src="src"></video>
         <img class="image" v-lazy='item.data.cover.detail'>
       </div>
-      <div style="padding: 8px;">
-        <p class="txt">{{item.data.title}}</p>
-        <div class="bottom clearfix">
-          <img v-if="item.data.author" class="icon" v-lazy="item.data.author.icon">
-          <div class="desc">
-            <p v-if="item.data.author" class="author">{{item.data.author.name}}</p>
-            <span class="time">
-              {{_duration(item.data.duration)}} / {{item.data.category}}
-            </span>
+      <div class="text">
+        <div @mouseenter="_enter(index)">
+          <p class="txt">{{item.data.title}}</p>
+          <div class="clearfix">
+            <img v-if="item.data.author" class="icon" v-lazy="item.data.author.icon">
+            <div class="desc">
+              <p v-if="item.data.author" class="author">{{item.data.author.name}}</p>
+              <span class="time">
+                {{_duration(item.data.duration)}} / {{item.data.category}}
+              </span>
+            </div>
           </div>
         </div>
+        <transition name="el-zoom-in-center">
+          <div class="under" v-if="index==v" @mouseleave="_out">
+            <p>
+              {{item.data.description}}
+            </p>
+          </div>
+        </transition>
       </div>
     </el-card>
   </div>
@@ -44,6 +53,7 @@ export default {
   },
   data() {
     return {
+      v: null,
       num: -1,
       src: '',
       timer: null,
@@ -68,6 +78,12 @@ export default {
     _mouseOut() {
       clearTimeout(this.timer)
       this.num = -1
+    },
+    _enter(index) {
+      this.v = index
+    },
+    _out() {
+      this.v = null
     },
     _duration(v) {
       return add2Zero(v)
@@ -109,6 +125,35 @@ export default {
   width: 260px;
   height: 40px;
   line-height: 40px;
+}
+
+.text {
+  box-sizing: border-box;
+  position: relative;
+  width: 260px;
+  height: 100px;
+  padding: 5px;
+}
+
+.under {
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  background: #fff;
+}
+
+.under>p {
+  font-size: 14px;
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
 }
 
 .txt {

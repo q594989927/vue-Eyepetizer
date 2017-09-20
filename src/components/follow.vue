@@ -1,65 +1,104 @@
 <template>
-  <div class="selected">
-
+  <div v-loading='loading' class="">
+    <div v-if="!badge">-_-你没有关注任何内容,快去关注喜欢的作者吧~</div>
+    <el-tabs v-model="name" v-if="follow[0]" type="card" closable @tab-remove="_remove">
+      <el-tab-pane :key="item.name" v-for="(item, index) in follow" :label="item.name" :name="item.itemId.toString()">
+      </el-tab-pane>
+    </el-tabs>
+    <card :datas="lastList"></card>
+    <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
   </div>
 </template>
 
 <script>
-import { getSelected } from '@/assets/api/getDatas'
-import { mapGetters, mapState, mapMutations } from 'vuex'
+import { apiFollow, apiAuthorVideoList } from '@/assets/api/getDatas'
+import { mapState, mapGetters, mapMutations } from 'vuex'
+import card from './card'
+import loadMore from './loadMore'
 export default {
   name: 'selected',
+  components: {
+    card,
+    loadMore
+  },
   data() {
     return {
-      itemList: [],
       newList: [],
       lastList: [],
-      duration: [],
-      num: -1,
-      src: ''
+      followed: {},
+      start: 0,
+      count: 9,
+      n: 0,
+      nextPageUrl: null,
+      name: null
     }
+  },
+  computed: {
+    ...mapState({
+      loading: state => state.loading,
+      follow: state => state.follow,
+    }),
+    ...mapGetters([
+      'badge'
+    ])
   },
   methods: {
     ...mapMutations([
-      'setVideoSrc',
-      'setIsTap'
+      'setFeedFollowed',
+      'removeFollowed',
+      'setLoading'
     ]),
-    _getList() {
-      this.lastList = this.itemList.filter(obj => {
-        return obj.type == 'video' && obj.tag == '1'
+    _getList(start, count, id) {
+      this.setLoading(true)
+      apiAuthorVideoList(start, count, id).then(res => {
+        this.lastList = res.itemList
+        this.setLoading(false)
       })
-      this.lastList.forEach(ele => {
-        this.duration.push(ele.data.duration)
-      });
     },
-    _play(i) {
-      this.setVideoSrc(i.data.playInfo[1].url)
-      this.setIsTap(false)
+    _into(start, count, id) {
+      apiAuthorVideoList(start, count, id).then(res => {
+        this.newList = res.itemList
+        this.lastList = this.lastList.concat(this.newList)
+        this.nextPageUrl = res.nextPageUrl
+        if (!this.nextPageUrl) {
+          this.newList = []
+        }
+      })
     },
-    _mouseEnter(item, index) {
-      this.num = index
-      this.src = item.data.playInfo[1].url
+    _currentChange() {
+      this.newList = []
+      this.n++
+      this.start = this.n * this.count
     },
-    _mouseOut() {
-      this.num = -1
-      this.src = ''
-    },
-    _duration(index) {
-      let m = (this.duration[index] / 60 | 0)
-      m = m < 10 ? '0' + m : '' + m
-      let s = this.duration[index] % 60
-      s = s < 10 ? '0' + s : '' + s
-      return m + "'" + s + "''"
+    _remove(targetName) {
+      this.setFeedFollowed({ 'itemId': targetName, "followed": !false })
+      this.removeFollowed(targetName)
     },
   },
-  computed: {
 
+  watch: {
+    start() {
+      this._into(this.start, this.count, this.follow[0].itemId)
+    },
+    badge() {
+      if (!this.newList.length && this.badge) {
+        this._getList(this.start, this.count, this.follow[0].itemId)
+      }
+
+    },
+    follow() {
+      if (this.badge) {
+        this.name = this.follow[0].itemId.toString()
+        this._getList(this.start, this.count, this.follow[0].itemId)
+      } else {
+        this.lastList = []
+      }
+    },
   },
   created() {
-    getSelected().then(res => {
-      this.itemList = res.itemList
-      this._getList();
-    })
+    if (this.follow[0]) {
+      this._getList(this.start, this.count, this.follow[0].itemId)
+    }
   }
 
 }

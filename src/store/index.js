@@ -10,7 +10,8 @@ const store = new Vuex.Store({
     videoSrc: '',
     closed: true,
     loading: true,
-    badge: 0,
+    feedfollow: [],
+    follow: [],
   },
   mutations: {
     setTap(state, res) {
@@ -19,15 +20,32 @@ const store = new Vuex.Store({
     setVideoSrc(state, res) {
       state.videoSrc = res
     },
-    setBadge(state, num) {
-      state.badge += num
-    },
     setLoading(state, res) {
       state.loading = res
     },
+    getFeedFollowed(state, res) {
+      state.feedfollow.push(res)
+    },
+    setFeedFollowed(state, res) {
+      state.feedfollow.forEach(item => {
+        if (item.itemId == res.itemId) {
+          item.followed = !res.followed
+        }
+      })
+    },
+    setFollowed(state, res) {
+      state.follow.push(res)
+    },
+    removeFollowed(state, id) {
+      state.follow = state.follow.filter(item => {
+        return item.itemId != id
+      })
+    },
   },
   getters: {
-
+    badge: state => {
+      return state.follow.filter(item => item.followed).length
+    }
   },
   strict: debug,
   plugins: debug ? [createLogger()] : []

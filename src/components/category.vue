@@ -16,7 +16,7 @@
 
 <script>
 import { add2Zero } from '@/assets/js/add2Zero'
-import { getCategory, getDetailCategory } from '@/assets/api/getDatas'
+import { apiCategory, apiDetailCategory } from '@/assets/api/getDatas'
 import card from './card'
 import loadMore from './loadMore'
 export default {
@@ -27,7 +27,7 @@ export default {
   },
   data() {
     return {
-      categoryNav: [{ title: "热门" }],  //热门分类
+      categoryNav: [{ title: "最新" }],  //分类
       ids: ['0'],
       lastList: [],
       newList: [],
@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     _getList(start, count) {
-      getCategory(start, count).then(res => {
+      apiCategory(start, count).then(res => {
         this.lastList = res.itemList
         res.itemList.forEach(obj => {
           this.categoryNav.push(obj.data.header)
@@ -50,7 +50,7 @@ export default {
     },
     _into(start, count, id) {
       id = parseInt(id)
-      getDetailCategory(start, count, id).then(res => {
+      apiDetailCategory(start, count, id).then(res => {
         this.newList = res.itemList
         this.detailCategory = this.detailCategory.concat(this.newList)
       })

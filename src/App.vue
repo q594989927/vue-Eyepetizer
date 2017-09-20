@@ -31,7 +31,7 @@
 
 <script>
 import player from './components/player'
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'app',
   data() {
@@ -40,9 +40,9 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      badge: state => state.badge,
-    })
+    ...mapGetters([
+      'badge'
+    ]),
   },
   components: {
     player

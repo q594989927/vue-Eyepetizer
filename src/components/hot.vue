@@ -7,8 +7,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import { getHot, getCategory, getAuthor } from '@/assets/api/getDatas'
-import { add2Zero } from '@/assets/js/add2Zero'
+import { apiHot, apiCategory, apiAuthor } from '@/assets/api/getDatas'
 import card from './card'
 import loadMore from './loadMore'
 export default {
@@ -32,7 +31,7 @@ export default {
       'setTap'
     ]),
     _getList(start, count) {
-      getHot(start, count).then(res => {
+      apiHot(start, count).then(res => {
         this.newList = res.itemList
         this.lastList = this.lastList.concat(this.newList)
       })
@@ -42,8 +41,6 @@ export default {
       this.n++
       this.start = this.n * this.count
     },
-  },
-  computed: {
   },
   watch: {
     start: function() {

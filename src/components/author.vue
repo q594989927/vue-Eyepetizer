@@ -11,13 +11,13 @@
           </div>
         </div>
         <transition v-if="!item.text" name="el-zoom-in-top">
-          <div v-loading="loading" v-if="item.title&&index==show" @mouseenter="_stay(index)" @mouseleave="_out()" class="introWrap" ref="Intro">
+          <div v-loading="loading" v-if="index==show" @mouseenter="_stay(index)" @mouseleave="_out()" class="introWrap" ref="Intro">
             <div v-if="intro.tabInfo" class="intro">
               <p v-html="intro.pgcInfo.name"></p>
               <p v-html="intro.pgcInfo.brief"></p>
               <a class="tabList" href="javasript:;" v-for="(el,index) in  intro.tabInfo.tabList" :key="index" v-html="el.name"></a>
-              <el-button type="text" size="small" class="focusOn" v-if="item.follow.followed" @click="_setFollows(item.id,item.follow.followed)">已关注</el-button>
-              <el-button type="text" size="small" class="focusOn" v-else @click="_setFollows(item.id,item.follow.followed)">关注</el-button>
+              <el-button type="text" size="small" class="focusOn" v-if="item.follow.followed" @click="_setFollows(item.id,item.follow.followed,item.title)">已关注</el-button>
+              <el-button type="text" size="small" class="focusOn" v-else @click="_setFollows(item.id,item.follow.followed,item.title)">关注</el-button>
             </div>
           </div>
         </transition>
@@ -28,8 +28,8 @@
   </div>
 </template>
 <script>
-import { mapState, mapMutations } from 'vuex'
-import { getDefaultAuthor, getAuthor, getAuthorDetail } from '@/assets/api/getDatas'
+import { mapState, mapGetter, mapMutations } from 'vuex'
+import { apiDefaultAuthor, apiAuthor, apiAuthorDetail } from '@/assets/api/getDatas'
 import { add2Zero } from '@/assets/js/add2Zero'
 
 import loadMore from './loadMore'
@@ -54,15 +54,19 @@ export default {
   computed: {
     ...mapState({
       loading: state => state.loading,
-    })
+      follow: state => state.follow,
+    }),
   },
   methods: {
     ...mapMutations([
-      'setBadge',
-      'setLoading'
+      'setFollowed',
+      'removeFollowed',
+      'getFeedFollowed',
+      'setFeedFollowed',
+      'setLoading',
     ]),
     _getList() {
-      getDefaultAuthor().then(res => {
+      apiDefaultAuthor().then(res => {
         this.newList = res.itemList.filter(item => {
           return item.type != "blankCard"
         })
@@ -72,7 +76,7 @@ export default {
       })
     },
     _getAuthor(start, count) {
-      getAuthor(start, count).then(res => {
+      apiAuthor(start, count).then(res => {
         this.newList = res.itemList.filter(item => {
           return item.type != "blankCard"
         })
@@ -90,28 +94,34 @@ export default {
         }
       })
       this.newList = arr
+      arr.forEach(el => {
+        if (el.follow) {
+          this.getFeedFollowed(el.follow)
+        } else {
+          this.getFeedFollowed({})
+        }
+      })
     },
     _info(v, index) {
-      this.id = v
-      this._getAuthorDetail(this.id)
+      this.setLoading(true)
+      this.show = index
       this.timer = setTimeout(() => {
-        this.show = index
-        this.setLoading(false)
-      }, 500);
+        this.id = v
+        this._getAuthorDetail(this.id)
+      }, 20)
     },
     _out() {
       this.show = null
-      this.id = null
-      this.setLoading(true)
+      this.intro = []
       clearTimeout(this.timer)
     },
     _stay(index) {
-      this.setLoading(false)
       this.show = index
     },
     _getAuthorDetail(id) {
-      getAuthorDetail(id).then(res => {
+      apiAuthorDetail(id).then(res => {
         this.intro = res
+        this.setLoading(false)
       })
     },
     _currentChange() {
@@ -119,16 +129,13 @@ export default {
       this.n++
       this.start = this.n * this.count
     },
-    _setFollows(id, boo) {
-      this.lastList.forEach(item => {
-        if (item.follow && item.follow.itemId == id) {
-          item.follow.followed = !boo
-        }
-      })
+    _setFollows(id, boo, name) {
+      this.setFeedFollowed({ 'itemId': id, 'followed': boo })
+      console.log({ 'itemId': id, 'followed': boo })
       if (!boo) {
-        this.setBadge(1)
+        this.setFollowed({ 'itemId': id, 'followed': !boo, 'name': name })
       } else {
-        this.setBadge(-1)
+        this.removeFollowed(id)
       }
     },
   },
@@ -138,7 +145,6 @@ export default {
     },
   },
   created() {
-
     this._getList()
   }
 }

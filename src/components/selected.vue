@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { getSelected } from '@/assets/api/getDatas'
+import { apiSelected } from '@/assets/api/getDatas'
 import { add2Zero } from '@/assets/js/add2Zero'
 import { mapGetters, mapState, mapMutations } from 'vuex'
 export default {
@@ -78,7 +78,7 @@ export default {
 
   },
   created() {
-    getSelected().then(res => {
+    apiSelected().then(res => {
       this.itemList = res.itemList
       this._getList();
     })
