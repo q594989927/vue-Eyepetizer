@@ -42,7 +42,6 @@ export default {
   methods: {
     _getList(start, count) {
       apiCategory(start, count).then(res => {
-        console.log(res)
         this.newList = res.itemList
         this.lastList = this.lastList.concat(this.newList)
         this.newList = !res.nextPageUrl ? [] : " "

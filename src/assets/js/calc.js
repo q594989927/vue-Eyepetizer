@@ -8,12 +8,18 @@ export function add2Zero(v) {
 export function timeDiff(s) {
   let date = new Date()
   let now = date.getTime()
-  let m = (now - s) / 1000 / 60
-  if (m > 60) {
-    let h = m / 60
-    return h + '小时'
+  var m = (now - s) / 1000 / 60
+  var h = m / 60
+  var d = h / 24
+  var w = d / 7
+  if (d > 7) {
+    return Math.floor(w) + '星期'
+  } else if (h > 24) {
+    return Math.floor(d) + '天'
+  } else if (m > 60) {
+    return Math.floor(h) + '小时'
   } else {
-    return m + '分钟'
+    return Math.floor(m) + '分钟'
   }
 }
 

@@ -20,6 +20,7 @@
               <span class="time">
                 {{_duration(item.data.duration)}} / {{item.data.category}}
               </span>
+              <span class="updateTime">{{_time(item.data.date)}}前</span>
             </div>
           </div>
         </div>
@@ -36,7 +37,7 @@
 </template>
 
 <script>
-import { add2Zero } from '@/assets/js/calc'
+import { add2Zero, timeDiff } from '@/assets/js/calc'
 import { mapMutations } from 'vuex'
 export default {
   name: 'card',
@@ -97,6 +98,9 @@ export default {
     _duration(v) {
       return add2Zero(v)
     },
+    _time(v) {
+      return timeDiff(v)
+    }
   }
 }
 </script>
@@ -194,17 +198,26 @@ export default {
 
 .icon {
   width: 30px;
+  height: 30px;
   border-radius: 50%;
   vertical-align: top;
 }
 
 .desc {
+  width: 200px;
+  overflow: hidden;
   line-height: 16px;
   padding-left: 10px;
   display: inline-block;
 }
 
+.updateTime,
 .desc .author {
   font-size: 14px
+}
+
+.updateTime {
+  float: right;
+  color: #999;
 }
 </style>

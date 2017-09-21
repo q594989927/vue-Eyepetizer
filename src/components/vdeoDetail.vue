@@ -2,7 +2,7 @@
   <div class="vdeoDetail">
     <div class="title">
       <h3 class="text" v-if="headerText" v-html="headerText"></h3>
-      <el-button class="random" @click="_random">
+      <el-button v-if="videoId" class="random" @click="_random">
         随便看看
         <i class="el-icon-more"></i>
       </el-button>
@@ -63,7 +63,9 @@ export default {
   whatch: {
   },
   created() {
-    this._show(this.videoId)
+    if (this.videoId) {
+      this._show(this.videoId)
+    }
   }
 }
 </script>

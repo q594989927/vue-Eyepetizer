@@ -32,8 +32,10 @@ export default {
     ]),
     _getList(start, count) {
       apiHot(start, count).then(res => {
+        console.log(res)
         this.newList = res.itemList
         this.lastList = this.lastList.concat(this.newList)
+        this.newList = !res.nextPageUrl ? [] : " "
       })
     },
     _currentChange() {

@@ -132,7 +132,6 @@ export default {
     },
     _setFollows(id, boo, name) {
       this.setFeedFollowed({ 'itemId': id, 'followed': boo })
-      console.log({ 'itemId': id, 'followed': boo })
       if (!boo) {
         this.setFollowed({ 'itemId': id, 'followed': !boo, 'name': name })
       } else {
@@ -227,8 +226,8 @@ export default {
 }
 
 .intro {
-  width: 240px;
-  padding: 10px;
+  width: 250px;
+  padding: 5px;
   text-align: center;
 }
 
@@ -244,10 +243,15 @@ export default {
 
 .intro>p:nth-child(2) {
   margin-bottom: 15px;
+  width: 250px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .focusOn {
-  color: #FFB8FA;
+  font-size: 14px;
+  color: #F40;
 }
 
 .tabList {
@@ -258,7 +262,6 @@ export default {
 
 .tabList {
   display: inline-block;
-  border-bottom: 1px solid #0E1142;
 }
 
 .detail {
