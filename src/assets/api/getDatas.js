@@ -58,10 +58,9 @@ export function apiFollow() {
     return response.json();
   })
 }
-export function apiFollow(start, count, q) {
+export function apiSearch(start, count, q) {
   let url = '/api/v1/search?start=' + start + '&num=' + count + '&query=' + q
   return fetch(url).then(response => {
     return response.json();
   })
 }
-http://baobab.kaiyanapp.com/api/

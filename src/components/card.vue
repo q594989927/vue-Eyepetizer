@@ -1,8 +1,8 @@
 <template>
   <div class="clearfix">
-    <div class="el-card card titles" v-if="titles">
+    <div class="el-card card titles" @click="_go(id)" v-if="titles">
       <h3 v-html="titles"></h3>
-      <p v-html="subTitle">13213242</p>
+      <p v-html="subTitle"></p>
     </div>
     <el-card class="card" :body-style="{ padding: '0px'}" v-for="(item,index) in datas" :key="index">
       <div @click='_play(item)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
@@ -40,6 +40,9 @@ import { mapMutations } from 'vuex'
 export default {
   name: 'card',
   props: {
+    id: {
+      type: Number,
+    },
     titles: {
       type: String,
     },
@@ -84,6 +87,9 @@ export default {
     },
     _out() {
       this.v = null
+    },
+    _go(id) {
+      this.$emit('go', id)
     },
     _duration(v) {
       return add2Zero(v)
