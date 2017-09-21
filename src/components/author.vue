@@ -4,6 +4,7 @@
       <div :class="{'author':!item.text}" v-for="(item,index)  in lastList" :key="index">
         <h3 class="title" v-if="item.text" v-html="item.text"></h3>
         <div class="clearfix" @mouseenter="_info(item.id,index)" v-if="item.title">
+          <i v-if="item.follow.followed" class="el-icon-my-followed"></i>
           <img class="icon" v-lazy="item.icon">
           <div class="text">
             <p class="name" v-html="item.title"></p>
@@ -157,7 +158,7 @@ export default {
 }
 
 .author:hover {
-  transition: .2s;
+  transition: ease-out .2s;
   transform: scale3d(1.02, 1.02, 1.05)
 }
 
@@ -175,6 +176,13 @@ export default {
   height: 30px;
   margin: 20px 10px;
   border-bottom: 1px dashed #000;
+}
+
+.el-icon-my-followed {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  color: #f40;
 }
 
 .icon {

@@ -2,7 +2,10 @@
   <div class="vdeoDetail">
     <div class="title">
       <h3 class="text" v-if="headerText" v-html="headerText"></h3>
-      <el-button class="random" @click="_random">随便看看=</el-button>
+      <el-button class="random" @click="_random">
+        随便看看
+        <i class="el-icon-more"></i>
+      </el-button>
     </div>
     <div class="detail" v-for="(item,index) in list" :key="index">
       <div class="cover">
@@ -86,16 +89,15 @@ export default {
 
 .random {
   float: right;
-  width: 80px;
-  padding: 0 5px;
+  width: 88px;
+  padding: 0 2px;
   font-size: 14px;
   line-height: 26px;
   margin-right: 20px;
-  /* cursor: pointer; */
 }
 
 .detail:hover {
-  transition: .5s;
+  transition: ease-out .2s;
   transform: scale3d(1.05, 1.05, 1.05)
 }
 

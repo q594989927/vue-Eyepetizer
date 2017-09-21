@@ -103,7 +103,7 @@ export default {
 
 <style scoped>
 .card:hover {
-  transition: .8s;
+  transition: ease-out .2s;
   transform: scale3d(1.05, 1.05, 1.05)
 }
 

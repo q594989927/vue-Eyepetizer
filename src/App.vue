@@ -2,24 +2,19 @@
   <div id="app">
     <el-menu :router="true" :default-active="activeIndex" class="menu el-menu-vertical-demo">
       <el-menu-item index="/selected">
-        <i class="el-icon-star-off"></i>首页</el-menu-item>
-      <el-submenu index="/discovery">
-        <template slot="title">
-          <i class="el-icon-menu"></i>发现</template>
-        <el-menu-item-group>
-          <el-menu-item index="/hot">热门</el-menu-item>
-          <el-menu-item index="/category">分类</el-menu-item>
-          <el-menu-item index="/author">作者</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
+        <i class="el-icon-my-index"></i>首页</el-menu-item>
+      <el-menu-item index="/hot">
+        <i class="el-icon-my-hot"></i>热门</el-menu-item>
+      <el-menu-item index="/category">
+        <i class="el-icon-my-category"></i>分类</el-menu-item>
+      <el-menu-item index="/author">
+        <i class="el-icon-my-author"></i>作者</el-menu-item>
       <el-menu-item index="/follow">
         <el-badge :value="badge" :max="99" class="item">
-          <i class="el-icon-more"></i>
-          关注
-        </el-badge>
+          <i class="el-icon-my-follow"></i>关注</el-badge>
       </el-menu-item>
       <el-menu-item index="/search">
-        <i class="el-icon-search"></i>搜索</el-menu-item>
+        <i class="el-icon-my-search"></i>搜索</el-menu-item>
     </el-menu>
     <player></player>
     <keep-alive>
@@ -51,10 +46,16 @@ export default {
 </script>
 
 <style>
+[class^="el-icon-my"],
+[class*=" el-icon-my"] {
+  font-family: "iconfont" !important;
+  font-weight: bold;
+  font-size: 18px;
+}
+
 body {
   user-select: none;
   margin: 0;
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 
 h1,
@@ -113,8 +114,8 @@ a {
 }
 
 .item {
-  margin-top: 10px;
-  margin-right: 40px;
+  /* margin-top: 10px;
+  margin-right: 40px; */
 }
 
 .el-badge__content.is-fixed {
