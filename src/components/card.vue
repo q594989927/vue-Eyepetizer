@@ -3,11 +3,12 @@
     <div class="el-card card titles" @click="_go(id)" v-if="titles">
       <h3 v-html="titles"></h3>
       <p v-html="subTitle"></p>
+      <p>查看更多</p>
     </div>
     <el-card class="card" :body-style="{ padding: '0px'}" v-for="(item,index) in datas" :key="index">
-      <div @click='_play(item)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
+      <div class="video" @click='_play(item.data.playUrl,item.data.id)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
         <video v-if="index===num" width="260" class="mouseShow" autoplay muted="muted" :src="src"></video>
-        <img class="image" v-lazy='item.data.cover.detail'>
+        <img v-else class="image" v-lazy='item.data.cover.detail'>
       </div>
       <div class="text">
         <div @mouseenter="_enter(index)">
@@ -22,7 +23,7 @@
             </div>
           </div>
         </div>
-        <transition name="el-zoom-in-center">
+        <transition name="el-fade-in">
           <div class="under" v-if="index==v" @mouseleave="_out">
             <p>
               {{item.data.description}}
@@ -35,7 +36,7 @@
 </template>
 
 <script>
-import { add2Zero } from '@/assets/js/add2Zero'
+import { add2Zero } from '@/assets/js/calc'
 import { mapMutations } from 'vuex'
 export default {
   name: 'card',
@@ -65,12 +66,14 @@ export default {
   methods: {
     ...mapMutations([
       'setVideoSrc',
-      'setTap'
+      'setTap',
+      'setVideoId'
     ]),
-    _play(i) {
-      let url = i.data.playUrl
+    _play(url, id) {
       this.setVideoSrc(url)
+      this.setVideoId(id)
       this.setTap(false)
+      clearTimeout(this.timer)
     },
     _mouseEnter(item, index) {
       this.timer = setTimeout(() => {
@@ -100,7 +103,7 @@ export default {
 
 <style scoped>
 .card:hover {
-  transition: .5s;
+  transition: .8s;
   transform: scale3d(1.05, 1.05, 1.05)
 }
 
@@ -110,6 +113,11 @@ export default {
   height: 240px;
   margin: 9px;
   float: left;
+}
+
+.video {
+  width: 260px;
+  height: 145px;
 }
 
 .titles {

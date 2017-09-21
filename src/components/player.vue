@@ -1,17 +1,25 @@
 <template>
-  <div v-if="!closed" class="playVideo">
-    <video controls="controls" width="800" :src="videoSrc">
-    </video>
-    <span @click='_closed'>关闭</span>
+  <div class="play" v-if="!closed">
+    <div class="playVideo">
+      <video controls="controls" :src="videoSrc" @mouseover="_show" @mouseout="_hidden"></video>
+      <span v-if="tap" @click='_closed'>关闭</span>
+    </div>
+    <vdeoDetail></vdeoDetail>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState, mapMutations } from 'vuex'
+import vdeoDetail from './vdeoDetail'
 export default {
-  name: 'selected',
+  name: 'play',
+  components: {
+    vdeoDetail
+  },
   data() {
     return {
+      tap: false,
+      timer: null
     }
   },
   computed: {
@@ -25,6 +33,16 @@ export default {
       'setVideoSrc',
       'setTap'
     ]),
+    _show() {
+      clearTimeout(this.timer)
+      this.tap = true
+    },
+    _hidden() {
+      this.timer = setTimeout(() => {
+        this.tap = false
+      }, 3000)
+
+    },
     _closed() {
       this.setTap(true)
     }
@@ -33,27 +51,33 @@ export default {
 </script>
 
 <style scoped>
-.playVideo {
+.play {
   position: fixed;
   z-index: 999;
-  top: 0;
-  left: 120px;
-  width: 860px;
-  height: 810px;
-  background: rgba(0, 0, 0, .6)
+  width: 980px;
+  height: 880px;
+  margin: 0 auto;
+  background: #fff;
+  overflow: hidden;
 }
 
-.playVideo video {
-  position: absolute;
-  top: 175px;
-  left: 30px;
-  right: 0;
-  bottom: 0;
+.playVideo>video {
+  margin: 50px;
+  width: 880px;
 }
 
 .playVideo span {
-  color: red;
+  text-align: center;
   position: absolute;
-  right: 0;
+  top: 20px;
+  right: 10px;
+  height: 30px;
+  width: 40px;
+  font-size: 14px;
+  line-height: 30px;
+  color: #fff;
+  background: #1F0716;
+  border-radius: 5px 5px 5px 0;
+  cursor: pointer;
 }
 </style>

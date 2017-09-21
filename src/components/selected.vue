@@ -29,7 +29,7 @@
 
 <script>
 import { apiSelected } from '@/assets/api/getDatas'
-import { add2Zero } from '@/assets/js/add2Zero'
+import { add2Zero } from '@/assets/js/calc'
 import { mapGetters, mapState, mapMutations } from 'vuex'
 export default {
   name: 'selected',

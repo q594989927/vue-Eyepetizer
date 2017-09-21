@@ -52,10 +52,8 @@ export default {
       'setLoading'
     ]),
     _getList(start, count, id) {
-      //this.setLoading(true)
       apiAuthorVideoList(start, count, id).then(res => {
         this.lastList = res.itemList
-        //this.setLoading(false)
         this.newList = !res.nextPageUrl ? [] : " "
       })
     },

@@ -10,7 +10,7 @@
             <p class="txt" v-html="item.description"></p>
           </div>
         </div>
-        <transition v-if="!item.text" name="el-zoom-in-top">
+        <transition v-if="!item.text" name="el-fade-in">
           <div v-loading="loading" v-if="index==show" @mouseenter="_stay(index)" @mouseleave="_out()" class="introWrap" ref="Intro">
             <div v-if="intro.tabInfo" class="intro">
               <p v-html="intro.pgcInfo.name"></p>
@@ -30,7 +30,7 @@
 <script>
 import { mapState, mapGetter, mapMutations } from 'vuex'
 import { apiDefaultAuthor, apiAuthor, apiAuthorDetail } from '@/assets/api/getDatas'
-import { add2Zero } from '@/assets/js/add2Zero'
+import { add2Zero } from '@/assets/js/calc'
 
 import loadMore from './loadMore'
 export default {

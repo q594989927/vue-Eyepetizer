@@ -50,7 +50,6 @@ export default {
         this.newList = res.itemList
         this.lastList = this.lastList.concat(this.newList)
         this.newList = !res.nextPageUrl ? [] : " "
-        console.log(res);
       })
     },
     handleIconClick() {

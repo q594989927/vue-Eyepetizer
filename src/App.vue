@@ -76,6 +76,7 @@ a {
   overflow: hidden;
   box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
+  margin: 0 auto;
 }
 
 #app .menu {

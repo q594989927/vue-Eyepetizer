@@ -8,12 +8,16 @@ const debug = process.env.NODE_ENV !== 'production'
 const store = new Vuex.Store({
   state: {
     videoSrc: '',
+    videoId: null,
     closed: true,
     loading: true,
     feedfollow: [],
     follow: [],
   },
   mutations: {
+    setVideoId(state, res) {
+      state.videoId = res
+    },
     setTap(state, res) {
       state.closed = res
     },

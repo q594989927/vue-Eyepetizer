@@ -64,3 +64,9 @@ export function apiSearch(start, count, q) {
     return response.json();
   })
 }
+export function apiVdeoDetail(id) {
+  let url = '/api/v4/video/related?id=' + id
+  return fetch(url).then(response => {
+    return response.json();
+  })
+}

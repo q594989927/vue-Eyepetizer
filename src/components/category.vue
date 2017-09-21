@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { add2Zero } from '@/assets/js/add2Zero'
+import { add2Zero } from '@/assets/js/calc'
 import { apiCategory, apiDetailCategory } from '@/assets/api/getDatas'
 import card from './card'
 import loadMore from './loadMore'
