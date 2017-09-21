@@ -13,7 +13,7 @@
       </div>
       <div class="intro">
         <img v-if="item.data.author" class="icon" v-lazy="item.data.author.icon">
-        <p v-if="item.data.author" class="author">{{item.data.author.name}}</p>
+        <p v-if="item.data.author" class="author ellipsis">{{item.data.author.name}}</p>
         <p class="desc" v-html="item.data.description"></p>
       </div>
     </div>
@@ -149,9 +149,6 @@ export default {
 }
 
 .author {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
   width: 120px;
   line-height: 30px;
   padding-left: 5px;

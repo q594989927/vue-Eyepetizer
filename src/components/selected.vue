@@ -1,19 +1,35 @@
 <template>
-  <div>
-    <el-carousel :interval="4000" type="card" trigger="click" height="240px">
-      <el-carousel-item v-for="(item,index) in newList" :key="index">
-        <div class="cover" @click='_play(item)'>
-          <img :src="item.data.cover.feed" alt="">
-          <h3>{{item.data.title}}</h3>
-          <p>{{item.data.slogan}}</p>
-        </div>
-      </el-carousel-item>
-    </el-carousel>
+  <div class="container">
+    <div class="search">
+      <el-input placeholder="请输入" icon="search" v-model="input" :on-icon-click="_search"></el-input>
+    </div>
+    <div class="slide">
+      <el-carousel :interval="50000" trigger="click" height="370px">
+        <el-carousel-item v-for="(item,index) in newList" :key="index">
+          <div class="cover" @click='_play(item)'>
+            <img v-lazy='item.data.cover.detail'>
+            <h3>{{item.data.title}}</h3>
+            <p>{{item.data.slogan}}</p>
+          </div>
+        </el-carousel-item>
+      </el-carousel>
+      <ul class="indicator">
+        <li v-for="(item,index) in newList" :key="index">
+          <p class="text">{{item.data.title}}
+            <span>{{item.data.slogan}}</span>
+          </p>
+
+        </li>
+      </ul>
+    </div>
+
     <div class="list">
       <el-card class="card" :body-style="{ padding: '0px'}" v-for="(item,index) in lastList" :key="index">
         <div @click='_play(item)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
-          <video v-if="index===num" width="260" class="mouseShow" autoplay muted="muted" :src="src"></video>
-          <img class="image" :src="item.data.cover.feed">
+          <div class="image">
+            <video v-if="index===num" width="260" class="mouseShow" autoplay muted="muted" :src="src"></video>
+            <img v-else :src="item.data.cover.feed">
+          </div>
         </div>
         <div style="padding: 8px;">
           <p class="txt">{{item.data.title}}</p>
@@ -31,8 +47,12 @@
 import { apiSelected } from '@/assets/api/getDatas'
 import { add2Zero } from '@/assets/js/calc'
 import { mapGetters, mapState, mapMutations } from 'vuex'
+import search from './search'
 export default {
   name: 'selected',
+  components: {
+    search
+  },
   data() {
     return {
       itemList: [],
@@ -40,7 +60,8 @@ export default {
       lastList: [],
       num: -1,
       src: '',
-      timer: null
+      timer: null,
+      input: null,
     }
   },
   methods: {
@@ -55,6 +76,9 @@ export default {
       this.lastList = this.itemList.filter(obj => {
         return obj.type == 'video' && obj.tag == '1'
       })
+    },
+    _search() {
+
     },
     _play(i) {
       this.setVideoSrc(i.data.playUrl)
@@ -88,6 +112,38 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  padding: 0;
+}
+
+.search {
+  width: 700px;
+  border-radius: 50px;
+  margin: 10px auto;
+}
+
+.slide {
+  position: relative;
+}
+
+.indicator {
+  width: 200px;
+  display: inline-block;
+}
+
+.indicator>li {
+  font-size: 14px
+}
+
+.indicator .text {
+  width: 200px;
+}
+
+.el-carousel {
+  display: inline-block;
+  width: 650px;
+}
+
 .el-carousel__item .cover {
   position: relative;
   color: #fff;
@@ -139,13 +195,15 @@ export default {
 .card {
   position: relative;
   width: 260px;
-  height: 240px;
+  height: 225px;
   margin: 9px;
   float: left;
 }
 
 .txt {
-  height: 50px;
+  font-size: 14px;
+  height: 30px;
+  width: 240px;
 }
 
 .time {
@@ -161,19 +219,15 @@ export default {
 }
 
 .image {
+  width: 260px;
+  height: 145px;
+  overflow: hidden;
+}
+
+.image img {
   width: 100%;
   height: 145px;
   display: block;
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-
-.clearfix:after {
-  clear: both
 }
 
 .icon {

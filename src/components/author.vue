@@ -7,15 +7,15 @@
           <i v-if="item.follow.followed" class="el-icon-my-followed"></i>
           <img class="icon" v-lazy="item.icon">
           <div class="text">
-            <p class="name" v-html="item.title"></p>
-            <p class="txt" v-html="item.description"></p>
+            <p class="name ellipsis" v-html="item.title"></p>
+            <p class="txt ellipsis" v-html="item.description"></p>
           </div>
         </div>
         <transition v-if="!item.text" name="el-fade-in">
           <div v-loading="loading" v-if="index==show" @mouseenter="_stay(index)" @mouseleave="_out()" class="introWrap" ref="Intro">
             <div v-if="intro.tabInfo" class="intro">
               <p v-html="intro.pgcInfo.name"></p>
-              <p v-html="intro.pgcInfo.brief"></p>
+              <p class="ellipsis" v-html="intro.pgcInfo.brief"></p>
               <a class="tabList" href="javasript:;" v-for="(el,index) in  intro.tabInfo.tabList" :key="index" v-html="el.name"></a>
               <el-button type="text" size="small" class="focusOn" v-if="item.follow.followed" @click="_setFollows(item.id,item.follow.followed,item.title)">已关注</el-button>
               <el-button type="text" size="small" class="focusOn" v-else @click="_setFollows(item.id,item.follow.followed,item.title)">关注</el-button>
@@ -202,9 +202,6 @@ export default {
   font-size: 14px;
   line-height: 30px;
   width: 140px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
 }
 
 .name {
@@ -244,9 +241,6 @@ export default {
 .intro>p:nth-child(2) {
   margin-bottom: 15px;
   width: 250px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
 }
 
 .focusOn {

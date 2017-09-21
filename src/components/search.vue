@@ -13,7 +13,7 @@ import { mapState, mapGetters, mapMutations } from 'vuex'
 import card from './card'
 import loadMore from './loadMore'
 export default {
-  name: 'selected',
+  name: 'search',
   components: {
     card,
     loadMore
@@ -31,20 +31,8 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      loading: state => state.loading,
-      follow: state => state.follow,
-    }),
-    ...mapGetters([
-      'badge'
-    ])
   },
   methods: {
-    ...mapMutations([
-      'setFeedFollowed',
-      'removeFollowed',
-      'setLoading'
-    ]),
     _getList(start, count, q) {
       apiSearch(start, count, q).then(res => {
         this.newList = res.itemList

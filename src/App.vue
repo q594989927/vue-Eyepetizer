@@ -66,9 +66,31 @@ p {
   margin: 0
 }
 
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
 a {
   text-decoration: none;
   color: #000;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+
+.clearfix:after {
+  clear: both
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 #app {
@@ -86,7 +108,7 @@ a {
   height: 880px;
 }
 
-#app .container {
+.container {
   float: left;
   height: 880px;
   width: 860px;
@@ -121,16 +143,6 @@ a {
 .el-badge__content.is-fixed {
   top: 18px;
   right: 5px;
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-
-.clearfix:after {
-  clear: both
 }
 
 .el-submenu .el-menu-item,
