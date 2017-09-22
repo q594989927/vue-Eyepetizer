@@ -27,7 +27,7 @@ export default {
   },
   data() {
     return {
-      categoryNav: [{ title: "最新" }],  //分类
+      categoryNav: [{ title: "热门" }],  //分类
       ids: ['0'],
       lastList: [],
       newList: [],
@@ -57,7 +57,9 @@ export default {
     },
     _into(start, count, id) {
       apiDetailCategory(start, count, id).then(res => {
-        this.newList = res.itemList
+        this.newList = res.itemList.filter(el => {
+          return el.type == "video"
+        })
         this.detailCategory = this.detailCategory.concat(this.newList)
         this.newList = !res.nextPageUrl ? [] : " "
       })

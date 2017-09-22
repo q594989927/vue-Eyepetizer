@@ -17,7 +17,7 @@ export default {
 
 <style scoped>
 .loadMore {
-  margin: 0 auto;
+  margin: 20px auto;
   width: 400px;
   height: 40px;
   font-size: 14px;

@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="!lastList.length">
+  <div class="overFlowAuto" v-loading="!lastList.length">
     <card :datas="lastList"></card>
     <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
   </div>
@@ -21,7 +21,7 @@ export default {
       lastList: [],
       newList: [],
       start: 1,
-      count: 18,
+      count: 15,
       n: 0
     }
   },
@@ -32,7 +32,6 @@ export default {
     ]),
     _getList(start, count) {
       apiHot(start, count).then(res => {
-        console.log(res)
         this.newList = res.itemList
         this.lastList = this.lastList.concat(this.newList)
         this.newList = !res.nextPageUrl ? [] : " "

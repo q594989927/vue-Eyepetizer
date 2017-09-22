@@ -7,7 +7,7 @@
     </div>
     <el-card class="card" :body-style="{ padding: '0px'}" v-for="(item,index) in datas" :key="index">
       <div class="video" @click='_play(item.data.playUrl,item.data.id)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
-        <video v-if="index===num" width="260" class="mouseShow" autoplay muted="muted" :src="src"></video>
+        <video v-if="index===num" width="260" class="video" autoplay muted="muted" :src="src"></video>
         <img v-else class="image" v-lazy='item.data.cover.detail'>
       </div>
       <div class="text">
@@ -16,19 +16,20 @@
           <div class="clearfix">
             <img v-if="item.data.author" class="icon" v-lazy="item.data.author.icon">
             <div class="desc">
-              <p v-if="item.data.author" class="author">{{item.data.author.name}}</p>
+              <p v-if="item.data.author" class="author ellipsis">{{item.data.author.name}}</p>
               <span class="time">
                 {{_duration(item.data.duration)}} / {{item.data.category}}
               </span>
-              <span class="updateTime">{{_time(item.data.date)}}前</span>
             </div>
           </div>
         </div>
         <transition name="el-fade-in">
-          <div class="under" v-if="index==v" @mouseleave="_out">
+          <div class="under" v-if="index==show" @mouseleave="_out">
+            <span class="updateTime">更新于{{_time(item.data.date)}}前</span>
             <p>
               {{item.data.description}}
             </p>
+
           </div>
         </transition>
       </div>
@@ -58,8 +59,8 @@ export default {
   },
   data() {
     return {
-      v: null,
-      num: -1,
+      show: null,
+      num: null,
       src: '',
       timer: null,
     }
@@ -77,6 +78,7 @@ export default {
       clearTimeout(this.timer)
     },
     _mouseEnter(item, index) {
+      clearTimeout(this.timer)
       this.timer = setTimeout(() => {
         this.num = index
         this.src = item.data.playUrl
@@ -84,13 +86,13 @@ export default {
     },
     _mouseOut() {
       clearTimeout(this.timer)
-      this.num = -1
+      this.num = null
     },
     _enter(index) {
-      this.v = index
+      this.show = index
     },
     _out() {
-      this.v = null
+      this.show = null
     },
     _go(id) {
       this.$emit('go', id)
@@ -113,15 +115,15 @@ export default {
 
 .card {
   position: relative;
-  width: 180px;
-  height: 240px;
-  margin: 5px;
+  width: 175px;
+  height: 200px;
+  margin: 20px 0 0 20px;
   float: left;
 }
 
 .video {
-  width: 260px;
-  height: 145px;
+  width: 175px;
+  height: 100px;
 }
 
 .titles {
@@ -132,15 +134,15 @@ export default {
 
 .titles>h3 {
   font-size: 18px;
-  width: 260px;
+  width: 100%;
   height: 40px;
   line-height: 40px;
-  margin-top: 65px;
+  margin-top: 45px;
 }
 
 .titles>p {
   font-size: 13px;
-  width: 260px;
+  width: 100%;
   height: 40px;
   line-height: 40px;
 }
@@ -148,7 +150,7 @@ export default {
 .text {
   box-sizing: border-box;
   position: relative;
-  width: 260px;
+  width: 100%;
   height: 100px;
   padding: 5px;
 }
@@ -159,7 +161,7 @@ export default {
   bottom: 0;
   right: 0;
   width: 100%;
-  height: 100%;
+  height: 100px;
   padding: 8px;
   background: #fff;
 }
@@ -170,16 +172,24 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 
+.updateTime {
+  font-size: 12px;
+  display: block;
+  color: #999;
+  margin-bottom: 5px;
+}
+
 .txt {
+  font-size: 14px;
   height: 50px;
 }
 
 .time {
-  font-size: 13px;
+  font-size: 12px;
   color: #999;
 }
 
@@ -192,8 +202,7 @@ export default {
 
 .image {
   width: 100%;
-  height: 145px;
-  display: block;
+  height: 100px;
 }
 
 .icon {
@@ -204,20 +213,18 @@ export default {
 }
 
 .desc {
-  width: 200px;
+  width: 120px;
   overflow: hidden;
   line-height: 16px;
-  padding-left: 10px;
+  padding-left: 2px;
   display: inline-block;
 }
 
-.updateTime,
 .desc .author {
   font-size: 14px
 }
 
-.updateTime {
-  float: right;
-  color: #999;
+.desc .author {
+  width: 100%;
 }
 </style>

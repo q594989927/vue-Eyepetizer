@@ -63,5 +63,6 @@ export default {
   color: #e4e4e4;
   text-align: center;
   border: 1px solid #424242;
+  cursor: pointer;
 }
 </style>

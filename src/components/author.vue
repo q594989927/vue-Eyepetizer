@@ -1,7 +1,7 @@
 <template>
   <div class="overFlowAuto" v-loading="!lastList.length">
-    <div>
-      <div :class="{'author':!item.text}" v-for="(item,index)  in lastList" :key="index">
+    <div class="clearfix">
+      <div :class="{'author':!item.text}" class="clearfix" v-for="(item,index)  in lastList" :key="index">
         <h3 class="title" v-if="item.text" v-html="item.text"></h3>
         <div class="clearfix" @mouseenter="_info(item.id,index)" v-if="item.title">
           <i v-if="item.follow.followed" class="el-icon-my-followed"></i>
@@ -12,7 +12,7 @@
           </div>
         </div>
         <transition v-if="!item.text" name="el-fade-in">
-          <div v-loading="loading" v-if="index==show" @mouseenter="_stay(index)" @mouseleave="_out()" class="introWrap" ref="Intro">
+          <div v-show="index==show" @mouseenter="_stay(index)" @mouseleave="_out()" class="introWrap" ref="Intro">
             <div v-if="intro.tabInfo" class="intro">
               <p v-html="intro.pgcInfo.name"></p>
               <p class="ellipsis" v-html="intro.pgcInfo.brief"></p>
@@ -122,7 +122,7 @@ export default {
     _getAuthorDetail(id) {
       apiAuthorDetail(id).then(res => {
         this.intro = res
-        this.setLoading(false)
+        // this.setLoading(false)
       })
     },
     _currentChange() {
@@ -158,18 +158,18 @@ export default {
 
 .author {
   position: relative;
-  display: inline-block;
-  margin: 9px;
-  width: 260px;
+  float: left;
+  margin: 20px 0 0 20px;
+  width: 305px;
   height: 120px;
-  border: 1px solid #d1dbe5;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12), 0 0 6px 0 rgba(0, 0, 0, .04);
+  background: #fff;
 }
 
 .title {
+  float: left;
   height: 30px;
-  margin: 20px 10px;
-  border-bottom: 1px dashed #000;
+  margin: 20px;
+  color: #fff;
 }
 
 .el-icon-my-followed {
@@ -183,20 +183,20 @@ export default {
   float: left;
   width: 80px;
   height: 80px;
-  padding: 20px 10px;
+  margin: 20px 10px 20px 20px;
   border-radius: 50%;
 }
 
 .text {
   float: left;
-  width: 160px;
+  width: 180px;
 }
 
 .name,
 .txt {
   font-size: 14px;
   line-height: 30px;
-  width: 140px;
+  width: 100%;
 }
 
 .name {
@@ -210,15 +210,15 @@ export default {
   left: -5px;
   top: -5px;
   height: auto;
-  width: 270px;
+  width: 315px;
   height: 130px;
   background: #fff;
-  border: 1px solid #d1dbe5;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12), 0 0 6px 0 rgba(0, 0, 0, .04);
 }
 
 .intro {
-  width: 250px;
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
   padding: 5px;
   text-align: center;
 }
@@ -235,7 +235,7 @@ export default {
 
 .intro>p:nth-child(2) {
   margin-bottom: 15px;
-  width: 250px;
+  width: 305px;
 }
 
 .focusOn {

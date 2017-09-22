@@ -1,10 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { getSelected } from '@/assets/api/getDatas'
-import createLogger from 'vuex/dist/logger'
 Vue.use(Vuex)
-
-const debug = process.env.NODE_ENV !== 'production'
 const store = new Vuex.Store({
   state: {
     videoSrc: '',
@@ -51,7 +48,5 @@ const store = new Vuex.Store({
       return state.follow.filter(item => item.followed).length
     }
   },
-  strict: debug,
-  plugins: debug ? [createLogger()] : []
 })
 export default store

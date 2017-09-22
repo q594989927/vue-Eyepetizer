@@ -61,7 +61,11 @@ body {
 h1,
 h2,
 h3,
-h4,
+h4 {
+  font-weight: normal;
+  margin: 0
+}
+
 p {
   margin: 0
 }
@@ -126,7 +130,7 @@ input {
 .fixedTop {
   position: absolute;
   top: 10px;
-  width: 945px;
+  width: 955px;
   padding: 0 20px;
   height: 50px;
   background: #fff;
@@ -138,10 +142,10 @@ input {
 }
 
 .conWrapper {
-  width: 840px;
-  height: 670px;
+  width: 100%;
+  height: 660px;
   position: absolute;
-  top: 50px;
+  top: 60px;
   overflow: auto;
 }
 
@@ -163,18 +167,41 @@ input {
   color: #FF920B;
 }
 
+.el-badge__content {
+  border: none;
+}
+
 .el-badge__content.is-fixed {
   top: 18px;
   right: 5px;
 }
 
-.el-submenu .el-menu-item,
-.el-submenu__title {
-  padding: 0;
-  min-width: 0;
+.el-tabs {
+  background: #3a3c40;
 }
 
-.el-badge__content {
+.el-tabs__header {
+  border: none;
+  margin: 0;
+}
+
+.el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
+  border: 1px solid transparent;
+  border-bottom: 1px solid #FF920B;
+}
+
+.el-tabs__item:hover,
+.el-tabs__item.is-active {
+  color: #FF920B;
+}
+
+.el-tabs__item,
+.el-tabs__nav-next,
+.el-tabs__nav-prev {
+  color: #ccc;
+}
+
+.el-card {
   border: none;
 }
 </style>
