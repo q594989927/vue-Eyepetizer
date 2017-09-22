@@ -6,7 +6,7 @@
         <el-tab-pane :key="item.name" v-for="(item, index) in follow" :label="item.name" :name="item.itemId.toString()">
         </el-tab-pane>
       </el-tabs>
-      <div class="conWrapper">
+      <div class="overFlowAuto conWrapper">
         <card :datas="lastList"></card>
         <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
       </div>

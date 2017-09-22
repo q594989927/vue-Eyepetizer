@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="!lastList.length">
+  <div class="overFlowAuto" v-loading="!lastList.length">
     <div>
       <div :class="{'author':!item.text}" v-for="(item,index)  in lastList" :key="index">
         <h3 class="title" v-if="item.text" v-html="item.text"></h3>

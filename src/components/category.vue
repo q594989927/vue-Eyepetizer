@@ -109,12 +109,4 @@ export default {
   width: 100%;
   height: 145px;
 }
-
-.conWrapper {
-  width: 840px;
-  height: 670px;
-  position: absolute;
-  top: 50px;
-  overflow: auto;
-}
 </style>

@@ -113,9 +113,9 @@ export default {
 
 .card {
   position: relative;
-  width: 260px;
+  width: 180px;
   height: 240px;
-  margin: 9px;
+  margin: 5px;
   float: left;
 }
 

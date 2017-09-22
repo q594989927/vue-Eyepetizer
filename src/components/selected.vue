@@ -1,8 +1,6 @@
 <template>
   <div class="container">
-    <div class="search" @click="_search">
-      dddddd
-    </div>
+    <topBar></topBar>
     <div class="slide clearfix">
       <transition-group tag="div" class="carouselWrap" ref="carouselWrap" name='image' @click="_change">
         <div class="carousel" :class="{active:index==active}" v-show='index==active' v-for="(item,index) in newList" :key="index">
@@ -28,15 +26,15 @@
     </div>
     <div class="list">
       <h3 class="title" v-html="date"></h3>
-      <el-card class="card" :body-style="{ padding: '0px'}" v-for="(item,index) in lastList" :key="index">
+      <el-card class="card" :class="{six:lastList.length==6}" :body-style="{ padding: '0px'}" v-for="(item,index) in lastList" :key="index">
         <div @click='_play(item)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
-          <div class="image">
-            <video v-if="index===num" class="video" autoplay muted="muted" :src="src"></video>
+          <div :class="{six:lastList.length==6}" class="image">
+            <video v-if="index===num" :class="{six:lastList.length==6}" class="video" autoplay muted="muted" :src="src"></video>
             <img v-else :src="item.data.cover.detail">
           </div>
         </div>
         <div style="padding: 8px;">
-          <p class="txt ellipsis">{{item.data.title}}</p>
+          <p :class="{six:lastList.length==6}" class="txt ellipsis">{{item.data.title}}</p>
           <div class="bottom clearfix">
             <span class="time">{{_duration(item.data.duration)}}</span>
             <el-button type="text" class="button">{{item.data.category}}</el-button>
@@ -44,9 +42,10 @@
         </div>
       </el-card>
     </div>
-    <div>
-      <button>next</button>
-      <button>prev</button>
+    <div class="btn">
+      <el-button :plain="true">
+        <</el-button>
+          <el-button :plain="true">></el-button>
     </div>
   </div>
 </template>
@@ -55,19 +54,19 @@
 import { apiSelected } from '@/assets/api/getDatas'
 import { add2Zero, getDate } from '@/assets/js/calc'
 import { mapGetters, mapState, mapMutations } from 'vuex'
-import search from './search'
+import topBar from './topBar'
 export default {
   name: 'selected',
   components: {
-    search
+    topBar
   },
   data() {
     return {
       input: null,
       newList: [],
       lastList: [],
-      lastLi: [],
       date: '',
+      prevPageUrl: null,
       nextPageUrl: null,
       num: -1,
       src: '',
@@ -77,6 +76,11 @@ export default {
       interval: 40000,
       newListLength: null,
     }
+  },
+  computed: {
+    ...mapGetters([
+      'badge'
+    ]),
   },
   methods: {
     ...mapMutations([
@@ -136,9 +140,6 @@ export default {
       return add2Zero(v)
     },
   },
-  computed: {
-
-  },
   watch: {
     active() {
       this._autoPlay()
@@ -155,15 +156,44 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  padding: 0;
+.topBar {
+  position: relative;
+  height: 54px;
+  background: #3a3c40;
+  overflow: hidden;
+}
+
+.searchBar {
+  position: relative;
+  width: 400px;
+  height: 34px;
+  margin: 10px auto;
+  overflow: hidden;
+  line-height: 34px;
+}
+
+.searchBar>input {
+  vertical-align: top;
+  width: 300px;
+  height: 34px;
+  padding: 0 30px 0 20px;
+  border: none;
+  background: #212224;
+  border-radius: 50px;
+  color: #fff;
 }
 
 .search {
-
-
-  height: 54px;
-  background: #ccc;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 78px;
+  height: 32px;
+  border-radius: 50px;
+  background: #494b4f;
+  color: #e4e4e4;
+  text-align: center;
+  border: 1px solid #424242;
 }
 
 .image-enter-active,
@@ -321,7 +351,7 @@ export default {
 
 .card:hover {
   transition: ease-out .2s;
-  transform: scale3d(1.05, 1.05, 1.05)
+  transform: scale3d(1.05, 1.05, 1.05) translateY(-10px)
 }
 
 .card {
@@ -332,10 +362,18 @@ export default {
   float: left;
 }
 
+.card.six {
+  width: 150px;
+  margin-left: 12px;
+}
+
 .image {
-  width: 172px;
   height: 100px;
   overflow: hidden;
+}
+
+.image.six {
+  height: 87px;
 }
 
 .image img {
@@ -355,7 +393,12 @@ export default {
   width: 160px;
 }
 
+.txt.six {
+  width: 130px;
+}
+
 .time {
+  line-height: 34px;
   font-size: 13px;
   color: #999;
 }
@@ -372,6 +415,10 @@ export default {
   width: 172px;
 }
 
+.video.six {
+  width: 150px;
+}
+
 .desc {
   line-height: 16px;
   padding-left: 10px;
@@ -380,5 +427,15 @@ export default {
 
 .desc .author {
   font-size: 14px
+}
+
+.btn {
+  margin-left: 20px;
+}
+
+.el-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }
 </style>

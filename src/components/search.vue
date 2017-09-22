@@ -1,7 +1,6 @@
 <template>
   <div>
-    <el-input placeholder="请输入" icon="search" v-model="input" :on-icon-click="handleIconClick">
-    </el-input>
+    <topBar @search='_search'></topBar>
     <card :datas='lastList'></card>
     <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
   </div>
@@ -12,9 +11,11 @@ import { apiSearch } from '@/assets/api/getDatas'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import card from './card'
 import loadMore from './loadMore'
+import topBar from './topBar'
 export default {
   name: 'search',
   components: {
+    topBar,
     card,
     loadMore
   },
@@ -26,7 +27,6 @@ export default {
       count: 9,
       n: 0,
       id: null,
-      input: null,
       name: '',
     }
   },
@@ -40,8 +40,8 @@ export default {
         this.newList = !res.nextPageUrl ? [] : " "
       })
     },
-    handleIconClick() {
-      this._getList(this.start, this.count, this.input)
+    _search(val) {
+      this._getList(this.start, this.count, val)
     },
     _currentChange() {
       this.newList = []
@@ -62,6 +62,10 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  padding: 0
+}
+
 .hint {
   text-align: center;
   padding-top: 50px;

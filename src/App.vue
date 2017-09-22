@@ -77,6 +77,12 @@ a {
   color: #000;
 }
 
+input {
+  padding: 0;
+  margin: 0;
+  outline: none;
+}
+
 .clearfix:before,
 .clearfix:after {
   display: table;
@@ -99,7 +105,7 @@ a {
   overflow: hidden;
   box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  margin: 0 auto;
+  margin: 80px auto;
 }
 
 #app .menu {
@@ -109,22 +115,52 @@ a {
 }
 
 .container {
+  position: relative;
   float: left;
   height: 720px;
   width: 995px;
-  box-sizing: border-box;
-  padding: 10px;
-  overflow: auto;
-  background-color: rgba(255, 255, 255, 1);
+  overflow: hidden;
+  background-color: #3a3c40;
 }
 
 .fixedTop {
-  position: fixed;
-  top: 0;
-  width: 840px;
+  position: absolute;
+  top: 10px;
+  width: 945px;
+  padding: 0 20px;
   height: 50px;
   background: #fff;
   z-index: 99;
+}
+
+.overFlowAuto {
+  overflow: auto;
+}
+
+.conWrapper {
+  width: 840px;
+  height: 670px;
+  position: absolute;
+  top: 50px;
+  overflow: auto;
+}
+
+.el-menu {
+  background: #252525;
+  border-radius: 0;
+}
+
+.el-menu-item {
+  color: #ccc;
+}
+
+.el-menu-item:hover {
+  background: #252525;
+  color: #FF920B;
+}
+
+.el-menu-item.is-active {
+  color: #FF920B;
 }
 
 .el-badge__content.is-fixed {
@@ -136,5 +172,9 @@ a {
 .el-submenu__title {
   padding: 0;
   min-width: 0;
+}
+
+.el-badge__content {
+  border: none;
 }
 </style>
