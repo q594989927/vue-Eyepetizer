@@ -1,6 +1,6 @@
 <template>
   <div>
-    <topBar @search='_search'></topBar>
+    <topBar :placeholder="input" @search='_search'></topBar>
     <card :datas='lastList'></card>
     <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
   </div>
@@ -31,6 +31,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      input: state => state.input
+    })
   },
   methods: {
     _getList(start, count, q) {

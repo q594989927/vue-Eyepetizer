@@ -10,8 +10,12 @@ const store = new Vuex.Store({
     loading: true,
     feedfollow: [],
     follow: [],
+    input: null,
   },
   mutations: {
+    setInput(state, res) {
+      state.input = res
+    },
     setVideoId(state, res) {
       state.videoId = res
     },

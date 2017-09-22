@@ -1,9 +1,10 @@
 <template>
   <div class="clearfix">
-    <div class="el-card card titles" @click="_go(id)" v-if="titles">
-      <h3 v-html="titles"></h3>
-      <p v-html="subTitle"></p>
-      <p>查看更多</p>
+    <div class="card titles" ref="menuTitles" @click="_go(id)" v-if="titles">
+      <h3>
+        {{titles}}
+        <span>查看更多</span>
+      </h3>
     </div>
     <el-card class="card" :body-style="{ padding: '0px'}" v-for="(item,index) in datas" :key="index">
       <div class="video" @click='_play(item.data.playUrl,item.data.id)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
@@ -29,7 +30,6 @@
             <p>
               {{item.data.description}}
             </p>
-
           </div>
         </transition>
       </div>
@@ -102,7 +102,7 @@ export default {
     },
     _time(v) {
       return timeDiff(v)
-    }
+    },
   }
 }
 </script>
@@ -114,7 +114,6 @@ export default {
 }
 
 .card {
-  position: relative;
   width: 175px;
   height: 200px;
   margin: 20px 0 0 20px;
@@ -126,23 +125,28 @@ export default {
   height: 100px;
 }
 
+.titles:hover {
+  color: #FF920B;
+}
+
 .titles {
+  margin-left: 20px;
+  height: 40px;
+  line-height: 40px;
+  width: 175px;
   color: #fff;
-  background: rgba(0, 0, 0, .3);
-  text-align: center;
+  float: initial;
 }
 
 .titles>h3 {
   font-size: 18px;
   width: 100%;
   height: 40px;
-  line-height: 40px;
-  margin-top: 45px;
+  display: inline-block;
 }
 
-.titles>p {
-  font-size: 13px;
-  width: 100%;
+.titles span {
+  font-size: 12px;
   height: 40px;
   line-height: 40px;
 }

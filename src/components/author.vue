@@ -25,7 +25,7 @@
       </div>
     </div>
     <!-- <div class="detail"><div class="coverPhoto"></div></div> -->
-    <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
+    <load-more v-show="nextPageUrl" @currentChange="_currentChange"></load-more>
   </div>
 </template>
 <script>
@@ -49,7 +49,8 @@ export default {
       count: 9,
       n: 0,            //加载更多计数
       timer: null,
-      show: null
+      show: null,
+      nextPageUrl: null
     }
   },
   computed: {
@@ -74,6 +75,7 @@ export default {
         this.newList.pop()
         this._getNewList()
         this.lastList = this.lastList.concat(this.newList)
+        this.nextPageUrl = res.nextPageUrl
       })
     },
     _getAuthor(start, count) {

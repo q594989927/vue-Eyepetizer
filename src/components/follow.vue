@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="hint" v-if="!badge">-_-你没有关注任何内容,快去关注喜欢的作者吧~</div>
-    <div v-loading='loading&&newList.length'>
+    <div>
       <el-tabs class="fixedTop" v-model="name" v-if="follow[0]" type="card" closable @tab-remove="_remove" @tab-click="_tabClick">
         <el-tab-pane :key="item.name" v-for="(item, index) in follow" :label="item.name" :name="item.itemId.toString()">
         </el-tab-pane>
       </el-tabs>
       <div class="overFlowAuto conWrapper">
         <card :datas="lastList"></card>
-        <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
+        <load-more v-show="nextPageUrl" @currentChange="_currentChange"></load-more>
       </div>
     </div>
   </div>
@@ -29,11 +29,12 @@ export default {
     return {
       newList: [],
       lastList: [],
-      start: 0,
-      count: 9,
+      start: 1,
+      count: 12,
       n: 0,
       id: null,
       name: '',
+      nextPageUrl: null
     }
   },
   computed: {
@@ -54,14 +55,14 @@ export default {
     _getList(start, count, id) {
       apiAuthorVideoList(start, count, id).then(res => {
         this.lastList = res.itemList
-        this.newList = !res.nextPageUrl ? [] : " "
+        this.nextPageUrl = res.nextPageUrl
       })
     },
     _into(start, count, id) {
       apiAuthorVideoList(start, count, id).then(res => {
         this.newList = res.itemList
         this.lastList = this.lastList.concat(this.newList)
-        this.newList = !res.nextPageUrl ? [] : " "
+        this.nextPageUrl = res.nextPageUrl
       })
     },
     _tabClick(tab) {
@@ -92,10 +93,11 @@ export default {
       }
     },
     follow() {
-      if (this.newList.length && this.badge) {
+      if (this.badge && this.name == this.follow[0].itemId) {
         this._into(this.start, this.count, this.follow[0].itemId)
       } else {
-        this.lastList = this.newList = []
+        this.lastList = []
+        this.nextPageUrl = null
       }
     },
   },

@@ -4,10 +4,10 @@
       <el-tab-pane v-for="(item,index) in categoryNav" :key="index" :name="ids[index].toString()" :label="item.title">
       </el-tab-pane>
     </el-tabs>
-    <div class="conWrapper">
+    <div class="conWrapper clearfix">
       <card :datas="detailCategory"></card>
-      <div v-show="id==0" class="classify" v-for="(item,index) in lastList" :key="index">
-        <card @go='_go' :datas="item.data.itemList" :id="item.data.header.id" :titles="item.data.header.title" :subTitle="item.data.header.subTitle"></card>
+      <div v-show="id==0" class="clearfix" v-for="(item,index) in lastList" :key="index">
+        <card @go='_go' :datas="item.data.itemList" :id="item.data.header.id" :titles="item.data.header.title"></card>
       </div>
       <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
     </div>
@@ -33,7 +33,7 @@ export default {
       newList: [],
       detailCategory: [],
       start: 0,
-      count: 9,
+      count: 10,
       id: 0,
       n: 0,
       idstr: ''
@@ -42,9 +42,9 @@ export default {
   methods: {
     _getList(start, count) {
       apiCategory(start, count).then(res => {
+        this.newList = []
         this.newList = res.itemList
         this.lastList = this.lastList.concat(this.newList)
-        this.newList = !res.nextPageUrl ? [] : " "
       })
     },
     _getNavsId() {
@@ -57,26 +57,26 @@ export default {
     },
     _into(start, count, id) {
       apiDetailCategory(start, count, id).then(res => {
+
         this.newList = res.itemList.filter(el => {
           return el.type == "video"
         })
         this.detailCategory = this.detailCategory.concat(this.newList)
-        this.newList = !res.nextPageUrl ? [] : " "
       })
     },
     _changeId(tab) {
-      this.detailCategory = []
-      this.newList = []
       this.start = 0
       this.id = tab.name
-      if (this.id != 0) {
-        this._into(this.start, this.count, this.id)
-      }
     },
     _currentChange() {
       this.newList = []
       this.n++
       this.start = this.n * this.count
+      if (this.id != 0) {
+        this._into(this.start, this.count, this.id)
+      } else {
+        this._getList(this.start, this.count)
+      }
     },
     _duration(v) {
       return add2Zero(v)
@@ -88,10 +88,13 @@ export default {
     }
   },
   watch: {
-    start: function() {
+    id: function() {
       if (this.id != 0) {
         this._into(this.start, this.count, this.id)
+      } else {
+        this._getList(this.start, this.count)
       }
+      this.detailCategory = []
     },
   },
   created() {
@@ -103,10 +106,6 @@ export default {
 </script>
 
 <style scoped>
-.classify {
-  overflow: hidden;
-}
-
 .content img {
   width: 100%;
   height: 145px;

@@ -129,10 +129,10 @@ input {
 
 .fixedTop {
   position: absolute;
-  top: 10px;
+  top: 0;
   width: 955px;
   padding: 0 20px;
-  height: 50px;
+  height: 45px;
   background: #fff;
   z-index: 99;
 }
@@ -143,10 +143,18 @@ input {
 
 .conWrapper {
   width: 100%;
-  height: 660px;
+  height: 675px;
   position: absolute;
-  top: 60px;
+  top: 45px;
   overflow: auto;
+}
+
+.el-loading-mask {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.el-loading-spinner .path {
+  stroke: #FF920B;
 }
 
 .el-menu {

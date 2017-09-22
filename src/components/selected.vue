@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <topBar></topBar>
+    <topBar :isRouter="isRouter" @search='_search'></topBar>
     <div class="slide clearfix">
       <transition-group tag="div" class="carouselWrap" ref="carouselWrap" name='image' @click="_change">
         <div class="carousel" :class="{active:index==active}" v-show='index==active' v-for="(item,index) in newList" :key="index">
@@ -62,7 +62,7 @@ export default {
   },
   data() {
     return {
-      input: null,
+      isRouter: true,
       newList: [],
       lastList: [],
       date: '',
@@ -73,7 +73,7 @@ export default {
       timer: null,
       active: 0,
       autoTimer: null,
-      interval: 40000,
+      interval: 4000,
       newListLength: null,
     }
   },
@@ -108,7 +108,7 @@ export default {
     },
     _search() {
 
-      console.log(this.date)
+      console.log()
     },
     _change(n) {
       this.active = n

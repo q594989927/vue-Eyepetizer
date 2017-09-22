@@ -1,25 +1,45 @@
 <template>
   <div class="topBar">
     <div class="searchBar">
-      <input v-model="input" type="text">
-      <span @click="_search(input)" class="search">搜索</span>
+      <input v-model="val" @change='_change(val)' type="text">
+      <router-link v-if="isRouter" class="search" to="/search">搜索</router-link>
+      <span v-else @click="_search(input)" class="search">搜索</span>
     </div>
   </div>
 </template>
 
 <script>
+import { mapMutations, mapState } from 'vuex'
 export default {
   name: 'topBar',
-  data() {
-    return {
-      input: null,
+  props: {
+    isRouter: {
+      type: Boolean
     }
   },
+  data() {
+    return {
+      val: null,
+    }
+  },
+  computed: {
+    ...mapState({
+      input: state => state.input
+    })
+  },
   methods: {
-    _search(val) {
+    ...mapMutations([
+      'setInput'
+    ]),
+    _change(val) {
+      this.setInput(this.val)
       this.$emit('search', val)
     },
-
+    _search(val) {
+      if (val != '') {
+        this.$emit('search', val)
+      }
+    },
   }
 }
 </script>
