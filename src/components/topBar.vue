@@ -1,9 +1,9 @@
 <template>
   <div class="topBar">
     <div class="searchBar">
-      <input v-model="val" @change='_change(val)' type="text">
+      <input v-model="val" type="text">
       <router-link v-if="isRouter" class="search" to="/search">搜索</router-link>
-      <span v-else @click="_search(input)" class="search">搜索</span>
+      <span v-else @click="_search()" class="search">搜索</span>
     </div>
   </div>
 </template>
@@ -19,7 +19,7 @@ export default {
   },
   data() {
     return {
-      val: null,
+      val: '',
     }
   },
   computed: {
@@ -31,13 +31,10 @@ export default {
     ...mapMutations([
       'setInput'
     ]),
-    _change(val) {
-      this.setInput(this.val)
-      this.$emit('search', val)
-    },
-    _search(val) {
-      if (val != '') {
-        this.$emit('search', val)
+    _search() {
+      if (this.val !== '' && this.val.trim() !== '') {
+        this.setInput(this.val)
+        this.$emit('search')
       }
     },
   }

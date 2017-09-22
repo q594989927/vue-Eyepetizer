@@ -7,7 +7,7 @@ const store = new Vuex.Store({
     videoSrc: '',
     videoId: null,
     closed: true,
-    loading: true,
+    loading: false,
     feedfollow: [],
     follow: [],
     input: null,

@@ -1,6 +1,6 @@
 <template>
   <div class="clearfix">
-    <div class="card titles" ref="menuTitles" @click="_go(id)" v-if="titles">
+    <div class="titles" ref="menuTitles" @click="_go(id)" v-if="titles">
       <h3>
         {{titles}}
         <span>查看更多</span>
@@ -110,7 +110,7 @@ export default {
 <style scoped>
 .card:hover {
   transition: ease-out .2s;
-  transform: scale3d(1.05, 1.05, 1.05)
+  transform: scale3d(1.05, 1.05, 1.05)translateY(-5px)
 }
 
 .card {
@@ -125,22 +125,20 @@ export default {
   height: 100px;
 }
 
-.titles:hover {
+.titles>span:hover,
+.titles>h3:hover {
   color: #FF920B;
 }
 
 .titles {
-  margin-left: 20px;
+  margin: 20px 0 0 20px;
   height: 40px;
   line-height: 40px;
-  width: 175px;
   color: #fff;
-  float: initial;
 }
 
 .titles>h3 {
   font-size: 18px;
-  width: 100%;
   height: 40px;
   display: inline-block;
 }

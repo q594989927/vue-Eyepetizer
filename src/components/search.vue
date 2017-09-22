@@ -1,8 +1,13 @@
 <template>
   <div>
     <topBar :placeholder="input" @search='_search'></topBar>
-    <card :datas='lastList'></card>
-    <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
+    <div v-loading='loading' class="loading">
+      <div class="clearfix" v-for="(item,index) in collection" :key="index">
+        <card :datas="item.itemList" :id="item.header.id" :titles="item.header.title"></card>
+      </div>
+      <card :datas='lastList'></card>
+      <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
+    </div>
   </div>
 </template>
 
@@ -27,24 +32,42 @@ export default {
       count: 9,
       n: 0,
       id: null,
-      name: '',
+      collection: [],
     }
   },
   computed: {
     ...mapState({
+      loading: state => state.loading,
       input: state => state.input
     })
   },
   methods: {
+    ...mapMutations([
+      'setLoading'
+    ]),
     _getList(start, count, q) {
       apiSearch(start, count, q).then(res => {
-        this.newList = res.itemList
+        console.log(res)
+        this.setLoading(true)
+        this.newList = res.itemList.filter(el => {
+          return el.type == 'video'
+        })
+        res.itemList.filter(el => {
+          if (el.type == "videoCollectionWithBrief") {
+            this.collection.push(el.data)
+          }
+        })
+        console.log(this.collection)
         this.lastList = this.lastList.concat(this.newList)
         this.newList = !res.nextPageUrl ? [] : " "
+        this.setLoading(false)
       })
+
     },
     _search(val) {
-      this._getList(this.start, this.count, val)
+      this.lastList = []
+      console.log(this.input)
+      this._getList(this.start, this.count, this.input)
     },
     _currentChange() {
       this.newList = []
@@ -54,19 +77,18 @@ export default {
   },
 
   watch: {
-    start() {
-      this._getList(this.start, this.count, this.input)
-    },
-    input() {
-      this.lastList = []
-    }
+    // start() {
+    //   this._getList(this.start, this.count, this.input)
+    // },
   },
 }
 </script>
 
 <style scoped>
-.container {
-  padding: 0
+.loading {
+  height: 666px;
+  padding: 0;
+  overflow: auto;
 }
 
 .hint {
