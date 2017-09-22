@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-menu :router="true" :default-active="activeIndex" class="menu el-menu-vertical-demo">
+    <el-menu :router="true" :default-active="activeIndex" class="menu">
       <el-menu-item index="/selected">
         <i class="el-icon-my-index"></i>首页</el-menu-item>
       <el-menu-item index="/hot">
@@ -94,8 +94,8 @@ a {
 }
 
 #app {
-  width: 980px;
-  height: 880px;
+  width: 1120px;
+  height: 720px;
   overflow: hidden;
   box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
@@ -104,14 +104,14 @@ a {
 
 #app .menu {
   float: left;
-  width: 120px;
-  height: 880px;
+  width: 125px;
+  height: 720px;
 }
 
 .container {
   float: left;
-  height: 880px;
-  width: 860px;
+  height: 720px;
+  width: 995px;
   box-sizing: border-box;
   padding: 10px;
   overflow: auto;
@@ -125,19 +125,6 @@ a {
   height: 50px;
   background: #fff;
   z-index: 99;
-}
-
-.conWrapper {
-  width: 840px;
-  height: 830px;
-  position: absolute;
-  top: 50px;
-  overflow: auto;
-}
-
-.item {
-  /* margin-top: 10px;
-  margin-right: 40px; */
 }
 
 .el-badge__content.is-fixed {

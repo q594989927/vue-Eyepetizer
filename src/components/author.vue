@@ -1,5 +1,5 @@
 <template>
-  <div class="list" v-loading="!lastList.length">
+  <div v-loading="!lastList.length">
     <div>
       <div :class="{'author':!item.text}" v-for="(item,index)  in lastList" :key="index">
         <h3 class="title" v-if="item.text" v-html="item.text"></h3>
@@ -151,11 +151,6 @@ export default {
 </script>
 
 <style scoped>
-.list {
-  width: 100%;
-  overflow: hidden;
-}
-
 .author:hover {
   transition: ease-out .2s;
   transform: scale3d(1.02, 1.02, 1.05)

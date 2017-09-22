@@ -62,7 +62,6 @@ export default {
 }
 
 .playVideo>video {
-  margin: 50px;
   width: 880px;
 }
 

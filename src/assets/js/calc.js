@@ -22,4 +22,7 @@ export function timeDiff(s) {
     return Math.floor(m) + '分钟'
   }
 }
-
+export function getDate(t) {
+  var time = new Date(t).toDateString().substr(4, 6);
+  return time;
+}

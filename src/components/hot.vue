@@ -1,5 +1,5 @@
 <template>
-  <div class="list" v-loading="!lastList.length">
+  <div v-loading="!lastList.length">
     <card :datas="lastList"></card>
     <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
   </div>
@@ -57,11 +57,6 @@ export default {
 </script>
 
 <style scoped>
-.list {
-  width: 100%;
-  overflow: hidden;
-}
-
 .title {
   text-align: center;
 }

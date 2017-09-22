@@ -1,38 +1,42 @@
 <template>
   <div class="container">
-    <div class="search">
-      <el-input placeholder="请输入" icon="search" v-model="input" :on-icon-click="_search"></el-input>
+    <div class="search" @click="_search">
+      dddddd
     </div>
-    <div class="slide">
-      <el-carousel :interval="50000" trigger="click" height="370px">
-        <el-carousel-item v-for="(item,index) in newList" :key="index">
-          <div class="cover" @click='_play(item)'>
-            <img v-lazy='item.data.cover.detail'>
+    <div class="slide clearfix">
+      <transition-group tag="div" class="carouselWrap" ref="carouselWrap" name='image' @click="_change">
+        <div class="carousel" :class="{active:index==active}" v-show='index==active' v-for="(item,index) in newList" :key="index">
+          <div class="cover" @click='_play(item.data.playUrl)'>
+            <img :src='item.data.cover.feed'>
             <h3>{{item.data.title}}</h3>
             <p>{{item.data.slogan}}</p>
           </div>
-        </el-carousel-item>
-      </el-carousel>
-      <ul class="indicator">
-        <li v-for="(item,index) in newList" :key="index">
-          <p class="text">{{item.data.title}}
-            <span>{{item.data.slogan}}</span>
-          </p>
-
-        </li>
-      </ul>
+        </div>
+      </transition-group>
+      <div class="indicator">
+        <div class="mask" v-for="(item,index) in newList" :key="index">
+          <img class="blur" v-show="index == active" :src="item.data.cover.blurred">
+          <div v-if="index == active" class="upside"></div>
+        </div>
+        <div class="txtList" :class="{five:newList.length==5}">
+          <div v-for="(item,index) in newList" @click="_change(index)" :key="index">
+            <p :class="{active:index == active}" class="text ellipsis">{{item.data.title}} </p>
+            <span class="ellipsis">{{item.data.slogan}}</span>
+          </div>
+        </div>
+      </div>
     </div>
-
     <div class="list">
+      <h3 class="title" v-html="date"></h3>
       <el-card class="card" :body-style="{ padding: '0px'}" v-for="(item,index) in lastList" :key="index">
         <div @click='_play(item)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
           <div class="image">
-            <video v-if="index===num" width="260" class="mouseShow" autoplay muted="muted" :src="src"></video>
-            <img v-else :src="item.data.cover.feed">
+            <video v-if="index===num" class="video" autoplay muted="muted" :src="src"></video>
+            <img v-else :src="item.data.cover.detail">
           </div>
         </div>
         <div style="padding: 8px;">
-          <p class="txt">{{item.data.title}}</p>
+          <p class="txt ellipsis">{{item.data.title}}</p>
           <div class="bottom clearfix">
             <span class="time">{{_duration(item.data.duration)}}</span>
             <el-button type="text" class="button">{{item.data.category}}</el-button>
@@ -40,12 +44,16 @@
         </div>
       </el-card>
     </div>
+    <div>
+      <button>next</button>
+      <button>prev</button>
+    </div>
   </div>
 </template>
 
 <script>
 import { apiSelected } from '@/assets/api/getDatas'
-import { add2Zero } from '@/assets/js/calc'
+import { add2Zero, getDate } from '@/assets/js/calc'
 import { mapGetters, mapState, mapMutations } from 'vuex'
 import search from './search'
 export default {
@@ -55,34 +63,64 @@ export default {
   },
   data() {
     return {
-      itemList: [],
+      input: null,
       newList: [],
       lastList: [],
+      lastLi: [],
+      date: '',
+      nextPageUrl: null,
       num: -1,
       src: '',
       timer: null,
-      input: null,
+      active: 0,
+      autoTimer: null,
+      interval: 40000,
+      newListLength: null,
     }
   },
   methods: {
     ...mapMutations([
       'setVideoSrc',
-      'setTap'
+      'setTap',
+      'setVideoId'
     ]),
     _getList() {
-      this.newList = this.itemList.filter(obj => {
-        return obj.type == 'video' && obj.tag == '0'
-      })
-      this.lastList = this.itemList.filter(obj => {
-        return obj.type == 'video' && obj.tag == '1'
+      apiSelected().then(res => {
+        this.nextPageUrl = res.nextPageUrl
+        this.newList = res.itemList.filter(obj => {
+          return obj.type == 'video' && obj.tag == '0'
+        })
+        this.newListLength = this.newList.length
+
+        this.lastList = res.itemList.filter(obj => {
+          return obj.type == 'video' && obj.tag == '1'
+        })
+        res.itemList.forEach(el => {
+          if (el.type == "textHeader") {
+            this.date = el.data.text.split('-').join('').split(',')[0]
+          }
+        })
       })
     },
     _search() {
 
+      console.log(this.date)
     },
-    _play(i) {
-      this.setVideoSrc(i.data.playUrl)
+    _change(n) {
+      this.active = n
+      clearTimeout(this.autoTimer)
+    },
+    _autoPlay() {
+      this.autoTimer = setTimeout(() => {
+        this.active++
+        this.active = this.active % this.newListLength
+      }, this.interval)
+    },
+    _play(url) {
+      this.setVideoSrc(url)
+      //this.setVideoId(id)
       this.setTap(false)
+      clearTimeout(this.timer)
     },
     _mouseEnter(item, index) {
       this.timer = setTimeout(() => {
@@ -101,13 +139,18 @@ export default {
   computed: {
 
   },
-  created() {
-    apiSelected().then(res => {
-      this.itemList = res.itemList
-      this._getList();
-    })
-  }
+  watch: {
+    active() {
+      this._autoPlay()
+    }
+  },
+  mounted() {
+    this._autoPlay()
+  },
 
+  created() {
+    this._getList();
+  }
 }
 </script>
 
@@ -117,74 +160,163 @@ export default {
 }
 
 .search {
-  width: 700px;
-  border-radius: 50px;
-  margin: 10px auto;
+
+
+  height: 54px;
+  background: #ccc;
+}
+
+.image-enter-active,
+.image-leave-active {
+  transition: opacity .5s
+}
+
+.image-enter,
+.image-leave-to {
+  opacity: 0
+}
+
+.container {
+  padding: 0;
 }
 
 .slide {
+  height: 370px;
+  overflow: hidden;
+}
+
+
+.carouselWrap {
   position: relative;
+  float: left;
+  width: 780px;
+  height: 370px;
+  z-index: 0;
 }
 
-.indicator {
-  width: 200px;
+.carousel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: inline-block;
+  overflow: hidden;
+  z-index: 0;
 }
 
-.indicator>li {
-  font-size: 14px
+.active {
+  z-index: 1;
 }
 
-.indicator .text {
-  width: 200px;
-}
-
-.el-carousel {
-  display: inline-block;
-  width: 650px;
-}
-
-.el-carousel__item .cover {
+.carousel .cover {
   position: relative;
   color: #fff;
-  text-align: center
+  text-align: center;
+  width: 780px;
+  height: 370px;
+  overflow: hidden;
 }
 
-.el-carousel__item .cover img {
+.carousel .cover img {
   width: 100%;
 }
 
-.el-carousel__item .cover h3 {
+.carousel .cover h3,
+.carousel .cover p {
   position: absolute;
-  bottom: 20%;
-  left: calc( 50% - 170px);
-  width: 340px;
+  bottom: 18%;
+  left: calc( 50% - 200px);
+  width: 400px;
+  font-size: 16px;
 }
 
-.el-carousel__item .cover p {
-  position: absolute;
+.carousel .cover p {
   bottom: 10%;
-  left: calc( 50% - 170px);
+  font-size: 12px;
+}
+
+.indicator {
+  position: relative;
+  float: right;
+  width: 215px;
+  height: 370px;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 185px;
+  height: 60px;
+}
+
+.mask .upside {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 215px;
+  height: 370px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.mask .blur {
+  position: absolute;
+  left: -50px;
+  top: -50px;
+  height: 500px;
+}
+
+.five {
+  margin-top: 29px;
+}
+
+.txtList {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 180px;
+  height: auto;
+  padding: 20px 0 20px 20px;
+  cursor: pointer;
+  text-shadow: 1px 1px rgba(0, 0, 0, .2)
+}
+
+.txtList>div:nth-child(1)>p:nth-child(1) {
+  margin-top: 1px;
+}
+
+.txtList .text {
+  margin-top: 15px;
   font-size: 14px;
-  width: 340px;
+  color: #f1f1f1;
 }
 
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
+.txtList span {
+  padding-top: 1px;
+  font-size: 12px;
+  line-height: 20px;
+  display: block;
+  color: #eeeeee;
 }
 
-.el-carousel__item:nth-child(2n+1) {
-  background-color: #d3dce6;
+.txtList .active {
+  color: #FF920B;
+  font-size: 20px;
 }
 
 .list {
   width: 100%;
-  height: 520px;
-  overflow: auto;
+  height: 250px;
+  overflow: hidden;
 }
 
-.button {
-  float: right;
+.title {
+  padding-left: 20px;
+  line-height: 50px;
+  height: 50px;
 }
 
 .card:hover {
@@ -194,39 +326,20 @@ export default {
 
 .card {
   position: relative;
-  width: 260px;
-  height: 225px;
-  margin: 9px;
+  width: 172px;
+  margin-left: 20px;
+  overflow: hidden;
   float: left;
 }
 
-.txt {
-  font-size: 14px;
-  height: 30px;
-  width: 240px;
-}
-
-.time {
-  font-size: 13px;
-  color: #999;
-}
-
-.mouseShow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
 .image {
-  width: 260px;
-  height: 145px;
+  width: 172px;
+  height: 100px;
   overflow: hidden;
 }
 
 .image img {
   width: 100%;
-  height: 145px;
   display: block;
 }
 
@@ -234,6 +347,29 @@ export default {
   width: 30px;
   border-radius: 50%;
   vertical-align: top;
+}
+
+.txt {
+  font-size: 14px;
+  height: 30px;
+  width: 160px;
+}
+
+.time {
+  font-size: 13px;
+  color: #999;
+}
+
+.button {
+  float: right;
+}
+
+.video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 172px;
 }
 
 .desc {
