@@ -3,7 +3,7 @@
     <topBar :placeholder="input" @search='_search'></topBar>
     <div v-loading='loading' class="loading">
       <div class="clearfix" v-for="(item,index) in collection" :key="index">
-        <card :datas="item.itemList" :id="item.header.id" :titles="item.header.title"></card>
+        <card @go='_go' :datas="item.itemList" :id="item.header.id" :titles="item.header.title"></card>
       </div>
       <card :datas='lastList'></card>
       <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
@@ -74,12 +74,20 @@ export default {
       this.n++
       this.start = this.n * this.count
     },
+    _go(id) {
+      console.log(id)
+      // this.id = id
+      // this._into(this.start, this.count, this.id)
+    }
   },
 
   watch: {
     // start() {
     //   this._getList(this.start, this.count, this.input)
     // },
+    input() {
+      this._getList(this.start, this.count, this.input)
+    },
   },
 }
 </script>

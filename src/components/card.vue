@@ -169,7 +169,7 @@ export default {
 }
 
 .under>p {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 20px;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -1,7 +1,7 @@
 <template>
   <div class="topBar">
     <div class="searchBar">
-      <input v-model="val" type="text">
+      <input v-model="val" :placeholder="val" type="text" @change="_search">
       <router-link v-if="isRouter" class="search" to="/search">搜索</router-link>
       <span v-else @click="_search()" class="search">搜索</span>
     </div>
