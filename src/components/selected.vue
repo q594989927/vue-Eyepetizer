@@ -44,7 +44,7 @@
       </el-card>
     </div>
     <div class="btn">
-      <el-button :plain="true">
+      <el-button @click="_getNextList" :plain="true">
         <</el-button>
           <el-button @click="_getPrevList" :plain="true">></el-button>
     </div>
@@ -77,6 +77,8 @@ export default {
       autoTimer: null,
       interval: 4000,
       newListLength: null,
+      pages: [],
+      pagesCount: 0,
     }
   },
   computed: {
@@ -114,12 +116,30 @@ export default {
     _getList() {
       apiSelected().then(res => {
         this.getdatelist(res)
+        this.pages.push(this.toDate)
       })
     },
     _getPrevList() {
       apiPrevPage(this.nextPageUrlID).then(res => {
         this.getdatelist(res)
+        this.pages.push(this.toDate)
+        this.pagesCount++
+        console.log(this.pages)
       })
+    },
+    _getNextList() {
+      if (!this.pages.length) {
+        console.log("none")
+      } else {
+        this.pagesCount--
+        if (this.pagesCount >= 0) {
+          apiPrevPage(this.pages[this.pagesCount]).then(res => {
+            this.getdatelist(res)
+          })
+        } else {
+          console.log("none")
+        }
+      }
     },
     _change(n) {
       this.active = n
@@ -132,7 +152,6 @@ export default {
       }, this.interval)
     },
     _play(url, id) {
-      console.log()
       this.setVideoSrc(url)
       this.setVideoId(id)
       this.setTap(false)

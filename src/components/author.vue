@@ -1,30 +1,32 @@
 <template>
-  <div class="overFlowAuto" v-loading="!lastList.length">
-    <div class="clearfix">
-      <div :class="{'author':!item.text}" class="clearfix" v-for="(item,index)  in lastList" :key="index">
-        <h3 class="title" v-if="item.text" v-html="item.text"></h3>
-        <div class="clearfix" @mouseenter="_info(item.id,index)" v-if="item.title">
-          <i v-if="item.follow.followed" class="el-icon-my-followed"></i>
-          <img class="icon" v-lazy="item.icon">
-          <div class="text">
-            <p class="name ellipsis" v-html="item.title"></p>
-            <p class="txt ellipsis" v-html="item.description"></p>
-          </div>
-        </div>
-        <transition v-if="!item.text" name="el-fade-in">
-          <div v-show="index==show" @mouseenter="_stay(index)" @mouseleave="_out()" class="introWrap" ref="Intro">
-            <div v-if="intro.tabInfo" class="intro">
-              <p v-html="intro.pgcInfo.name"></p>
-              <p class="ellipsis" v-html="intro.pgcInfo.brief"></p>
-              <a class="tabList" href="javasript:;" v-for="(el,index) in  intro.tabInfo.tabList" :key="index" v-html="el.name"></a>
-              <el-button type="text" size="small" class="focusOn" v-if="item.follow.followed" @click="_setFollows(item.id,item.follow.followed,item.title)">已关注</el-button>
-              <el-button type="text" size="small" class="focusOn" v-else @click="_setFollows(item.id,item.follow.followed,item.title)">关注</el-button>
+  <div v-loading="!lastList.length">
+    <div class="conWrapper clearfix">
+      <div class="clearfix">
+        <div :class="{'author':!item.text}" class="clearfix" v-for="(item,index)  in lastList" :key="index">
+          <h3 class="title" v-if="item.text" v-html="item.text"></h3>
+          <div class="clearfix" @mouseenter="_info(item.id,index)" v-if="item.title">
+            <i v-if="item.follow.followed" class="el-icon-my-followed"></i>
+            <img class="icon" v-lazy="item.icon">
+            <div class="text">
+              <p class="name ellipsis" v-html="item.title"></p>
+              <p class="txt ellipsis" v-html="item.description"></p>
             </div>
           </div>
-        </transition>
+          <transition v-if="!item.text" name="el-fade-in">
+            <div v-show="index==show" @mouseenter="_stay(index)" @mouseleave="_out()" class="introWrap" ref="Intro">
+              <div v-if="intro.tabInfo" class="intro">
+                <p v-html="intro.pgcInfo.name"></p>
+                <p class="ellipsis" v-html="intro.pgcInfo.brief"></p>
+                <a class="tabList" href="javasript:;" v-for="(el,index) in  intro.tabInfo.tabList" :key="index" v-html="el.name"></a>
+                <el-button type="text" size="small" class="focusOn" v-if="item.follow.followed" @click="_setFollows(item.id,item.follow.followed,item.title)">已关注</el-button>
+                <el-button type="text" size="small" class="focusOn" v-else @click="_setFollows(item.id,item.follow.followed,item.title)">关注</el-button>
+              </div>
+            </div>
+          </transition>
+        </div>
       </div>
+      <load-more v-show="nextPageUrl" @currentChange="_currentChange"></load-more>
     </div>
-    <load-more v-show="nextPageUrl" @currentChange="_currentChange"></load-more>
   </div>
 </template>
 <script>
@@ -150,6 +152,11 @@ export default {
 </script>
 
 <style scoped>
+.conWrapper {
+  top: 0;
+  height: 720px;
+}
+
 .author:hover {
   transition: ease-out .2s;
   transform: scale3d(1.02, 1.02, 1.05)

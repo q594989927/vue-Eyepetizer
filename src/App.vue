@@ -120,20 +120,15 @@ input {
   z-index: 99;
 }
 
-.overFlowAuto {
-  overflow: auto;
-}
-
 .hint {
   position: absolute;
-  left: calc( 50% - 250px);
+  left: calc( 50% - 200px);
   top: calc( 50% - 100px);
   height: 200px;
-  width: 500px;
-  font-size: 18px;
+  width: 400px;
+  font-size: 16px;
   line-height: 30px;
   word-break: break-all;
-  text-indent: 30px;
   color: #fff;
 }
 
@@ -201,11 +196,7 @@ input {
   stroke: #FF920B;
 }
 
-.el-button:focus,
-.el-button:hover {
-  color: #FF920B;
-  border: 1px solid #FF920B;
-}
+
 
 .el-badge__content {
   background: #FF920B;

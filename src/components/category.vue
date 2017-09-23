@@ -1,7 +1,7 @@
 <template>
   <div v-loading="!lastList.length">
     <el-tabs class="fixedTop" type="card" v-model="idstr" @tab-click="_changeId">
-      <el-tab-pane v-for="(item,index) in categoryNav" :key="index" :name="ids[index].toString()" :label="item.title">
+      <el-tab-pane v-for="(item,index) in categoryNav" :key="index" :name="categoryNav[index].id.toString()" :label="item.name">
       </el-tab-pane>
     </el-tabs>
     <div class="conWrapper clearfix">
@@ -9,14 +9,14 @@
       <div v-show="id==0" class="clearfix" v-for="(item,index) in lastList" :key="index">
         <card @go='_go' :datas="item.data.itemList" :id="item.data.header.id" :titles="item.data.header.title"></card>
       </div>
-      <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
+      <load-more v-show="nextPageUrl" @currentChange="_currentChange"></load-more>
     </div>
   </div>
 </template>
 
 <script>
 import { add2Zero } from '@/assets/js/calc'
-import { apiCategory, apiDetailCategory } from '@/assets/api/getDatas'
+import { apiCategories, apiCategory, apiDetailCategory } from '@/assets/api/getDatas'
 import card from './card'
 import loadMore from './loadMore'
 export default {
@@ -27,36 +27,37 @@ export default {
   },
   data() {
     return {
-      categoryNav: [{ title: "最新" }],  //分类
-      ids: ['0'],
+      categoryNav: [{ id: 0, name: "最新" }],  //分类
       lastList: [],
       newList: [],
       detailCategory: [],
       start: 0,
-      count: 10,
+      count: 20,
       id: 0,
       n: 0,
-      idstr: ''
+      idstr: '',
+      nextPageUrl: null
     }
   },
   methods: {
     _getList(start, count) {
       apiCategory(start, count).then(res => {
+        this.nextPageUrl = res.nextPageUrl
         this.newList = []
         this.newList = res.itemList
         this.lastList = this.lastList.concat(this.newList)
       })
     },
     _getNavsId() {
-      apiCategory(this.start, 21).then(res => {
-        res.itemList.forEach(obj => {
-          this.categoryNav.push(obj.data.header)
-          this.ids.push((obj.data.header.id))
+      apiCategories().then(res => {
+        res.forEach(el => {
+          this.categoryNav.push(el)
         })
       })
     },
     _into(start, count, id) {
       apiDetailCategory(start, count, id).then(res => {
+        this.nextPageUrl = res.nextPageUrl
         this.newList = res.itemList.filter(el => {
           return el.type == "video"
         })
@@ -83,7 +84,6 @@ export default {
     _go(id) {
       this.idstr = id.toString()
       this.id = id
-      this._into(this.start, this.count, this.id)
     }
   },
   watch: {

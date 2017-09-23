@@ -132,7 +132,7 @@ export default {
 }
 
 .titles {
-  margin: 20px 0 0 20px;
+  margin: 0 0 5px 20px;
   height: 40px;
   line-height: 40px;
   color: #fff;

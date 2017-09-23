@@ -1,7 +1,7 @@
 <template>
   <div class="topBar">
     <div class="searchBar">
-      <input v-model="val" placeholder="请输入" :value="input" type="text">
+      <input v-model="val" :value="val" :placeholder="input" type="text">
       <span class="search" @click="_go">搜索</span>
     </div>
     <p v-if="total" class="total clearfix">找到关于
@@ -39,17 +39,16 @@ export default {
       'setInput',
     ]),
     _go() {
-
       if (this.val !== '' && this.val.trim() !== '') {
         console.log("go", this.val)
+        this.$router.push('/search')
         this.setInput(this.val)
         this.$emit('search', this.val)
-        this.$router.push('/search')
       }
     },
-    _search() {
-
-    },
+  },
+  created() {
+    this.val = this.input
   }
 }
 </script>

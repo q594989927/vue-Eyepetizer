@@ -34,7 +34,7 @@ export default {
       newList: [],
       lastList: [],
       start: 0,
-      count: 20,
+      count: 5,
       n: 0,
       id: null,
       collection: [],
@@ -54,8 +54,8 @@ export default {
       'setLoading'
     ]),
     _getList(start, count, q) {
+      this.setLoading(true)
       apiSearch(start, count, q).then(res => {
-        console.log(res)
         this.newList = res.itemList.filter(el => {
           return el.type == 'video'
         })
@@ -69,8 +69,8 @@ export default {
         this.setLoading(false)
         this.total = res.total
         setTimeout(() => {
-          if (this.nextPageUrl == null) {
-            this.hint = true
+          if (!this.total) {
+            //this.hint = true
           }
         }, 500)
       })
@@ -78,8 +78,6 @@ export default {
     },
     _search(val) {
       this.lastList = []
-      this.setLoading(true)
-      console.log("_search", val)
       this._getList(this.start, this.count, val)
     },
     _currentChange() {
@@ -99,6 +97,11 @@ export default {
       this._getList(this.start, this.count, this.input)
     },
   },
+  created() {
+    if (this.input) {
+      this._getList(this.start, this.count, this.input)
+    }
+  }
 }
 </script>
 

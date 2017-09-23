@@ -2,7 +2,7 @@
   <div class="play" v-if="!closed">
     <div class="playVideo">
       <video controls="controls" :src="videoSrc" @mouseover="_show" @mouseout="_hidden"></video>
-      <div @mouseover="_show" @mouseout="_hidden" class="playerMenu">
+      <div @mouseover="_show" @mouseout="_hidden" class="playerMenu clearfix">
         <p v-if="tap" @click='_closed'>关闭</p>
         <p v-if="tap" @click='_closed'>收藏</p>
       </div>
@@ -83,8 +83,8 @@ export default {
 .playVideo .playerMenu {
   text-align: center;
   position: absolute;
-  bottom: 40px;
-  right: -2px;
+  top: 0;
+  right: 100px;
   font-size: 14px;
   line-height: 30px;
   color: #FF920B;
@@ -94,7 +94,7 @@ export default {
 .playerMenu>p {
   height: 30px;
   width: 45px;
-  border-radius: 0 5px 5px 0;
+  border-radius: 5px 5px 0 0;
   background: #fff;
   margin-bottom: 5px;
 }

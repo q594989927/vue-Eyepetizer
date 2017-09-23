@@ -61,7 +61,6 @@ export default {
     },
     _into(start, count, id) {
       apiAuthorVideoList(start, count, id).then(res => {
-        console.log(res)
         this.lastList = res.itemList
         this.nextPageUrl = res.nextPageUrl
       })
@@ -78,7 +77,6 @@ export default {
       if (this.follow[0]) {
         if (targetName == this.id) {
           this._into(this.start, this.count, this.follow[0].itemId)
-          console.log(1)
           this.name = this.follow[0].itemId.toString()
         }
       } else {
@@ -98,6 +96,8 @@ export default {
           this.name = this.follow[0].itemId.toString()
         }
         this.id = this.follow[0].itemId
+      } else {
+        this.lastList = []
       }
     }
   },

@@ -22,8 +22,21 @@ export function apiHot(start, count) {
     return response.json();
   })
 }
+
+export function apiRanklist(cycle) {
+  let url = '/api/v3/ranklist?strategy=' + cycle
+  return fetch(url).then(response => {
+    return response.json();
+  })
+}
 export function apiCategory(start, count) {
   let url = '/api/v4/discovery/category?start=' + start + '&num=' + count
+  return fetch(url).then(response => {
+    return response.json();
+  })
+}
+export function apiCategories() {
+  let url = '/api/v4/categories'
   return fetch(url).then(response => {
     return response.json();
   })
