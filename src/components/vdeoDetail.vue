@@ -1,20 +1,20 @@
 <template>
-  <div class="vdeoDetail">
-    <div class="title">
+  <div class="vdeoDetail clearfix">
+    <div class="title clearfix">
       <h3 class="text" v-if="headerText" v-html="headerText"></h3>
       <el-button v-if="videoId" class="random" @click="_random">
         随便看看
         <i class="el-icon-more"></i>
       </el-button>
     </div>
-    <div class="detail" v-for="(item,index) in list" :key="index">
+    <div @click="_play(item)" class="detail" v-for="(item,index) in list" :key="index">
       <div class="cover">
         <img v-lazy='item.data.cover.detail'>
       </div>
       <div class="intro">
         <img v-if="item.data.author" class="icon" v-lazy="item.data.author.icon">
         <p v-if="item.data.author" class="author ellipsis">{{item.data.author.name}}</p>
-        <p class="desc" v-html="item.data.description"></p>
+        <p class="title ellipsis" v-html="item.data.title"></p>
       </div>
     </div>
   </div>
@@ -41,7 +41,8 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'setVideoId'
+      'setVideoId',
+      'setVideoSrc',
     ]),
     _show(id) {
       apiVdeoDetail(id).then(res => {
@@ -54,6 +55,10 @@ export default {
         })
         this.list = res.itemList.splice(1)
       })
+    },
+    _play(i) {
+      console.log(i.data.playUrl)
+      this.setVideoSrc(i.data.playUrl)
     },
     _random() {
       let n = this.tempId[parseInt(Math.random() * 5)]
@@ -72,19 +77,18 @@ export default {
 
 <style scoped>
 .vdeoDetail {
-  text-align: center;
+  text-align: -center;
   background: #fff;
 }
 
-.title {
-  text-align: left;
+.vdeoDetail>.title {
   overflow: hidden;
-  margin-bottom: 10px;
+  width: 980px;
+  margin: 10px;
 }
 
 .text {
   float: left;
-  padding-left: 20px;
   font-size: 18px;
   line-height: 30px;
 }
@@ -95,26 +99,24 @@ export default {
   padding: 0 2px;
   font-size: 14px;
   line-height: 26px;
-  margin-right: 20px;
 }
 
 .detail:hover {
   transition: ease-out .2s;
-  transform: scale3d(1.05, 1.05, 1.05)
+  transform: scale3d(1.05, 1.05, 1.05) translateY(-10px)
 }
 
 .detail {
   width: 180px;
-  height: 220px;
-  margin: 5px;
+  height: 170px;
+  margin: 10px 10px 20px;
   display: inline-block;
   vertical-align: top;
   text-align: left;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12), 0 0 6px 0 rgba(0, 0, 0, .04);
 }
 
 .cover {
-  display: inline-block;
+  display: block;
   width: 180px;
   height: 100px;
   overflow: hidden;
@@ -127,18 +129,9 @@ export default {
 
 .intro {
   width: 160px;
-  margin: 10px 10px 0 10px;
+  height: 55px;
+  margin: 5px;
   font-size: 14px;
-  line-height: 20px;
-}
-
-.desc {
-  margin-top: 10px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
 }
 
 .icon {
@@ -153,5 +146,12 @@ export default {
   line-height: 30px;
   padding-left: 5px;
   display: inline-block;
+  color: #999;
+}
+
+.intro>.title {
+  font-size: 14px;
+  width: 170px;
+  height: 20px;
 }
 </style>

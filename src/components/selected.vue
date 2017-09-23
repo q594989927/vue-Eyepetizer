@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <topBar :isRouter="isRouter" @search='_search'></topBar>
+    <topBar></topBar>
     <div class="slide clearfix">
       <transition-group tag="div" class="carouselWrap" ref="carouselWrap" name='image' @click="_change">
         <div class="carousel" :class="{active:index==active}" v-show='index==active' v-for="(item,index) in newList" :key="index">
-          <div class="cover" @click='_play(item.data.playUrl)'>
+          <div class="cover" @click='_play(item.data.playUrl,item.data.id)'>
             <img :src='item.data.cover.feed'>
             <h3>{{item.data.title}}</h3>
             <p>{{item.data.slogan}}</p>
@@ -27,7 +27,7 @@
     <div class="list">
       <h3 class="title" v-html="date"></h3>
       <el-card class="card" :class="{six:lastList.length==6}" :body-style="{ padding: '0px'}" v-for="(item,index) in lastList" :key="index">
-        <div @click='_play(item)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
+        <div @click='_play(item.data.playUrl,item.data.id)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
           <div :class="{six:lastList.length==6}" class="image">
             <video v-if="index===num" :class="{six:lastList.length==6}" class="video" autoplay muted="muted" :src="src"></video>
             <img v-else :src="item.data.cover.detail">
@@ -62,7 +62,6 @@ export default {
   },
   data() {
     return {
-      isRouter: true,
       newList: [],
       lastList: [],
       date: '',
@@ -106,10 +105,6 @@ export default {
         })
       })
     },
-    _search() {
-
-      console.log()
-    },
     _change(n) {
       this.active = n
       clearTimeout(this.autoTimer)
@@ -120,9 +115,11 @@ export default {
         this.active = this.active % this.newListLength
       }, this.interval)
     },
-    _play(url) {
+    _play(url, id) {
+      console.log()
       this.setVideoSrc(url)
-      //this.setVideoId(id)
+
+      // this.setVideoId(id)
       this.setTap(false)
       clearTimeout(this.timer)
     },
@@ -144,7 +141,7 @@ export default {
   watch: {
     active() {
       this._autoPlay()
-    }
+    },
   },
   mounted() {
     this._autoPlay()
@@ -309,7 +306,7 @@ export default {
   line-height: 50px;
   height: 50px;
   color: #fff;
-  font-style: italic;
+  font-family: 'Lobster'
 }
 
 .card:hover {

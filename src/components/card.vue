@@ -116,7 +116,7 @@ export default {
 .card {
   width: 175px;
   height: 200px;
-  margin: 20px 0 0 20px;
+  margin: 0 0 20px 20px;
   float: left;
 }
 

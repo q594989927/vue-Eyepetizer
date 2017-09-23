@@ -4,15 +4,20 @@ import { getSelected } from '@/assets/api/getDatas'
 Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
+    activeIndex: '/selected',
     videoSrc: '',
     videoId: null,
     closed: true,
     loading: false,
     feedfollow: [],
     follow: [],
-    input: null,
+    input: '请输入',
   },
   mutations: {
+    setActiveIndex(state, res) {
+      state.activeIndex = res
+      console.log(res)
+    },
     setInput(state, res) {
       state.input = res
     },

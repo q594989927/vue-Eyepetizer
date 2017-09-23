@@ -1,9 +1,8 @@
 <template>
   <div class="topBar">
     <div class="searchBar">
-      <input v-model="val" :placeholder="val" type="text" @change="_search">
-      <router-link v-if="isRouter" class="search" to="/search">搜索</router-link>
-      <span v-else @click="_search()" class="search">搜索</span>
+      <input v-model="val" :placeholder="input" type="text" @change="_search">
+      <span class="search" @click="_go">搜索</span>
     </div>
   </div>
 </template>
@@ -29,8 +28,13 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'setInput'
+      'setInput',
+      'setActiveIndex'
     ]),
+    _go() {
+      this.setActiveIndex('/search')
+      this.$router.push('/search')
+    },
     _search() {
       if (this.val !== '' && this.val.trim() !== '') {
         this.setInput(this.val)
@@ -81,5 +85,9 @@ export default {
   text-align: center;
   border: 1px solid #424242;
   cursor: pointer;
+}
+
+.search:hover {
+  color: #FF920B;
 }
 </style>

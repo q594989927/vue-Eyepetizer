@@ -24,7 +24,6 @@
         </transition>
       </div>
     </div>
-    <!-- <div class="detail"><div class="coverPhoto"></div></div> -->
     <load-more v-show="nextPageUrl" @currentChange="_currentChange"></load-more>
   </div>
 </template>
@@ -106,12 +105,11 @@ export default {
       })
     },
     _info(v, index) {
-      this.setLoading(true)
       this.show = index
       this.timer = setTimeout(() => {
         this.id = v
         this._getAuthorDetail(this.id)
-      }, 100)
+      }, 20)
     },
     _out() {
       this.show = null
@@ -124,7 +122,6 @@ export default {
     _getAuthorDetail(id) {
       apiAuthorDetail(id).then(res => {
         this.intro = res
-        // this.setLoading(false)
       })
     },
     _currentChange() {
@@ -165,6 +162,7 @@ export default {
   width: 305px;
   height: 120px;
   background: #fff;
+  border-radius: 4px;
 }
 
 .title {
@@ -178,7 +176,7 @@ export default {
   position: absolute;
   top: 5px;
   right: 5px;
-  color: #f40;
+  color: #FF920B;
 }
 
 .icon {
@@ -215,6 +213,7 @@ export default {
   width: 315px;
   height: 130px;
   background: #fff;
+  border-radius: 4px;
 }
 
 .intro {
@@ -242,7 +241,8 @@ export default {
 
 .focusOn {
   font-size: 14px;
-  color: #F40;
+  color: #FF920B;
+  ;
 }
 
 .tabList {

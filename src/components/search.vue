@@ -1,12 +1,12 @@
 <template>
   <div>
-    <topBar :placeholder="input" @search='_search'></topBar>
+    <topBar @search='_search'></topBar>
     <div v-loading='loading' class="loading">
       <div class="clearfix" v-for="(item,index) in collection" :key="index">
         <card @go='_go' :datas="item.itemList" :id="item.header.id" :titles="item.header.title"></card>
       </div>
       <card :datas='lastList'></card>
-      <load-more v-show="newList.length" @currentChange="_currentChange"></load-more>
+      <load-more v-show="nextPageUrl" @currentChange="_currentChange"></load-more>
     </div>
   </div>
 </template>
@@ -29,10 +29,11 @@ export default {
       newList: [],
       lastList: [],
       start: 0,
-      count: 9,
+      count: 20,
       n: 0,
       id: null,
       collection: [],
+      nextPageUrl: null
     }
   },
   computed: {
@@ -57,9 +58,8 @@ export default {
             this.collection.push(el.data)
           }
         })
-        console.log(this.collection)
         this.lastList = this.lastList.concat(this.newList)
-        this.newList = !res.nextPageUrl ? [] : " "
+        this.nextPageUrl = res.nextPageUrl
         this.setLoading(false)
       })
 
@@ -82,9 +82,9 @@ export default {
   },
 
   watch: {
-    // start() {
-    //   this._getList(this.start, this.count, this.input)
-    // },
+    start() {
+      this._getList(this.start, this.count, this.input)
+    },
     input() {
       this._getList(this.start, this.count, this.input)
     },

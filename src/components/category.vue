@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="!lastList.length">
+  <div v-loading="!lastList.length" v-if="categoryNav.length>1">
     <el-tabs class="fixedTop" type="card" v-model="idstr" @tab-click="_changeId">
       <el-tab-pane v-for="(item,index) in categoryNav" :key="index" :name="ids[index].toString()" :label="item.title">
       </el-tab-pane>
@@ -27,7 +27,7 @@ export default {
   },
   data() {
     return {
-      categoryNav: [{ title: "热门" }],  //分类
+      categoryNav: [{ title: "最新" }],  //分类
       ids: ['0'],
       lastList: [],
       newList: [],

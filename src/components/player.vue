@@ -30,7 +30,6 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'setVideoSrc',
       'setTap'
     ]),
     _show() {
@@ -47,22 +46,27 @@ export default {
       this.setTap(true)
     }
   },
+  watch: {
+
+  }
 }
 </script>
 
 <style scoped>
 .play {
-  position: fixed;
+  position: absolute;
+  left: 0;
+  top: 0;
   z-index: 999;
-  width: 980px;
-  height: 880px;
-  margin: 0 auto;
+  width: 1120px;
+  height: 720px;
+  margin: 80 auto;
   background: #fff;
   overflow: hidden;
 }
 
 .playVideo>video {
-  width: 880px;
+  width: 835px;
 }
 
 .playVideo span {
@@ -78,5 +82,12 @@ export default {
   background: #1F0716;
   border-radius: 5px 5px 5px 0;
   cursor: pointer;
+}
+
+.vdeoDetail {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
 }
 </style>

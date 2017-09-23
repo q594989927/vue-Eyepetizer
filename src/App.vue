@@ -31,13 +31,16 @@ export default {
   name: 'app',
   data() {
     return {
-      activeIndex: '/selected'
+
     }
   },
   computed: {
     ...mapGetters([
       'badge'
     ]),
+    ...mapState({
+      activeIndex: state => state.activeIndex
+    })
   },
   components: {
     player
@@ -104,6 +107,7 @@ input {
 }
 
 #app {
+  position: relative;
   width: 1120px;
   height: 720px;
   overflow: hidden;
@@ -143,9 +147,9 @@ input {
 
 .conWrapper {
   width: 100%;
-  height: 675px;
+  height: 655px;
   position: absolute;
-  top: 45px;
+  top: 65px;
   overflow: auto;
 }
 
@@ -176,6 +180,7 @@ input {
 }
 
 .el-badge__content {
+  background: #FF920B;
   border: none;
 }
 

@@ -30,7 +30,7 @@ export default {
       newList: [],
       lastList: [],
       start: 1,
-      count: 12,
+      count: 15,
       n: 0,
       id: null,
       name: '',
@@ -54,14 +54,15 @@ export default {
     ]),
     _getList(start, count, id) {
       apiAuthorVideoList(start, count, id).then(res => {
-        this.lastList = res.itemList
+        this.newList = res.itemList
+        this.lastList = this.lastList.concat(this.newList)
         this.nextPageUrl = res.nextPageUrl
       })
     },
     _into(start, count, id) {
       apiAuthorVideoList(start, count, id).then(res => {
-        this.newList = res.itemList
-        this.lastList = this.lastList.concat(this.newList)
+        console.log(res)
+        this.lastList = res.itemList
         this.nextPageUrl = res.nextPageUrl
       })
     },
@@ -71,40 +72,46 @@ export default {
       this.id = parseInt(tab.name)
       this._into(this.start, this.count, this.id)
     },
-    _currentChange() {
-      this.newList = []
-      this.n++
-      this.start = this.n * this.count
-    },
     _remove(targetName) {
       this.setFeedFollowed({ 'itemId': targetName, "followed": !false })
       this.removeFollowed(targetName)
-    },
-  },
-
-  watch: {
-    start() {
-      this._into(this.start, this.count, this.id)
-    },
-    badge() {
-      if (!this.newList.length && this.badge) {
-        this.name = this.follow[0].itemId.toString()
-        this._getList(this.start, this.count, this.follow[0].itemId)
-      }
-    },
-    follow() {
-      if (this.badge && this.name == this.follow[0].itemId) {
-        this._into(this.start, this.count, this.follow[0].itemId)
+      if (this.follow[0]) {
+        if (targetName == this.id) {
+          this._into(this.start, this.count, this.follow[0].itemId)
+          console.log(1)
+          this.name = this.follow[0].itemId.toString()
+        }
       } else {
         this.lastList = []
         this.nextPageUrl = null
       }
     },
+    _currentChange() {
+      this.newList = []
+      this.n++
+      this.start = this.n * this.count
+    },
+    _badgeChange() {
+      if (this.badge) {
+        if (!this.lastList.length) {
+          this._into(this.start, this.count, this.follow[0].itemId)
+          this.name = this.follow[0].itemId.toString()
+        }
+        this.id = this.follow[0].itemId
+      }
+    }
+  },
+
+  watch: {
+    start() {
+      this._getList(this.start, this.count, this.id)
+    },
+    badge() {
+      this._badgeChange()
+    },
   },
   created() {
-    if (this.follow[0]) {
-      this._getList(this.start, this.count, this.follow[0].itemId)
-    }
+    this._badgeChange()
   }
 
 }
