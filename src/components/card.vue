@@ -71,7 +71,8 @@ export default {
       'setTap',
       'setVideoId'
     ]),
-    _play(url, id) {
+    _play(url, id, i) {
+      console.log(this.datas)
       this.setVideoSrc(url)
       this.setVideoId(id)
       this.setTap(false)

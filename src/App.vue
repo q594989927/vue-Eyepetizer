@@ -137,7 +137,6 @@ input {
   width: 955px;
   padding: 0 20px;
   height: 45px;
-  background: #fff;
   z-index: 99;
 }
 
@@ -173,6 +172,12 @@ input {
 .el-menu-item:hover {
   background: #252525;
   color: #FF920B;
+}
+
+.el-button:focus,
+.el-button:hover {
+  color: #FF920B;
+  border: 1px solid #FF920B;
 }
 
 .el-menu-item.is-active {
@@ -216,5 +221,6 @@ input {
 
 .el-card {
   border: none;
+  box-shadow: none;
 }
 </style>

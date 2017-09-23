@@ -37,7 +37,7 @@
           <p :class="{six:lastList.length==6}" class="txt ellipsis">{{item.data.title}}</p>
           <div class="bottom clearfix">
             <span class="time">{{_duration(item.data.duration)}}</span>
-            <el-button type="text" class="button">{{item.data.category}}</el-button>
+            <span class="button">{{item.data.category}}</span>
           </div>
         </div>
       </el-card>
@@ -297,7 +297,7 @@ export default {
 
 .list {
   width: 100%;
-  height: 250px;
+  height: 220px;
   overflow: hidden;
 }
 
@@ -316,7 +316,8 @@ export default {
 
 .card {
   position: relative;
-  width: 172px;
+  width: 175px;
+  height: 170px;
   margin-left: 20px;
   overflow: hidden;
   float: left;
@@ -357,8 +358,9 @@ export default {
   width: 130px;
 }
 
+.button,
 .time {
-  line-height: 34px;
+  line-height: 24px;
   font-size: 13px;
   color: #999;
 }
@@ -390,7 +392,7 @@ export default {
 }
 
 .btn {
-  margin-left: 20px;
+  margin: 20px;
 }
 
 .el-button {

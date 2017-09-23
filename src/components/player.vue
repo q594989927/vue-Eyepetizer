@@ -2,7 +2,10 @@
   <div class="play" v-if="!closed">
     <div class="playVideo">
       <video controls="controls" :src="videoSrc" @mouseover="_show" @mouseout="_hidden"></video>
-      <span v-if="tap" @click='_closed'>关闭</span>
+      <div @mouseover="_show" @mouseout="_hidden" class="playerMenu">
+        <p v-if="tap" @click='_closed'>关闭</p>
+        <p v-if="tap" @click='_closed'>收藏</p>
+      </div>
     </div>
     <vdeoDetail></vdeoDetail>
   </div>
@@ -14,7 +17,7 @@ import vdeoDetail from './vdeoDetail'
 export default {
   name: 'play',
   components: {
-    vdeoDetail
+    vdeoDetail,
   },
   data() {
     return {
@@ -61,27 +64,39 @@ export default {
   width: 1120px;
   height: 720px;
   margin: 80 auto;
-  background: #fff;
+  background: rgb(0, 0, 0);
+  /* background: #252525; */
   overflow: hidden;
 }
 
-.playVideo>video {
-  width: 835px;
+.playVideo {
+  position: absolute;
+  left: 20px;
+  top: 0px;
 }
 
-.playVideo span {
+.playVideo>video {
+  width: 1080px;
+  height: 560px;
+}
+
+.playVideo .playerMenu {
   text-align: center;
   position: absolute;
-  top: 20px;
-  right: 10px;
-  height: 30px;
-  width: 40px;
+  bottom: 40px;
+  right: -2px;
   font-size: 14px;
   line-height: 30px;
-  color: #fff;
-  background: #1F0716;
-  border-radius: 5px 5px 5px 0;
+  color: #FF920B;
   cursor: pointer;
+}
+
+.playerMenu>p {
+  height: 30px;
+  width: 45px;
+  border-radius: 0 5px 5px 0;
+  background: #fff;
+  margin-bottom: 5px;
 }
 
 .vdeoDetail {
@@ -89,5 +104,7 @@ export default {
   bottom: 0;
   left: 0;
   width: 100%;
+  height: 155px;
+  overflow: hidden;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="hint" v-if="!badge">-_-你没有关注任何内容,快去关注喜欢的作者吧~</div>
+    <div class="hint" v-if="!badge">这里一片荒芜,快去关注喜欢的作者吧~</div>
     <div>
       <el-tabs class="fixedTop" v-model="name" v-if="follow[0]" type="card" closable @tab-remove="_remove" @tab-click="_tabClick">
         <el-tab-pane :key="item.name" v-for="(item, index) in follow" :label="item.name" :name="item.itemId.toString()">
@@ -120,7 +120,8 @@ export default {
 <style scoped>
 .hint {
   text-align: center;
-  padding-top: 50px;
-  font-size: 30px;
+  font-size: 20px;
+  line-height: 720px;
+  color: #fff;
 }
 </style>

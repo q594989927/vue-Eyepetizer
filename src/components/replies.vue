@@ -1,12 +1,5 @@
 <template>
-  <div class="vdeoDetail clearfix">
-    <div class="title clearfix">
-      <h3 class="text" v-if="headerText" v-html="headerText"></h3>
-      <span v-if="videoId" class="random" @click="_random">
-        瞎看看
-        <i class="el-icon-more"></i>
-      </span>
-    </div>
+  <div class="replies clearfix">
     <div @click="_play(item)" class="detail" v-for="(item,index) in list" :key="index">
       <div class="cover">
         <img v-lazy='item.data.cover.detail'>
@@ -24,7 +17,7 @@
 import { apiVdeoDetail } from '@/assets/api/getDatas'
 import { mapState, mapMutations } from 'vuex'
 export default {
-  name: 'vdeoDetail',
+  name: 'replies',
   data() {
     return {
       tap: false,
@@ -45,9 +38,7 @@ export default {
       'setVideoSrc',
     ]),
     _show(id) {
-      this.tempId = []
       apiVdeoDetail(id).then(res => {
-        res.itemList = res.itemList.splice(0, 6)
         res.itemList.forEach(el => {
           if (el.type == "textCard") {
             this.headerText = el.data.text
@@ -55,12 +46,11 @@ export default {
             this.tempId.push(el.data.id)
           }
         })
-        this.list = res.itemList.filter(el => {
-          return el.type == "videoSmallCard"
-        })
+        this.list = res.itemList.splice(1)
       })
     },
     _play(i) {
+      console.log(i)
       this.setVideoSrc(i.data.playUrl)
     },
     _random() {
@@ -79,49 +69,14 @@ export default {
 </script>
 
 <style scoped>
-.vdeoDetail {
+.replies {
   text-align: center;
 }
 
-.vdeoDetail>.title {
-  overflow: hidden;
-  width: 1080px;
-  height: 30px;
-  margin-left: 20px;
-  color: #f1f1f1
-}
-
-.text {
-  float: left;
-  font-size: 18px;
-  line-height: 30px;
-}
-
-.random {
-  float: right;
-  width: 88px;
-  padding: 0 2px;
-  font-size: 14px;
-  line-height: 26px;
-  cursor: pointer;
-  border-radius: 4px;
-  background: #7F7F7F;
-}
-
-.random:hover {
-  color: #FF920B;
-}
-
-.detail:hover {
-  transition: ease-out .2s;
-  transform: scale3d(1.05, 1.05, 1.05) translateY(-10px)
-}
-
 .detail {
-  position: relative;
   width: 200px;
-  height: 100px;
-  margin: 5px 10px 20px;
+  height: 170px;
+  margin: 10px 10px 20px;
   display: inline-block;
   vertical-align: top;
   text-align: left;
@@ -132,7 +87,6 @@ export default {
   width: 200px;
   height: 100px;
   overflow: hidden;
-  border-radius: 4px;
 }
 
 .cover>img {
@@ -141,16 +95,10 @@ export default {
 }
 
 .intro {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 200px;
-  height: 100px;
+  width: 180px;
+  height: 55px;
+  margin: 5px;
   font-size: 14px;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 20px 10px;
-  box-sizing: border-box;
-  border-radius: 4px;
 }
 
 .icon {
@@ -161,17 +109,17 @@ export default {
 }
 
 .author {
-  width: 100px;
+  width: 140px;
   line-height: 30px;
   padding-left: 5px;
   display: inline-block;
-  color: #f1f1f1;
+  color: #999;
 }
 
 .intro>.title {
-  font-size: 16px;
-  width: 100%;
+  font-size: 14px;
+  width: 190px;
   height: 20px;
-  color: #fff;
+  color: #ccc;
 }
 </style>

@@ -57,7 +57,6 @@ export default {
     },
     _into(start, count, id) {
       apiDetailCategory(start, count, id).then(res => {
-
         this.newList = res.itemList.filter(el => {
           return el.type == "video"
         })
@@ -106,8 +105,5 @@ export default {
 </script>
 
 <style scoped>
-.content img {
-  width: 100%;
-  height: 145px;
-}
+
 </style>

@@ -2,10 +2,10 @@
   <div class="vdeoDetail clearfix">
     <div class="title clearfix">
       <h3 class="text" v-if="headerText" v-html="headerText"></h3>
-      <span v-if="videoId" class="random" @click="_random">
-        瞎看看
+      <el-button v-if="videoId" class="random" @click="_random">
+        查看更多
         <i class="el-icon-more"></i>
-      </span>
+      </el-button>
     </div>
     <div @click="_play(item)" class="detail" v-for="(item,index) in list" :key="index">
       <div class="cover">
@@ -45,9 +45,7 @@ export default {
       'setVideoSrc',
     ]),
     _show(id) {
-      this.tempId = []
       apiVdeoDetail(id).then(res => {
-        res.itemList = res.itemList.splice(0, 6)
         res.itemList.forEach(el => {
           if (el.type == "textCard") {
             this.headerText = el.data.text
@@ -55,12 +53,11 @@ export default {
             this.tempId.push(el.data.id)
           }
         })
-        this.list = res.itemList.filter(el => {
-          return el.type == "videoSmallCard"
-        })
+        this.list = res.itemList.splice(1)
       })
     },
     _play(i) {
+      console.log(i)
       this.setVideoSrc(i.data.playUrl)
     },
     _random() {
@@ -86,15 +83,14 @@ export default {
 .vdeoDetail>.title {
   overflow: hidden;
   width: 1080px;
-  height: 30px;
-  margin-left: 20px;
-  color: #f1f1f1
+  margin: 10px 20px;
 }
 
 .text {
   float: left;
   font-size: 18px;
   line-height: 30px;
+  color: #ccc
 }
 
 .random {
@@ -103,13 +99,6 @@ export default {
   padding: 0 2px;
   font-size: 14px;
   line-height: 26px;
-  cursor: pointer;
-  border-radius: 4px;
-  background: #7F7F7F;
-}
-
-.random:hover {
-  color: #FF920B;
 }
 
 .detail:hover {
@@ -118,10 +107,9 @@ export default {
 }
 
 .detail {
-  position: relative;
   width: 200px;
-  height: 100px;
-  margin: 5px 10px 20px;
+  height: 90px;
+  margin: 10px 10px 20px;
   display: inline-block;
   vertical-align: top;
   text-align: left;
@@ -130,9 +118,8 @@ export default {
 .cover {
   display: block;
   width: 200px;
-  height: 100px;
+  height: 60px;
   overflow: hidden;
-  border-radius: 4px;
 }
 
 .cover>img {
@@ -141,16 +128,10 @@ export default {
 }
 
 .intro {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 200px;
-  height: 100px;
+  width: 180px;
+  height: 30px;
+  margin: 5px;
   font-size: 14px;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 20px 10px;
-  box-sizing: border-box;
-  border-radius: 4px;
 }
 
 .icon {
@@ -161,17 +142,17 @@ export default {
 }
 
 .author {
-  width: 100px;
+  width: 140px;
   line-height: 30px;
   padding-left: 5px;
   display: inline-block;
-  color: #f1f1f1;
+  color: #999;
 }
 
 .intro>.title {
-  font-size: 16px;
-  width: 100%;
+  font-size: 14px;
+  width: 190px;
   height: 20px;
-  color: #fff;
+  color: #ccc;
 }
 </style>
