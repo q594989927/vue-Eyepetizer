@@ -1,9 +1,17 @@
 <template>
   <div class="topBar">
     <div class="searchBar">
-      <input v-model="val" :placeholder="input" type="text" @change="_search">
+      <input v-model="val" placeholder="请输入" :value="input" type="text">
       <span class="search" @click="_go">搜索</span>
     </div>
+    <p v-if="total" class="total clearfix">找到关于
+      <span class="ellipsis">
+        "{{input}}"
+      </span>
+      <strong>
+        {{total}}
+      </strong>条数据
+    </p>
   </div>
 </template>
 
@@ -12,8 +20,8 @@ import { mapMutations, mapState } from 'vuex'
 export default {
   name: 'topBar',
   props: {
-    isRouter: {
-      type: Boolean
+    total: {
+      type: Number
     }
   },
   data() {
@@ -29,17 +37,18 @@ export default {
   methods: {
     ...mapMutations([
       'setInput',
-      'setActiveIndex'
     ]),
     _go() {
-      this.setActiveIndex('/search')
-      this.$router.push('/search')
+
+      if (this.val !== '' && this.val.trim() !== '') {
+        console.log("go", this.val)
+        this.setInput(this.val)
+        this.$emit('search', this.val)
+        this.$router.push('/search')
+      }
     },
     _search() {
-      if (this.val !== '' && this.val.trim() !== '') {
-        this.setInput(this.val)
-        this.$emit('search')
-      }
+
     },
   }
 }
@@ -88,6 +97,25 @@ export default {
 }
 
 .search:hover {
+  color: #FF920B;
+}
+
+.total {
+  position: absolute;
+  left: 710px;
+  top: 18px;
+  font-size: 14px;
+  color: #e4e4e4;
+}
+
+.total>span {
+  display: inline-block;
+  vertical-align: top;
+  max-width: 50px;
+}
+
+.total>strong {
+  display: inline-block;
   color: #FF920B;
 }
 </style>

@@ -26,6 +26,6 @@ export function timeDiff(s) {
   }
 }
 export function getDate(t) {
-  var time = new Date(t).toDateString().substr(4, 6);
+  var time = new Date(t).toDateString().substr(4, 6).split(' ').join('.');
   return time;
 }

@@ -1,11 +1,16 @@
 <template>
   <div>
-    <topBar @search='_search'></topBar>
+    <topBar @search='_search' :total="total"></topBar>
     <div v-loading='loading' class="loading">
       <div class="clearfix" v-for="(item,index) in collection" :key="index">
         <card @go='_go' :datas="item.itemList" :id="item.header.id" :titles="item.header.title"></card>
       </div>
       <card :datas='lastList'></card>
+      <div class="hint" v-if="hint">
+        没有找到任何相关
+        <strong>{{input}}</strong>
+        的内容,试试别的关键词吧
+      </div>
       <load-more v-show="nextPageUrl" @currentChange="_currentChange"></load-more>
     </div>
   </div>
@@ -33,7 +38,9 @@ export default {
       n: 0,
       id: null,
       collection: [],
-      nextPageUrl: null
+      nextPageUrl: null,
+      hint: false,
+      total: 0,
     }
   },
   computed: {
@@ -49,7 +56,6 @@ export default {
     _getList(start, count, q) {
       apiSearch(start, count, q).then(res => {
         console.log(res)
-        this.setLoading(true)
         this.newList = res.itemList.filter(el => {
           return el.type == 'video'
         })
@@ -61,13 +67,20 @@ export default {
         this.lastList = this.lastList.concat(this.newList)
         this.nextPageUrl = res.nextPageUrl
         this.setLoading(false)
+        this.total = res.total
+        setTimeout(() => {
+          if (this.nextPageUrl == null) {
+            this.hint = true
+          }
+        }, 500)
       })
 
     },
     _search(val) {
       this.lastList = []
-      console.log(this.input)
-      this._getList(this.start, this.count, this.input)
+      this.setLoading(true)
+      console.log("_search", val)
+      this._getList(this.start, this.count, val)
     },
     _currentChange() {
       this.newList = []
@@ -85,9 +98,6 @@ export default {
     start() {
       this._getList(this.start, this.count, this.input)
     },
-    input() {
-      this._getList(this.start, this.count, this.input)
-    },
   },
 }
 </script>
@@ -97,11 +107,5 @@ export default {
   height: 666px;
   padding: 0;
   overflow: auto;
-}
-
-.hint {
-  text-align: center;
-  padding-top: 50px;
-  font-size: 30px;
 }
 </style>

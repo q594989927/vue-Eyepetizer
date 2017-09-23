@@ -65,7 +65,7 @@ export default {
   height: 720px;
   margin: 80 auto;
   background: rgb(0, 0, 0);
-  /* background: #252525; */
+  background: #252525;
   overflow: hidden;
 }
 

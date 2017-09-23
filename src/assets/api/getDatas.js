@@ -4,6 +4,12 @@ export function apiSelected() {
     return response.json();
   })
 }
+export function apiPrevPage(d) {
+  let url = '/api/v4/tabs/selected?date=' + d
+  return fetch(url).then(response => {
+    return response.json();
+  })
+}
 export function apiDiscovery() {
   let url = '/api/v4/discovery'
   return fetch(url).then(response => {

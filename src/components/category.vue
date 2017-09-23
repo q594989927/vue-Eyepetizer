@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="!lastList.length" v-if="categoryNav.length>1">
+  <div v-loading="!lastList.length">
     <el-tabs class="fixedTop" type="card" v-model="idstr" @tab-click="_changeId">
       <el-tab-pane v-for="(item,index) in categoryNav" :key="index" :name="ids[index].toString()" :label="item.title">
       </el-tab-pane>

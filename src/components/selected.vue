@@ -5,8 +5,9 @@
       <transition-group tag="div" class="carouselWrap" ref="carouselWrap" name='image' @click="_change">
         <div class="carousel" :class="{active:index==active}" v-show='index==active' v-for="(item,index) in newList" :key="index">
           <div class="cover" @click='_play(item.data.playUrl,item.data.id)'>
+            <h3 class="title" v-html="titleDate1"></h3>
             <img :src='item.data.cover.feed'>
-            <h3>{{item.data.title}}</h3>
+            <h4>{{item.data.title}}</h4>
             <p>{{item.data.slogan}}</p>
           </div>
         </div>
@@ -25,19 +26,19 @@
       </div>
     </div>
     <div class="list">
-      <h3 class="title" v-html="date"></h3>
+      <h3 class="title" v-html="titleDate2"></h3>
       <el-card class="card" :class="{six:lastList.length==6}" :body-style="{ padding: '0px'}" v-for="(item,index) in lastList" :key="index">
         <div @click='_play(item.data.playUrl,item.data.id)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
           <div :class="{six:lastList.length==6}" class="image">
             <video v-if="index===num" :class="{six:lastList.length==6}" class="video" autoplay muted="muted" :src="src"></video>
             <img v-else :src="item.data.cover.detail">
           </div>
-        </div>
-        <div style="padding: 8px;">
-          <p :class="{six:lastList.length==6}" class="txt ellipsis">{{item.data.title}}</p>
-          <div class="bottom clearfix">
-            <span class="time">{{_duration(item.data.duration)}}</span>
-            <span class="button">{{item.data.category}}</span>
+          <div style="padding: 8px;">
+            <p :class="{six:lastList.length==6}" class="txt ellipsis">{{item.data.title}}</p>
+            <div class="bottom clearfix">
+              <span class="time">{{_duration(item.data.duration)}}</span>
+              <span class="button">{{item.data.category}}</span>
+            </div>
           </div>
         </div>
       </el-card>
@@ -45,13 +46,13 @@
     <div class="btn">
       <el-button :plain="true">
         <</el-button>
-          <el-button :plain="true">></el-button>
+          <el-button @click="_getPrevList" :plain="true">></el-button>
     </div>
   </div>
 </template>
 
 <script>
-import { apiSelected } from '@/assets/api/getDatas'
+import { apiSelected, apiPrevPage } from '@/assets/api/getDatas'
 import { add2Zero, getDate } from '@/assets/js/calc'
 import { mapGetters, mapState, mapMutations } from 'vuex'
 import topBar from './topBar'
@@ -64,9 +65,11 @@ export default {
     return {
       newList: [],
       lastList: [],
-      date: '',
-      prevPageUrl: null,
-      nextPageUrl: null,
+      titleDate1: "",
+      titleDate2: '',
+      toDate: null,
+      oneDay: 172800000,
+      nextPageUrlID: null,
       num: -1,
       src: '',
       timer: null,
@@ -87,22 +90,35 @@ export default {
       'setTap',
       'setVideoId'
     ]),
+    getdatelist(res) {
+      this.toDate = res.date
+      this.nextPageUrlID = this.toDate - this.oneDay
+      this.titleDate1 = getDate(this.toDate)
+      this.newList = res.itemList.filter(obj => {
+        return obj.type == 'video' && obj.tag == '0'
+      })
+      this.lastList = res.itemList.filter(obj => {
+        return obj.type == 'video' && obj.tag == '1'
+      })
+      if (this.newList.length > 6 || this.lastList.length > 6) {
+        this.newList = this.newList.splice(0, 6)
+        this.lastList = this.lastList.splice(0, 6)
+      }
+      this.newListLength = this.newList.length
+      res.itemList.forEach(el => {
+        if (el.type == "textHeader") {
+          this.titleDate2 = el.data.text.split('-').join('').split(',')[0]
+        }
+      })
+    },
     _getList() {
       apiSelected().then(res => {
-        this.nextPageUrl = res.nextPageUrl
-        this.newList = res.itemList.filter(obj => {
-          return obj.type == 'video' && obj.tag == '0'
-        })
-        this.newListLength = this.newList.length
-
-        this.lastList = res.itemList.filter(obj => {
-          return obj.type == 'video' && obj.tag == '1'
-        })
-        res.itemList.forEach(el => {
-          if (el.type == "textHeader") {
-            this.date = el.data.text.split('-').join('').split(',')[0]
-          }
-        })
+        this.getdatelist(res)
+      })
+    },
+    _getPrevList() {
+      apiPrevPage(this.nextPageUrlID).then(res => {
+        this.getdatelist(res)
       })
     },
     _change(n) {
@@ -118,8 +134,7 @@ export default {
     _play(url, id) {
       console.log()
       this.setVideoSrc(url)
-
-      // this.setVideoId(id)
+      this.setVideoId(id)
       this.setTap(false)
       clearTimeout(this.timer)
     },
@@ -206,17 +221,24 @@ export default {
   overflow: hidden;
 }
 
+.cover>.title {
+  position: absolute;
+  left: 0px;
+  top: 0px
+}
+
 .carousel .cover img {
   width: 100%;
 }
 
-.carousel .cover h3,
+.carousel .cover h4,
 .carousel .cover p {
   position: absolute;
   bottom: 18%;
   left: calc( 50% - 200px);
   width: 400px;
   font-size: 16px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, .6)
 }
 
 .carousel .cover p {
@@ -247,7 +269,7 @@ export default {
   left: 0;
   width: 215px;
   height: 370px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .mask .blur {

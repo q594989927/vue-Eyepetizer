@@ -1,21 +1,26 @@
 <template>
   <div id="app">
-    <el-menu :router="true" :default-active="activeIndex" class="menu">
-      <el-menu-item index="/selected">
-        <i class="el-icon-my-index"></i>首页</el-menu-item>
-      <el-menu-item index="/hot">
-        <i class="el-icon-my-hot"></i>热门</el-menu-item>
-      <el-menu-item index="/category">
-        <i class="el-icon-my-category"></i>分类</el-menu-item>
-      <el-menu-item index="/author">
-        <i class="el-icon-my-author"></i>作者</el-menu-item>
-      <el-menu-item index="/follow">
+    <ul class="menu">
+      <router-link tag="li" to="/selected">
+        <i class="el-icon-my-index"></i>首页
+      </router-link>
+      <router-link tag="li" to="/hot">
+        <i class="el-icon-my-hot"></i>热门
+      </router-link>
+      <router-link tag="li" to="/category">
+        <i class="el-icon-my-category"></i>分类
+      </router-link>
+      <router-link tag="li" to="/author">
+        <i class="el-icon-my-author"></i>作者
+      </router-link>
+      <router-link tag="li" to="/follow">
         <el-badge :value="badge" :max="99" class="item">
           <i class="el-icon-my-follow"></i>关注</el-badge>
-      </el-menu-item>
-      <el-menu-item index="/search">
-        <i class="el-icon-my-search"></i>搜索</el-menu-item>
-    </el-menu>
+      </router-link>
+      <router-link tag="li" to="/search">
+        <i class="el-icon-my-search"></i>搜索
+      </router-link>
+    </ul>
     <player></player>
     <keep-alive>
       <router-view class="container"></router-view>
@@ -106,6 +111,32 @@ input {
   white-space: nowrap;
 }
 
+.fixedTop {
+  position: absolute;
+  top: 0;
+  width: 955px;
+  padding: 0 20px;
+  height: 45px;
+  z-index: 99;
+}
+
+.overFlowAuto {
+  overflow: auto;
+}
+
+.hint {
+  position: absolute;
+  left: calc( 50% - 250px);
+  top: calc( 50% - 100px);
+  height: 200px;
+  width: 500px;
+  font-size: 18px;
+  line-height: 30px;
+  word-break: break-all;
+  text-indent: 30px;
+  color: #fff;
+}
+
 #app {
   position: relative;
   width: 1120px;
@@ -120,6 +151,28 @@ input {
   float: left;
   width: 125px;
   height: 720px;
+  background: #252525;
+  text-align: center;
+}
+
+.menu>li {
+  padding: 20px 30px;
+  color: #ccc;
+  font-size: 14px;
+}
+
+.menu>li>i {
+  margin-right: 5px;
+  font-size: 16px;
+}
+
+.menu>li:hover {
+  background: #252525;
+  color: #FF920B;
+}
+
+.menu>li.router-link-active {
+  color: #FF920B;
 }
 
 .container {
@@ -131,18 +184,6 @@ input {
   background-color: #3a3c40;
 }
 
-.fixedTop {
-  position: absolute;
-  top: 0;
-  width: 955px;
-  padding: 0 20px;
-  height: 45px;
-  z-index: 99;
-}
-
-.overFlowAuto {
-  overflow: auto;
-}
 
 .conWrapper {
   width: 100%;
@@ -160,28 +201,10 @@ input {
   stroke: #FF920B;
 }
 
-.el-menu {
-  background: #252525;
-  border-radius: 0;
-}
-
-.el-menu-item {
-  color: #ccc;
-}
-
-.el-menu-item:hover {
-  background: #252525;
-  color: #FF920B;
-}
-
 .el-button:focus,
 .el-button:hover {
   color: #FF920B;
   border: 1px solid #FF920B;
-}
-
-.el-menu-item.is-active {
-  color: #FF920B;
 }
 
 .el-badge__content {
