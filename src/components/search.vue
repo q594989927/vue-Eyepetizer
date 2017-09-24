@@ -113,9 +113,5 @@ export default {
 </script>
 
 <style scoped>
-/* .loading {
-  height: 666px;
-  padding: 0;
-  overflow: auto;
-} */
+
 </style>
