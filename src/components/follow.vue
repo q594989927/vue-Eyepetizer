@@ -6,9 +6,9 @@
         <el-tab-pane :key="item.name" v-for="(item, index) in follow" :label="item.name" :name="item.itemId.toString()">
         </el-tab-pane>
       </el-tabs>
-      <div class="overFlowAuto conWrapper">
+      <div class="conWrapper" v-scroll="_currentChange">
         <card :datas="lastList"></card>
-        <load-more v-show="nextPageUrl" @currentChange="_currentChange"></load-more>
+        <load-more v-show="nextPageUrl" :IS="isLoadMore" @currentChange="_currentChange"></load-more>
       </div>
     </div>
   </div>
@@ -35,7 +35,7 @@ export default {
       id: null,
       name: '',
       nextPageUrl: null,
-      hint: false
+      isLoadMore: false
     }
   },
   computed: {
@@ -61,12 +61,14 @@ export default {
         this.newList = res.itemList
         this.lastList = this.lastList.concat(this.newList)
         this.nextPageUrl = res.nextPageUrl
+        this.isLoadMore = this.nextPageUrl ? true : false
       })
     },
     _into(start, count, id) {
       apiAuthorVideoList(start, count, id).then(res => {
         this.lastList = res.itemList
         this.nextPageUrl = res.nextPageUrl
+        this.isLoadMore = this.nextPageUrl ? true : false
       })
     },
     _tabClick(tab) {
@@ -89,9 +91,12 @@ export default {
       }
     },
     _currentChange() {
-      this.newList = []
-      this.n++
-      this.start = this.n * this.count
+      if (this.isLoadMore) {
+        this.newList = []
+        this.n++
+        this.start = this.n * this.count
+        this.isLoadMore = false
+      }
     },
     _badgeChange() {
       if (this.badge) {
@@ -102,6 +107,7 @@ export default {
         this.id = this.follow[0].itemId
       } else {
         this.lastList = []
+        this.nextPageUrl = null
       }
     }
   },

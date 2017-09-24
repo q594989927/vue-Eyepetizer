@@ -137,17 +137,6 @@ export default {
 </script>
 
 <style scoped>
-.list-leave-active,
-.list-enter-active {
-  transform: translateY(0%);
-  transition: all .5s ease;
-}
-
-.list-enter,
-.list-leave {
-  transform: translateY(100%);
-}
-
 .image-enter-active,
 .image-leave-active {
   transition: opacity .5s

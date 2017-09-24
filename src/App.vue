@@ -30,8 +30,21 @@
 
 
 <script>
+var isLoadMore = false
+import Vue from 'vue'
 import player from './components/player'
 import { mapState, mapGetters, mapMutations } from 'vuex'
+Vue.directive('scroll', {
+  bind: function(el, binding) {
+    el.addEventListener('scroll', () => {
+      // console.log(binding);
+      // console.log(el.firstChild.clientHeight, el.scrollTop, el.clientHeight);
+      if (el.firstChild.clientHeight - el.scrollTop < el.clientHeight - 50) {
+        binding.value()
+      }
+    })
+  }
+})
 export default {
   name: 'app',
   data() {
@@ -49,7 +62,7 @@ export default {
   },
   components: {
     player
-  }
+  },
 }
 </script>
 
@@ -130,6 +143,17 @@ input {
   line-height: 30px;
   word-break: break-all;
   color: #fff;
+}
+
+.list-enter-active,
+.list-leave-active {
+  transition: all .5s;
+}
+
+.list-enter,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
 }
 
 #app {

@@ -2,20 +2,21 @@
   <div class="vdeoDetail clearfix">
     <div class="title clearfix">
       <h3 class="text" v-if="headerText" v-html="headerText"></h3>
-      <span v-if="videoId" class="random" @click="_random">
-        瞎看看
-        <i class="el-icon-more"></i>
+      <span v-if="videoId" class="random" @click="_random">更多
+        <i class="el-icon-my-copy"></i>
       </span>
     </div>
     <transition-group tag="div" name="list" mode="out-in">
-      <div @click="_play(item)" class="detail" v-if='tempId.length' v-for="(item,index) in list" :key="index">
-        <div class="cover">
-          <img v-lazy='item.data.cover.detail'>
-        </div>
-        <div class="intro">
-          <img v-if="item.data.author" class="icon" v-lazy="item.data.author.icon">
-          <p v-if="item.data.author" class="author ellipsis">{{item.data.author.name}}</p>
-          <p class="title ellipsis" v-html="item.data.title"></p>
+      <div v-if='tempId.length' key="listTempId">
+        <div @click="_play(item)" class="detail" v-for="(item,index) in list" :key="index">
+          <div class="cover">
+            <img v-lazy='item.data.cover.detail'>
+          </div>
+          <div class="intro">
+            <img v-if="item.data.author" class="icon" v-lazy="item.data.author.icon">
+            <p v-if="item.data.author" class="author ellipsis">{{item.data.author.name}}</p>
+            <p class="title ellipsis" v-html="item.data.title"></p>
+          </div>
         </div>
       </div>
     </transition-group>
@@ -82,17 +83,6 @@ export default {
 </script>
 
 <style scoped>
-.list-enter-active,
-.list-leave-active {
-  transition: all .5s;
-}
-
-.list-enter,
-.list-leave-to {
-  opacity: 0;
-  transform: translateY(30px);
-}
-
 .vdeoDetail {
   text-align: center;
 }
@@ -113,13 +103,13 @@ export default {
 
 .random {
   float: right;
-  width: 88px;
+  width: 60px;
   padding: 0 2px;
   font-size: 14px;
   line-height: 26px;
   cursor: pointer;
   border-radius: 4px;
-  background: #7F7F7F;
+  background: #3a3c40;
 }
 
 .random:hover {

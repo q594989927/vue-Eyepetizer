@@ -3,9 +3,14 @@
     <topBar></topBar>
     <selected key="indexlist" :newList="newList" :lastList="lastList" :titleDate1="titleDate1" :titleDate2="titleDate2"></selected>
     <div class="btn">
-      <el-button v-show="!pagesCount.length" @click="_getNextList" :plain="true">
-        <</el-button>
-          <el-button @click="_getPrevList" :plain="true">></el-button>
+      <span v-show="pagesCount" @click="_getNextList">
+        <i class="el-icon-my-next">
+        </i>
+      </span>
+      <span @click="_getPrevList">
+        <i class="el-icon-my-prev">
+        </i>
+      </span>
     </div>
   </div>
 </template>
@@ -110,9 +115,18 @@ export default {
   background: #3a3c40;
 }
 
-.el-button {
+.btn>span {
+  display: inline-block;
   width: 40px;
   height: 40px;
+  line-height: 40px;
   border-radius: 50%;
+  background: #fff;
+  text-align: center;
+  margin-left: 10px;
+}
+
+.btn>span:hover {
+  color: #FF920B;
 }
 </style>

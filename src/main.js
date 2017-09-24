@@ -9,7 +9,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 Vue.use(ElementUI)
 Vue.use(VueLazyload, {
-  // loading: require('common/image/default.png')
+  loading: require('./assets/img/default.gif')
 })
 Vue.config.productionTip = false
 /* eslint-disable no-new */
@@ -18,5 +18,5 @@ new Vue({
   router,
   store,
   template: '<App/>',
-  components: { App }
+  components: { App },
 })

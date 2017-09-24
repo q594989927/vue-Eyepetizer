@@ -1,7 +1,7 @@
 <template>
   <div>
     <topBar @search='_search' :total="total"></topBar>
-    <div v-loading='loading' class="loading">
+    <div v-loading='loading' class="conWrapper clearfix" v-scroll="_currentChange">
       <div class="clearfix" v-for="(item,index) in collection" :key="index">
         <card @go='_go' :datas="item.itemList" :id="item.header.id" :titles="item.header.title"></card>
       </div>
@@ -11,7 +11,7 @@
         <strong>"{{input}}"</strong>
         的内容,试试别的关键词
       </div>
-      <load-more v-show="nextPageUrl" @currentChange="_currentChange"></load-more>
+      <load-more v-show="nextPageUrl" :IS="isLoadMore" @currentChange="_currentChange"></load-more>
     </div>
   </div>
 </template>
@@ -34,11 +34,12 @@ export default {
       newList: [],
       lastList: [],
       start: 0,
-      count: 10,
+      count: 30,
       n: 0,
       id: null,
       collection: [], //优先显示
       nextPageUrl: null,
+      isLoadMore: true,
       hint: false,
       total: 0,
     }
@@ -56,6 +57,7 @@ export default {
     _getList(start, count, q) {
       this.setLoading(true)
       apiSearch(start, count, q).then(res => {
+        console.log(res)
         this.newList = res.itemList.filter(el => {
           return el.type == 'video'
         })
@@ -66,9 +68,9 @@ export default {
         })
         this.lastList = this.lastList.concat(this.newList)
         this.nextPageUrl = res.nextPageUrl
+        this.isLoadMore = this.nextPageUrl ? true : false
         this.setLoading(false)
         this.total = res.total
-        console.log(this.total)
         setTimeout(() => {
           if (!this.total) {
             this.hint = true
@@ -82,9 +84,13 @@ export default {
       this._getList(this.start, this.count, val)
     },
     _currentChange() {
-      this.newList = []
-      this.n++
-      this.start = this.n * this.count
+      console.log(1)
+      if (this.isLoadMore) {
+        this.newList = []
+        this.n++
+        this.start = this.n * this.count
+        this.isLoadMore = false
+      }
     },
     _go(id) {
       console.log(id)
@@ -107,9 +113,9 @@ export default {
 </script>
 
 <style scoped>
-.loading {
+/* .loading {
   height: 666px;
   padding: 0;
   overflow: auto;
-}
+} */
 </style>

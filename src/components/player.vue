@@ -3,7 +3,9 @@
     <div class="playVideo">
       <video controls="controls" :src="videoSrc" @mouseenter="_show" @mouseleave="_hidden"></video>
       <transition-group tag="div" name="slide" class="playerMenu clearfix">
-        <p v-if="tap" key="a" @click='_closed' @mouseenter="_show" @mouseleave="_hidden">关闭</p>
+        <span v-if="tap" key="a" @click='_closed' @mouseenter="_show" @mouseleave="_hidden">
+          <i class="el-icon-my-leave"></i>
+          关闭</span>
       </transition-group>
     </div>
     <vdeoDetail></vdeoDetail>
@@ -97,23 +99,28 @@ export default {
   text-align: center;
   position: absolute;
   top: 10px;
-  right: -2px;
+  right: -18px;
   font-size: 14px;
   line-height: 30px;
   color: #fff;
   cursor: pointer;
 }
 
-.playerMenu>p:hover {
+.playerMenu>span:hover {
   color: #FF920B;
 }
 
-.playerMenu>p {
+.playerMenu>span {
+  display: inline-block;
   height: 30px;
-  width: 44px;
+  width: 60px;
   border-radius: 5px 0 5px 0;
   margin: 0 0 10px 0;
   background: #3a3c40;
+}
+
+.el-icon-my-leave {
+  vertical-align: text-top
 }
 
 .vdeoDetail {

@@ -1,11 +1,11 @@
 <template>
   <div v-loading="!lastList.length">
-    <div class="conWrapper clearfix">
+    <div class="conWrapper clearfix" v-scroll="_currentChange">
       <div class="clearfix">
         <div :class="{'author':!item.text}" class="clearfix" v-for="(item,index)  in lastList" :key="index">
           <h3 class="title" v-if="item.text" v-html="item.text"></h3>
           <div class="clearfix" @mouseenter="_info(item.id,index)" v-if="item.title">
-            <i v-if="item.follow.followed" class="el-icon-my-followed"></i>
+            <i v-if="item.follow.followed" class="el-icon-my-like"></i>
             <img class="icon" v-lazy="item.icon">
             <div class="text">
               <p class="name ellipsis" v-html="item.title"></p>
@@ -13,7 +13,7 @@
             </div>
           </div>
           <transition v-if="!item.text" name="el-fade-in">
-            <div v-show="index==show" @mouseenter="_stay(index)" @mouseleave="_out()" class="introWrap" ref="Intro">
+            <div v-show="index==show" @mouseenter="_stay(index)" @mouseleave="_out()" class="introWrap">
               <div v-if="intro.tabInfo" class="intro">
                 <p v-html="intro.pgcInfo.name"></p>
                 <p class="ellipsis" v-html="intro.pgcInfo.brief"></p>
@@ -25,7 +25,7 @@
           </transition>
         </div>
       </div>
-      <load-more v-show="nextPageUrl" @currentChange="_currentChange"></load-more>
+      <load-more v-show="nextPageUrl" :IS='isLoadMore' @currentChange="_currentChange"></load-more>
     </div>
   </div>
 </template>
@@ -42,6 +42,7 @@ export default {
   },
   data() {
     return {
+      isLoadMore: true,
       lastList: [],    //总数据
       newList: [],     //每次获取新数据
       intro: {},       //作者简介
@@ -86,6 +87,10 @@ export default {
         })
         this._getNewList()
         this.lastList = this.lastList.concat(this.newList)
+        this.nextPageUrl = res.nextPageUrl
+        if (this.nextPageUrl) {
+          this.isLoadMore = true
+        }
       })
     },
     _getNewList() {
@@ -127,9 +132,12 @@ export default {
       })
     },
     _currentChange() {
-      this.newList = []
-      this.n++
-      this.start = this.n * this.count
+      if (this.isLoadMore) {
+        this.newList = []
+        this.n++
+        this.start = this.n * this.count
+        this.isLoadMore = false
+      }
     },
     _setFollows(id, boo, name) {
       this.setFeedFollowed({ 'itemId': id, 'followed': boo })
@@ -147,7 +155,7 @@ export default {
   },
   created() {
     this._getList()
-  }
+  },
 }
 </script>
 
@@ -179,7 +187,7 @@ export default {
   color: #fff;
 }
 
-.el-icon-my-followed {
+.el-icon-my-like {
   position: absolute;
   top: 5px;
   right: 5px;

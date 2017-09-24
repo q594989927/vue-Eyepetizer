@@ -3,9 +3,9 @@
     <nav class="nav fixedTop">
       <a :class="{active: index == active}" @click="_click(index,item.tag)" href="javascript:;" v-for="(item,index) in menu" :key="index" v-html="item.name"></a>
     </nav>
-    <div class="conWrapper">
+    <div class="conWrapper" v-scroll="_currentChange">
       <card :datas="lastList"></card>
-      <load-more v-show="nextPageUrl" @currentChange="_currentChange"></load-more>
+      <load-more v-show="nextPageUrl" :IS="isLoadMore" @currentChange="_currentChange"></load-more>
     </div>
 
   </div>
@@ -35,7 +35,8 @@ export default {
       count: 20,
       n: 0,
       active: 0,
-      nextPageUrl: null
+      nextPageUrl: null,
+      isLoadMore: true,
     }
   },
   methods: {
@@ -48,12 +49,14 @@ export default {
         this.newList = res.itemList
         this.lastList = this.lastList.concat(this.newList)
         this.nextPageUrl = res.nextPageUrl
+        this.isLoadMore = this.nextPageUrl ? true : false
       })
     },
     _getRanklist(v) {
       apiRanklist(v).then(res => {
         this.lastList = res.itemList
         this.nextPageUrl = res.nextPageUrl
+        this.isLoadMore = this.nextPageUrl ? true : false
       })
     },
     _click(i, v) {
@@ -67,9 +70,13 @@ export default {
 
     },
     _currentChange() {
-      this.newList = []
-      this.n++
-      this.start = this.n * this.count
+      if (this.isLoadMore) {
+        this.newList = []
+        this.n++
+        this.start = this.n * this.count
+        this.isLoadMore = false
+      }
+
     },
   },
   watch: {

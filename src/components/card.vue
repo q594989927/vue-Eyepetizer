@@ -9,9 +9,9 @@
     <el-card class="card" :body-style="{ padding: '0px'}" v-for="(item,index) in datas" :key="index">
       <div class="video" @click='_play(item.data.playUrl,item.data.id)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
         <video v-if="index===num" width="260" class="video" autoplay muted="muted" :src="src"></video>
-        <img v-else class="image" v-lazy='item.data.cover.detail'>
+        <img v-else-if="item.data" class="image" v-lazy='item.data.cover.detail'>
       </div>
-      <div class="text">
+      <div class="text" v-if="item.data">
         <div @mouseenter="_enter(index)">
           <p class="txt">{{item.data.title}}</p>
           <div class="clearfix">
