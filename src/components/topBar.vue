@@ -40,7 +40,6 @@ export default {
     ]),
     _go() {
       if (this.val !== '' && this.val.trim() !== '') {
-        console.log("go", this.val)
         this.$router.push('/search')
         this.setInput(this.val)
         this.$emit('search', this.val)

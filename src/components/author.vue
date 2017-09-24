@@ -47,7 +47,7 @@ export default {
       intro: {},       //作者简介
       id: null,        //作者id
       start: 0,
-      count: 9,
+      count: 15,
       n: 0,            //加载更多计数
       timer: null,
       show: null,

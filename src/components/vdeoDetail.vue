@@ -7,16 +7,19 @@
         <i class="el-icon-more"></i>
       </span>
     </div>
-    <div @click="_play(item)" class="detail" v-for="(item,index) in list" :key="index">
-      <div class="cover">
-        <img v-lazy='item.data.cover.detail'>
+    <transition-group tag="div" name="list" mode="out-in">
+      <div @click="_play(item)" class="detail" v-if='tempId.length' v-for="(item,index) in list" :key="index">
+        <div class="cover">
+          <img v-lazy='item.data.cover.detail'>
+        </div>
+        <div class="intro">
+          <img v-if="item.data.author" class="icon" v-lazy="item.data.author.icon">
+          <p v-if="item.data.author" class="author ellipsis">{{item.data.author.name}}</p>
+          <p class="title ellipsis" v-html="item.data.title"></p>
+        </div>
       </div>
-      <div class="intro">
-        <img v-if="item.data.author" class="icon" v-lazy="item.data.author.icon">
-        <p v-if="item.data.author" class="author ellipsis">{{item.data.author.name}}</p>
-        <p class="title ellipsis" v-html="item.data.title"></p>
-      </div>
-    </div>
+    </transition-group>
+
   </div>
 </template>
 
@@ -79,6 +82,17 @@ export default {
 </script>
 
 <style scoped>
+.list-enter-active,
+.list-leave-active {
+  transition: all .5s;
+}
+
+.list-enter,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
 .vdeoDetail {
   text-align: center;
 }

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import selected from '@/components/selected'
+import index from '@/components/index'
 import hot from '@/components/hot'
 import category from '@/components/category'
 import author from '@/components/author'
@@ -13,12 +13,12 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: selected,
-      redirect: '/selected'
+      component: index,
+      redirect: '/index'
     },
     {
-      path: '/selected',
-      component: selected,
+      path: '/index',
+      component: index,
     },
     {
       path: '/hot',

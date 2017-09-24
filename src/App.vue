@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <ul class="menu">
-      <router-link tag="li" to="/selected">
+      <router-link tag="li" to="/index">
         <i class="el-icon-my-index"></i>首页
       </router-link>
       <router-link tag="li" to="/hot">

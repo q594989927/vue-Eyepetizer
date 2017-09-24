@@ -34,7 +34,8 @@ export default {
       n: 0,
       id: null,
       name: '',
-      nextPageUrl: null
+      nextPageUrl: null,
+      hint: false
     }
   },
   computed: {
@@ -52,6 +53,9 @@ export default {
       'removeFollowed',
       'setLoading'
     ]),
+    _a() {
+      this.hint = !this.hint
+    },
     _getList(start, count, id) {
       apiAuthorVideoList(start, count, id).then(res => {
         this.newList = res.itemList

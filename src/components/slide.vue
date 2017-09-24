@@ -1,49 +1,27 @@
 <template>
-  <div>
-    <div class="slide clearfix">
-      <transition-group tag="div" class="carouselWrap" ref="carouselWrap" name='image' @click="_change">
-        <div class="carousel" :class="{active:index==active}" v-show='index==active' v-for="(item,index) in newList" :key="index">
-          <div class="cover" @click='_play(item.data.playUrl,item.data.id)'>
-            <h3 class="title" v-html="titleDate1"></h3>
-            <img :src='item.data.cover.feed'>
-            <h4>{{item.data.title}}</h4>
-            <p>{{item.data.slogan}}</p>
-          </div>
+  <div class="slide clearfix">
+    <transition-group tag="div" class="carouselWrap" ref="carouselWrap" name='image' @click="_change">
+      <div class="carousel" :class="{active:index==active}" v-show='index==active' v-for="(item,index) in newList" :key="index">
+        <div class="cover" @click='_play(item.data.playUrl,item.data.id)'>
+          <h3 class="title" v-html="titleDate1"></h3>
+          <img :src='item.data.cover.feed'>
+          <h4>{{item.data.title}}</h4>
+          <p>{{item.data.slogan}}</p>
         </div>
-      </transition-group>
-      <div class="indicator">
-        <div class="mask" v-for="(item,index) in newList" :key="index">
-          <img class="blur" v-show="index == active" :src="item.data.cover.blurred">
-          <div v-if="index == active" class="upside"></div>
-        </div>
-        <div class="txtList" :class="{five:newList.length==5}">
-          <div v-for="(item,index) in newList" @click="_change(index)" :key="index">
-            <p :class="{active:index == active}" class="text ellipsis">{{item.data.title}} </p>
-            <span class="ellipsis">{{item.data.slogan}}</span>
-          </div>
+      </div>
+    </transition-group>
+    <div class="indicator">
+      <div class="mask" v-for="(item,index) in newList" :key="index">
+        <img class="blur" v-show="index == active" :src="item.data.cover.blurred">
+        <div v-if="index == active" class="upside"></div>
+      </div>
+      <div class="txtList" :class="{five:newList.length==5}">
+        <div v-for="(item,index) in newList" @click="_change(index)" :key="index">
+          <p :class="{active:index == active}" class="text ellipsis">{{item.data.title}} </p>
+          <span class="ellipsis">{{item.data.slogan}}</span>
         </div>
       </div>
     </div>
-    <transition-group tag="div" name="list">
-      <div class="list" v-if="lastList.length" key="indexlist">
-        <h3 class="title" v-html="titleDate2"></h3>
-        <el-card class="card" :class="{six:lastList.length==6}" :body-style="{ padding: '0px'}" v-for="(item,index) in lastList" :key="index">
-          <div @click='_play(item.data.playUrl,item.data.id)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
-            <div :class="{six:lastList.length==6}" class="image">
-              <video v-if="index===num" :class="{six:lastList.length==6}" class="video" autoplay muted="muted" :src="src"></video>
-              <img v-else :src="item.data.cover.detail">
-            </div>
-            <div style="padding: 8px;">
-              <p :class="{six:lastList.length==6}" class="txt ellipsis">{{item.data.title}}</p>
-              <div class="bottom clearfix">
-                <span class="time">{{_duration(item.data.duration)}}</span>
-                <span class="button">{{item.data.category}}</span>
-              </div>
-            </div>
-          </div>
-        </el-card>
-      </div>
-    </transition-group>
   </div>
 </template>
 <script>
@@ -52,33 +30,24 @@ import { add2Zero, getDate } from '@/assets/js/calc'
 import { mapGetters, mapState, mapMutations } from 'vuex'
 export default {
   name: 'index',
-  props: {
-    newList: {
-      type: Array,
-      default: []
-    },
-    lastList: {
-      type: Array,
-      default: []
-    },
-    titleDate1: {
-      type: String,
-      default: ""
-    },
-    titleDate2: {
-      type: String,
-      default: ""
-    },
-  },
   data() {
     return {
-      active: 0,
+      newList: [],
+      lastList: [],
+      titleDate1: "",
+      titleDate2: '',
+      toDate: null,
+      oneDay: 172800000,
+      nextPageUrlID: null,
       num: -1,
       src: '',
       timer: null,
+      active: 0,
       autoTimer: null,
       interval: 4000,
-      newListLength: 0,
+      newListLength: null,
+      pages: [],
+      pagesCount: 0,
     }
   },
   methods: {
@@ -87,15 +56,15 @@ export default {
       'setTap',
       'setVideoId'
     ]),
+  
     _change(n) {
       this.active = n
-      clearInterval(this.autoTimer)
+      clearTimeout(this.autoTimer)
     },
     _autoPlay() {
-      clearInterval(this.autoTimer)
-      this.autoTimer = setInterval(() => {
+      this.autoTimer = setTimeout(() => {
         this.active++
-        this.active = this.active % this.newList.length
+        this.active = this.active % this.newListLength
       }, this.interval)
     },
     _play(url, id) {
@@ -104,13 +73,7 @@ export default {
       this.setTap(false)
       clearTimeout(this.timer)
     },
-    _mouseEnter(item, index) {
-      clearTimeout(this.timer)
-      this.timer = setTimeout(() => {
-        this.num = index
-        this.src = item.data.playUrl
-      }, 1000)
-    },
+
     _mouseOut() {
       clearTimeout(this.timer)
       this.num = -1
@@ -120,30 +83,32 @@ export default {
     },
   },
   watch: {
-    // active() {
-    //   this._autoPlay()
-    // },
-    newList() {
-      this.active = 0
-    }
+    active() {
+      this._autoPlay()
+    },
   },
   mounted() {
-    this.$nextTick(() => {
-      this._autoPlay()
-    })
+    this._autoPlay()
+  },
 
+  created() {
+    this._getList();
   }
 }
 </script>
 
 <style scoped>
-.list-leave-active,
-.list-enter-active {
-  transform: translateY(0%);
+.list-enter-active,
+.list-leave-active {
+  transform: translateY(0);
   transition: all .5s ease;
 }
 
-.list-enter,
+.list-enter {
+  transition: .1s;
+  transform: translateY(-100%);
+}
+
 .list-leave {
   transform: translateY(100%);
 }
@@ -156,6 +121,16 @@ export default {
 .image-enter,
 .image-leave-to {
   opacity: 0
+}
+
+.wrap {
+  position: absolute;
+  top: 55px;
+  left: 0;
+}
+
+.container {
+  padding: 0;
 }
 
 .slide {
@@ -386,5 +361,17 @@ export default {
 
 .desc .author {
   font-size: 14px
+}
+
+.btn {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+.el-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }
 </style>

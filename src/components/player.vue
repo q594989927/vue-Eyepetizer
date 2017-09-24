@@ -1,11 +1,10 @@
 <template>
   <div class="play" v-if="!closed">
     <div class="playVideo">
-      <video controls="controls" :src="videoSrc" @mouseover="_show" @mouseout="_hidden"></video>
-      <div @mouseover="_show" @mouseout="_hidden" class="playerMenu clearfix">
-        <p v-if="tap" @click='_closed'>关闭</p>
-        <p v-if="tap" @click='_closed'>收藏</p>
-      </div>
+      <video controls="controls" :src="videoSrc" @mouseenter="_show" @mouseleave="_hidden"></video>
+      <transition-group tag="div" name="slide" class="playerMenu clearfix">
+        <p v-if="tap" key="a" @click='_closed' @mouseenter="_show" @mouseleave="_hidden">关闭</p>
+      </transition-group>
     </div>
     <vdeoDetail></vdeoDetail>
   </div>
@@ -42,7 +41,7 @@ export default {
     _hidden() {
       this.timer = setTimeout(() => {
         this.tap = false
-      }, 3000)
+      }, 2000)
 
     },
     _closed() {
@@ -80,23 +79,41 @@ export default {
   height: 560px;
 }
 
+.slide-enter-active {
+  transition: all .3s ease;
+}
+
+.slide-leave-active {
+  transition: all .8s;
+}
+
+.slide-enter,
+.slide-leave-to {
+  transform: translateX(200px);
+  opacity: 0;
+}
+
 .playVideo .playerMenu {
   text-align: center;
   position: absolute;
-  top: 0;
-  right: 100px;
+  top: 10px;
+  right: -2px;
   font-size: 14px;
   line-height: 30px;
-  color: #FF920B;
+  color: #fff;
   cursor: pointer;
+}
+
+.playerMenu>p:hover {
+  color: #FF920B;
 }
 
 .playerMenu>p {
   height: 30px;
-  width: 45px;
-  border-radius: 5px 5px 0 0;
-  background: #fff;
-  margin-bottom: 5px;
+  width: 44px;
+  border-radius: 5px 0 5px 0;
+  margin: 0 0 10px 0;
+  background: #3a3c40;
 }
 
 .vdeoDetail {

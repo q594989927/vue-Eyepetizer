@@ -7,9 +7,9 @@
       </div>
       <card :datas='lastList'></card>
       <div class="hint" v-if="hint">
-        没有找到任何相关
-        <strong>{{input}}</strong>
-        的内容,试试别的关键词吧
+        没有找到任何关于
+        <strong>"{{input}}"</strong>
+        的内容,试试别的关键词
       </div>
       <load-more v-show="nextPageUrl" @currentChange="_currentChange"></load-more>
     </div>
@@ -34,10 +34,10 @@ export default {
       newList: [],
       lastList: [],
       start: 0,
-      count: 5,
+      count: 10,
       n: 0,
       id: null,
-      collection: [],
+      collection: [], //优先显示
       nextPageUrl: null,
       hint: false,
       total: 0,
@@ -68,16 +68,17 @@ export default {
         this.nextPageUrl = res.nextPageUrl
         this.setLoading(false)
         this.total = res.total
+        console.log(this.total)
         setTimeout(() => {
           if (!this.total) {
-            //this.hint = true
+            this.hint = true
           }
         }, 500)
       })
 
     },
     _search(val) {
-      this.lastList = []
+      this.lastList = this.collection = []
       this._getList(this.start, this.count, val)
     },
     _currentChange() {
