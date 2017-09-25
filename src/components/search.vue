@@ -66,7 +66,6 @@ export default {
         this.newList = res.itemList.filter(el => {
           return el.type == 'video'
         })
-        console.log(res)
         this.lastList = this.lastList.concat(this.newList)
         this.isLoadMore = res.nextPageUrl ? true : false
         this.total = res.total
