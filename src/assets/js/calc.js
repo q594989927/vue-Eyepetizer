@@ -25,7 +25,12 @@ export function timeDiff(s) {
     return Math.floor(minute) + '分钟'
   }
 }
-export function getDate(t) {
+export function getTitleDate(t) {
   var time = new Date(t).toDateString().substr(4, 6).split(' ').join('.');
   return time;
+}
+export const getDate = () => { //获取当天日期
+  const date = new Date(),
+    mouth = parseInt(date.getMonth()) + 1;
+  return date.getFullYear() + '-' + mouth + '-' + date.getDate();
 }

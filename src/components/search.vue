@@ -1,17 +1,17 @@
 <template>
   <div>
     <topBar @search='_search' :total="total"></topBar>
-    <div v-loading='loading' class="conWrapper clearfix" v-scroll="_currentChange">
-      <div class="clearfix" v-for="(item,index) in collection" :key="index">
-        <card @go='_go' :datas="item.itemList" :id="item.header.id" :titles="item.header.title"></card>
+    <div v-loading='loading&&!lastList.length' class="conWrapper clearfix" v-scroll="_currentChange">
+      <div>
+        <div class="clearfix" v-for="(item,index) in collection" :key="index">
+          <card @go='_go' :datas="item.itemList" :id="item.header.id" :titles="item.header.title"></card>
+        </div>
+        <card :datas='lastList'></card>
+        <div class="hint" v-if="hint">
+          没有找到相关内容,试试别的关键词
+        </div>
       </div>
-      <card :datas='lastList'></card>
-      <div class="hint" v-if="hint">
-        没有找到任何关于
-        <strong>"{{input}}"</strong>
-        的内容,试试别的关键词
-      </div>
-      <load-more v-show="nextPageUrl" :IS="isLoadMore" @currentChange="_currentChange"></load-more>
+      <load-more :IS="isLoadMore" @currentChange="_currentChange"></load-more>
     </div>
   </div>
 </template>
@@ -34,11 +34,10 @@ export default {
       newList: [],
       lastList: [],
       start: 0,
-      count: 30,
+      count: 20,
       n: 0,
       id: null,
       collection: [], //优先显示
-      nextPageUrl: null,
       isLoadMore: true,
       hint: false,
       total: 0,
@@ -47,44 +46,45 @@ export default {
   computed: {
     ...mapState({
       loading: state => state.loading,
-      input: state => state.input
+      input: state => state.input,
+      stateNum: state => state.num
     })
   },
   methods: {
     ...mapMutations([
-      'setLoading'
+      'setLoading',
+      'setInput'
     ]),
     _getList(start, count, q) {
       this.setLoading(true)
       apiSearch(start, count, q).then(res => {
-        console.log(res)
-        this.newList = res.itemList.filter(el => {
-          return el.type == 'video'
-        })
         res.itemList.filter(el => {
           if (el.type == "videoCollectionWithBrief") {
             this.collection.push(el.data)
           }
         })
+        this.newList = res.itemList.filter(el => {
+          return el.type == 'video'
+        })
+        console.log(res)
         this.lastList = this.lastList.concat(this.newList)
-        this.nextPageUrl = res.nextPageUrl
-        this.isLoadMore = this.nextPageUrl ? true : false
-        this.setLoading(false)
+        this.isLoadMore = res.nextPageUrl ? true : false
         this.total = res.total
-        setTimeout(() => {
-          if (!this.total) {
-            this.hint = true
-          }
-        }, 500)
+        this.hint = !this.total ? true : false
+        this.setLoading(false)
+        if (!this.isLoadMore) {
+          this.setInput('')
+        }
       })
 
     },
-    _search(val) {
+    _search() {
       this.lastList = this.collection = []
-      this._getList(this.start, this.count, val)
+      this.start = 0
+      this.n = 0
+      this._getList(this.start, this.count, this.input)
     },
     _currentChange() {
-      console.log(1)
       if (this.isLoadMore) {
         this.newList = []
         this.n++
@@ -101,12 +101,21 @@ export default {
 
   watch: {
     start() {
-      this._getList(this.start, this.count, this.input)
+      if (this.start) {
+        this._getList(this.start, this.count, this.input)
+      }
     },
+    stateNum() {
+      this._search()
+    }
   },
   created() {
     if (this.input) {
+      console.log('1111111')
       this._getList(this.start, this.count, this.input)
+      this.isLoadMore = true
+    } else {
+      this.isLoadMore = false
     }
   }
 }

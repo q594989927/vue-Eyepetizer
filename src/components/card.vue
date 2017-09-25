@@ -1,15 +1,16 @@
 <template>
   <div class="clearfix">
-    <div class="titles" ref="menuTitles" @click="_go(id)" v-if="titles">
-      <h3>
+    <div class="titles" ref="menuTitles" v-if="titles">
+      <h3 @click="_go(id)">
         {{titles}}
         <span>查看更多</span>
       </h3>
     </div>
     <el-card class="card" :body-style="{ padding: '0px'}" v-for="(item,index) in datas" :key="index">
       <div class="video" @click='_play(item.data.playUrl,item.data.id)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
-        <video v-if="index===num" width="260" class="video" autoplay muted="muted" :src="src"></video>
+        <video v-if="index===num" class="video" autoplay muted="muted" :src="src"></video>
         <img v-else-if="item.data" class="image" v-lazy='item.data.cover.detail'>
+        <strong v-if='rankListNum' class="rankList" v-html="index+1"></strong>
       </div>
       <div class="text" v-if="item.data">
         <div @mouseenter="_enter(index)">
@@ -55,6 +56,9 @@ export default {
     datas: {
       type: Array,
       default: []
+    },
+    rankListNum: {
+      type: Boolean
     }
   },
   data() {
@@ -115,10 +119,19 @@ export default {
 }
 
 .card {
+  position: relative;
   width: 175px;
   height: 200px;
   margin: 0 0 20px 20px;
   float: left;
+}
+
+.card .rankList {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 18px;
+  font-family: 'Lobster';
 }
 
 .video {
@@ -142,6 +155,7 @@ export default {
   font-size: 18px;
   height: 40px;
   display: inline-block;
+  cursor: pointer;
 }
 
 .titles span {

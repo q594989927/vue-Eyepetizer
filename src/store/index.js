@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { getSelected } from '@/assets/api/getDatas'
+import * as func from './function'
 Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
@@ -11,8 +11,15 @@ const store = new Vuex.Store({
     feedfollow: [],
     follow: [],
     input: '',
+    num: 0
   },
   mutations: {
+    getLocalStorage(state) {
+      state.follow = func.local.get() || []
+    },
+    setNum(state) {
+      state.num++
+    },
     setInput(state, res) {
       state.input = res
     },
@@ -40,11 +47,13 @@ const store = new Vuex.Store({
     },
     setFollowed(state, res) {
       state.follow.push(res)
+      func.local.set(state.follow)
     },
     removeFollowed(state, id) {
       state.follow = state.follow.filter(item => {
         return item.itemId != id
       })
+      func.local.set(state.follow)
     },
   },
   getters: {

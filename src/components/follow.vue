@@ -53,9 +53,6 @@ export default {
       'removeFollowed',
       'setLoading'
     ]),
-    _a() {
-      this.hint = !this.hint
-    },
     _getList(start, count, id) {
       apiAuthorVideoList(start, count, id).then(res => {
         this.newList = res.itemList

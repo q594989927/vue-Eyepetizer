@@ -139,7 +139,17 @@ export default {
         this.isLoadMore = false
       }
     },
+    _inntFollow() {
+      setTimeout(() => {
+        if (this.follow.length) {
+          this.follow.forEach(el => {
+            this.setFeedFollowed({ 'itemId': el.itemId, 'followed': !el.followed })
+          })
+        }
+      }, 200)
+    },
     _setFollows(id, boo, name) {
+      console.log({ 'itemId': id, 'followed': boo })
       this.setFeedFollowed({ 'itemId': id, 'followed': boo })
       if (!boo) {
         this.setFollowed({ 'itemId': id, 'followed': !boo, 'name': name })
@@ -155,6 +165,7 @@ export default {
   },
   created() {
     this._getList()
+    this._inntFollow()
   },
 }
 </script>
