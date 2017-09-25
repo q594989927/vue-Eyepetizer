@@ -4,7 +4,7 @@
       <el-tab-pane v-for="(item,index) in categoryNav" :key="index" :name="categoryNav[index].id.toString()" :label="item.name">
       </el-tab-pane>
     </el-tabs>
-    <div class="conWrapper clearfix" v-scroll="_currentChange">
+    <div class="conWrapper clearfix" v-scroll="_currentChange" ref="conWrapper">
       <card :datas="detailCategory"></card>
       <div v-show="id==0" class="clearfix" v-for="(item,index) in lastList" :key="index">
         <card @go='_go' :datas="item.data.itemList" :id="item.data.header.id" :titles="item.data.header.title"></card>
@@ -96,6 +96,7 @@ export default {
     id: function() {
       if (this.id != 0) {
         this._into(this.start, this.count, this.id)
+        this.$refs.conWrapper.scrollTop = 0
       } else {
         this._getList(this.start, this.count)
       }

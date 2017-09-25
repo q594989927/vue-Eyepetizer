@@ -1,8 +1,9 @@
 <template>
   <div class="topBar">
     <div class="searchBar">
-      <input v-model="val" :value="val" :placeholder="input" type="text">
-      <span class="search" @click="_go">搜索</span>
+      <input v-model="val" :value="val" placeholder="请输入" type="text">
+      <span v-if="tap" class="search" @click="_go">搜索</span>
+      <span v-else class="search" @click="_search">搜索</span>
     </div>
     <p v-if="total" class="total clearfix">找到关于
       <span class="ellipsis">
@@ -22,11 +23,15 @@ export default {
   props: {
     total: {
       type: Number
+    },
+    tap: {
+      type: Boolean
     }
   },
   data() {
     return {
       val: '',
+      num: 0
     }
   },
   computed: {
@@ -37,14 +42,28 @@ export default {
   methods: {
     ...mapMutations([
       'setInput',
+      'setNum'
     ]),
     _go() {
       if (this.val !== '' && this.val.trim() !== '') {
         this.$router.push('/search')
         this.setInput(this.val)
-        this.$emit('search', this.val)
+        this.setNum()
       }
     },
+    _search() {
+      if (this.val !== '' && this.val.trim() !== '') {
+        this.setInput(this.val)
+        this.$emit('search', this.val)
+      }
+    }
+  },
+  watch: {
+    input() {
+      if (this.input) {
+        this.val = this.input
+      }
+    }
   },
   created() {
     this.val = this.input

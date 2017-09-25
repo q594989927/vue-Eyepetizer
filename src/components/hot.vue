@@ -3,8 +3,8 @@
     <nav class="nav fixedTop">
       <a :class="{active: index == active}" @click="_click(index,item.tag)" href="javascript:;" v-for="(item,index) in menu" :key="index" v-html="item.name"></a>
     </nav>
-    <div class="conWrapper" v-scroll="_currentChange">
-      <card :datas="lastList"></card>
+    <div class="conWrapper" v-scroll="_currentChange" ref="conWrapper">
+      <card :datas="lastList" :rankListNum="true"></card>
       <load-more v-show="nextPageUrl" :IS="isLoadMore" @currentChange="_currentChange"></load-more>
     </div>
 
@@ -67,7 +67,7 @@ export default {
       } else {
         this._getRanklist(v)
       }
-
+      this.$refs.conWrapper.scrollTop = 0
     },
     _currentChange() {
       if (this.isLoadMore) {

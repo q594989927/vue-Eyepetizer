@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" @contextmenu.prevent>
     <ul class="menu">
       <router-link tag="li" to="/index">
         <i class="el-icon-my-index"></i>首页
@@ -30,39 +30,29 @@
 
 
 <script>
-var isLoadMore = false
-import Vue from 'vue'
 import player from './components/player'
 import { mapState, mapGetters, mapMutations } from 'vuex'
-Vue.directive('scroll', {
-  bind: function(el, binding) {
-    el.addEventListener('scroll', () => {
-      // console.log(binding);
-      // console.log(el.firstChild.clientHeight, el.scrollTop, el.clientHeight);
-      if (el.firstChild.clientHeight - el.scrollTop < el.clientHeight - 50) {
-        binding.value()
-      }
-    })
-  }
-})
 export default {
   name: 'app',
-  data() {
-    return {
-
-    }
-  },
   computed: {
     ...mapGetters([
       'badge'
     ]),
     ...mapState({
       activeIndex: state => state.activeIndex
-    })
+    }),
+  },
+  methods: {
+    ...mapMutations([
+      'getLocalStorage'
+    ])
   },
   components: {
     player
   },
+  created() {
+    this.getLocalStorage()
+  }
 }
 </script>
 
