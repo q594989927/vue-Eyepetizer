@@ -19,7 +19,7 @@
 <script>
 import { mapMutations, mapState } from 'vuex'
 export default {
-  name: 'topBar',
+  name: 'searchBar',
   props: {
     total: {
       type: Number

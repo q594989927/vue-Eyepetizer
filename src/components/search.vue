@@ -1,6 +1,6 @@
 <template>
   <div>
-    <topBar @search='_search' :total="total"></topBar>
+    <searchBar @search='_search' :total="total"></searchBar>
     <div v-loading='loading&&!lastList.length' class="conWrapper clearfix" v-scroll="_currentChange">
       <div>
         <div class="clearfix" v-for="(item,index) in collection" :key="index">
@@ -21,11 +21,11 @@ import { apiSearch } from '@/assets/api/getDatas'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import card from './card'
 import loadMore from './loadMore'
-import topBar from './topBar'
+import searchBar from './searchBar'
 export default {
   name: 'search',
   components: {
-    topBar,
+    searchBar,
     card,
     loadMore
   },

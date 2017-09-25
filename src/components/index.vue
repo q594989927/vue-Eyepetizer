@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <topBar :tap="true"></topBar>
+    <searchBar :tap="true"></searchBar>
     <selected key="indexlist" :newList="newList" :lastList="lastList" :titleDate1="titleDate1" :titleDate2="titleDate2"></selected>
     <div class="btn">
       <span v-show="pagesCount" @click="_getNextList">
@@ -19,12 +19,12 @@
 import { apiSelected, apiPrevPage } from '@/assets/api/getDatas'
 import { add2Zero, getTitleDate } from '@/assets/js/calc'
 import { mapGetters, mapState, mapMutations } from 'vuex'
-import topBar from './topBar'
+import searchBar from './searchBar'
 import selected from './selected'
 export default {
   name: 'index',
   components: {
-    topBar,
+    searchBar,
     selected
   },
   data() {
@@ -54,7 +54,7 @@ export default {
     getdatelist(res) {
       this.toDate = res.date
       this.nextPageUrlID = this.toDate - this.oneDay
-      this.titleDate1 = getDate(this.getTitleDate)
+      this.titleDate1 = getTitleDate(this.toDate)
       this.newList = res.itemList.filter(obj => {
         return obj.type == 'video' && obj.tag == '0'
       })
