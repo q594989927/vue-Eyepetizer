@@ -56,10 +56,10 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      loading: state => state.loading,
-      follow: state => state.follow,
-    }),
+    ...mapState([
+      'loading',
+      'follow'
+    ]),
   },
   methods: {
     ...mapMutations([

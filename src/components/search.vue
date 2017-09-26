@@ -44,11 +44,8 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      loading: state => state.loading,
-      input: state => state.input,
-      stateNum: state => state.num
-    })
+    ...mapState(
+      ['loading', 'input', 'stateNum'])
   },
   methods: {
     ...mapMutations([

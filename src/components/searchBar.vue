@@ -35,9 +35,6 @@ export default {
     }
   },
   computed: {
-    // ...mapState({
-    //   input: state => state.input
-    // })
     ...mapState([
       "input"
     ])

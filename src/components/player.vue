@@ -27,10 +27,7 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      closed: state => state.closed,
-      videoSrc: state => state.videoSrc,
-    })
+    ...mapState(['closed', 'videoSrc'])
   },
   methods: {
     ...mapMutations([

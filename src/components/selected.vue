@@ -120,9 +120,6 @@ export default {
     },
   },
   watch: {
-    // active() {
-    //   this._autoPlay()
-    // },
     newList() {
       this.active = 0
     }

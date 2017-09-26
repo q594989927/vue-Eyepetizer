@@ -40,7 +40,7 @@ export default {
   },
   computed: {
     ...mapState({
-      videoId: state => state.videoId,
+      ['videoId']
     })
   },
   methods: {
