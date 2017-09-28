@@ -39,9 +39,8 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      ['videoId']
-    })
+    ...mapState(
+      ['videoId'])
   },
   methods: {
     ...mapMutations([
