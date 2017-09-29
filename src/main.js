@@ -7,6 +7,7 @@ import store from './store'
 import VueLazyload from 'vue-lazyload'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
+import './assets/css/important.css'
 Vue.use(ElementUI)
 Vue.use(VueLazyload, {
   loading: require('./assets/img/default.gif')
