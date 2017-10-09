@@ -1,5 +1,5 @@
 <template>
-  <div id="app" @contextmenu.prevent>
+  <div id="app" @contextmenu.prevent ref="wrapApp">
     <ul class="menu">
       <router-link tag="li" to="/index">
         <i class="el-icon-my-index"></i>首页
@@ -27,8 +27,6 @@
     </keep-alive>
   </div>
 </template>
-
-
 <script>
 import player from './components/player'
 import { mapState, mapGetters, mapMutations } from 'vuex'
@@ -45,10 +43,18 @@ export default {
   methods: {
     ...mapMutations([
       'getLocalStorage'
-    ])
+    ]),
+    _initMargin() {
+      let n = (window.innerHeight - this.$refs.wrapApp.offsetHeight) / 2
+      n = n < 0 ? 0 : n
+      this.$refs.wrapApp.style.margin = n + 'px auto'
+    }
   },
   components: {
     player
+  },
+  mounted() {
+    this._initMargin()
   },
   created() {
     this.getLocalStorage()
@@ -146,7 +152,6 @@ input {
   overflow: hidden;
   box-shadow: 0px 2px 16px 0px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  margin: 80px auto;
 }
 
 #app .menu {
