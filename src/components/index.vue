@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-loading='!lastList.length'>
+  <div class="container" v-loading='!titleDate1'>
     <searchBar :tap="true"></searchBar>
     <selected key="indexlist" :newList="newList" :lastList="lastList" :titleDate1="titleDate1" :titleDate2="titleDate2"></selected>
     <div class="btn">
@@ -46,11 +46,6 @@ export default {
     ]),
   },
   methods: {
-    ...mapMutations([
-      'setVideoSrc',
-      'setTap',
-      'setVideoId'
-    ]),
     getdatelist(res) {
       this.toDate = res.date
       this.nextPageUrlID = this.toDate - this.oneDay

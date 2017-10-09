@@ -94,7 +94,6 @@ export default {
 <style scoped>
 .nav {
   padding-top: 10px;
-
   background: #3a3c40;
 }
 
@@ -102,6 +101,7 @@ export default {
   display: inline-block;
   height: 40px;
   line-height: 40px;
+  font-size: 14px;
   color: #fff;
   padding-right: 20px;
 }

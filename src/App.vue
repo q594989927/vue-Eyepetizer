@@ -194,4 +194,14 @@ input {
   top: 65px;
   overflow: auto;
 }
+
+.conWrapper::-webkit-scrollbar {
+  width: 10px;
+  background-color: #3a3c40;
+}
+
+.conWrapper::-webkit-scrollbar-thumb {
+  background: #252525;
+  border-radius: 5px;
+}
 </style>
