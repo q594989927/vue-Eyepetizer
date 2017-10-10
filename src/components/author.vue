@@ -17,10 +17,14 @@
               <div v-if="intro.tabInfo" class="intro">
                 <p v-html="intro.pgcInfo.name"></p>
                 <p class="ellipsis" v-html="intro.pgcInfo.brief"></p>
-                <a class="tabList" href="javasript:;" v-for="(el,index) in  intro.tabInfo.tabList" :key="index" v-html="el.name"></a>
-                <el-button type="text" size="small" class="focusOn" v-if="item.follow.followed" @click="_setFollows(item.id,item.follow.followed,item.title)">已关注</el-button>
-                <el-button type="text" size="small" class="focusOn" v-else @click="_setFollows(item.id,item.follow.followed,item.title)">关注</el-button>
+                <!-- <a class="tabList" href="javasript:;" v-for="(el,index) in  intro.tabInfo.tabList" :key="index" v-html="el.name"></a> -->
+                <transition name="fade" mode="out-in">
+                  <el-button type="text" size="small" class="focusOn" v-if="item.follow.followed" @click="_setFollows(item.id,item.follow.followed,item.title)">已关注</el-button>
+                  <el-button type="text" size="small" class="focusOn" v-else @click="_setFollows(item.id,item.follow.followed,item.title)">关注</el-button>
+                </transition>
+
               </div>
+              <loading v-else></loading>
             </div>
           </transition>
         </div>
@@ -33,12 +37,13 @@
 import { mapState, mapGetter, mapMutations } from 'vuex'
 import { apiDefaultAuthor, apiAuthor, apiAuthorDetail } from '@/assets/api/getDatas'
 import { add2Zero } from '@/assets/js/calc'
-
+import loading from './loading'
 import loadMore from './loadMore'
 export default {
   name: 'hot',
   components: {
-    loadMore
+    loadMore,
+    loading
   },
   data() {
     return {
@@ -171,7 +176,7 @@ export default {
 }
 
 .conWrapper>div {
-  width: 990px;
+  width: 980px;
   overflow-x: auto;
 }
 
@@ -198,7 +203,7 @@ export default {
   float: left;
   height: 30px;
   width: 955px;
-  padding: 20px;
+  padding: 20px 0px 20px 20px;
   color: #fff;
 }
 

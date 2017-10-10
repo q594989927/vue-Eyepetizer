@@ -29,8 +29,8 @@ export default {
     return {
       newList: [],
       lastList: [],
-      start: 1,
-      count: 15,
+      start: 0,
+      count: 20,
       n: 0,
       id: null,
       name: '',
@@ -60,6 +60,7 @@ export default {
         this.nextPageUrl = res.nextPageUrl
         this.isLoadMore = this.nextPageUrl ? true : false
       })
+      console.log('123', start)
     },
     _into(start, count, id) {
       apiAuthorVideoList(start, count, id).then(res => {
@@ -67,10 +68,12 @@ export default {
         this.nextPageUrl = res.nextPageUrl
         this.isLoadMore = this.nextPageUrl ? true : false
       })
+      console.log('456')
     },
     _tabClick(tab) {
       this.lastList = []
-      this.start = 0
+      this.n = this.start = 0
+      console.log('789', this.start)
       this.id = parseInt(tab.name)
       this._into(this.start, this.count, this.id)
     },
@@ -111,7 +114,9 @@ export default {
 
   watch: {
     start() {
-      this._getList(this.start, this.count, this.id)
+      if (this.start) {
+        this._getList(this.start, this.count, this.id)
+      }
     },
     badge() {
       this._badgeChange()

@@ -12,7 +12,7 @@ Vue.directive('scroll', {
     el.addEventListener('scroll', () => {
       // console.log(binding);
       // console.log(el.firstChild.clientHeight, el.scrollTop, el.clientHeight);
-      if (el.firstChild.clientHeight - el.scrollTop < el.clientHeight - 50) {
+      if (el.firstChild.clientHeight - el.scrollTop <= el.clientHeight) {
         binding.value()
       }
     })

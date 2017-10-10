@@ -4,9 +4,7 @@
       <video controls="controls" :src="videoSrc" ref="video" @click="_play"></video>
       <transition tag="div" name="slide" class="clearfix">
         <div v-if="tap" class="playerMenu" key="a">
-          <span @click='_closed'>
-            <i class="el-icon-my-sand"></i>
-            收藏</span>
+          <!-- <span @click='_closed'><i class="el-icon-my-sand"></i> 收藏</span> -->
           <span @click='_closed'>
             <i class="el-icon-my-leave"></i>
             关闭</span>
@@ -129,10 +127,6 @@ export default {
   right: 10px;
   height: 30px;
   width: 60px;
-}
-
-.playerMenu>span:nth-of-type(1) {
-  right: 80px;
 }
 
 .el-icon-my-leave {

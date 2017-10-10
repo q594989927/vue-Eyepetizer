@@ -56,7 +56,7 @@ export default {
       'setTap',
       'setVideoId'
     ]),
-  
+
     _change(n) {
       this.active = n
       clearTimeout(this.autoTimer)

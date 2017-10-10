@@ -130,7 +130,7 @@ export default {
   position: absolute;
   right: 10px;
   bottom: 10px;
-  font-size: 18px;
+  font-size: 24px;
   font-family: 'Lobster';
 }
 

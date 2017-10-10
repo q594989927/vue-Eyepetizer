@@ -124,10 +124,10 @@ input {
 
 .hint {
   position: absolute;
-  left: calc( 50% - 200px);
   top: calc( 50% - 100px);
+  left: calc( 50% - 150px);
+  width: 300px;
   height: 200px;
-  width: 400px;
   font-size: 16px;
   line-height: 30px;
   word-break: break-all;
@@ -199,6 +199,7 @@ input {
   top: 65px;
   overflow-x: auto;
 }
+
 
 .conWrapper::-webkit-scrollbar {
   width: 5px;
