@@ -14,11 +14,12 @@ export default new Router({
     {
       path: '/',
       component: index,
-      redirect: '/index'
+      redirect: '/index',
     },
     {
       path: '/index',
       component: index,
+      name: 'index'
     },
     {
       path: '/hot',
@@ -39,6 +40,7 @@ export default new Router({
     {
       path: '/search',
       component: search,
+      name: 'search'
     },
   ]
 })

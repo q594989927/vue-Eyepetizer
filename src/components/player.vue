@@ -1,12 +1,17 @@
 <template>
   <div class="play" v-if="!closed">
-    <div class="playVideo">
-      <video controls="controls" :src="videoSrc" @mouseenter="_show" @mouseleave="_hidden"></video>
-      <transition-group tag="div" name="slide" class="playerMenu clearfix">
-        <span v-if="tap" key="a" @click='_closed' @mouseenter="_show" @mouseleave="_hidden">
-          <i class="el-icon-my-leave"></i>
-          关闭</span>
-      </transition-group>
+    <div class="playVideo" @mousemove="_show" @mouseleave="_hidden">
+      <video controls="controls" :src="videoSrc" ref="video" @click="_play"></video>
+      <transition tag="div" name="slide" class="clearfix">
+        <div v-if="tap" class="playerMenu" key="a">
+          <span @click='_closed'>
+            <i class="el-icon-my-sand"></i>
+            收藏</span>
+          <span @click='_closed'>
+            <i class="el-icon-my-leave"></i>
+            关闭</span>
+        </div>
+      </transition>
     </div>
     <vdeoDetail></vdeoDetail>
   </div>
@@ -36,15 +41,23 @@ export default {
     _show() {
       clearTimeout(this.timer)
       this.tap = true
-    },
-    _hidden() {
       this.timer = setTimeout(() => {
         this.tap = false
-      }, 2000)
-
+      }, 5000)
+    },
+    _hidden() {
+      this.tap = false
     },
     _closed() {
       this.setTap(true)
+    },
+    _play() {
+      if (this.$refs.video.paused) {
+        this.$refs.video.play()
+      } else {
+        this.$refs.video.pause()
+      }
+
     }
   },
   watch: {
@@ -62,45 +75,48 @@ export default {
   width: 1120px;
   height: 720px;
   margin: 80 auto;
-  background: rgb(0, 0, 0);
   background: #252525;
   overflow: hidden;
 }
 
 .playVideo {
   position: absolute;
-  left: 20px;
+  left: 0px;
   top: 0px;
+  height: 630px;
+  overflow: hidden;
 }
 
 .playVideo>video {
-  width: 1080px;
-  height: 560px;
+  width: 1120px;
+  height: 630px;
 }
 
 .slide-enter-active {
-  transition: all .3s ease;
+  transform: translateY(0);
+  transition: all .4s linear;
 }
 
-.slide-leave-active {
-  transition: all .8s;
+.slide-enter {
+  transition: .1s;
+  transform: translateY(-100%);
 }
 
-.slide-enter,
-.slide-leave-to {
-  transform: translateX(200px);
-  opacity: 0;
+.slide-leave {
+  transform: translateY(0);
 }
 
 .playVideo .playerMenu {
-  text-align: center;
   position: absolute;
-  top: 10px;
-  right: -18px;
+  top: 0px;
+  left: 0px;
   font-size: 14px;
   line-height: 30px;
   color: #fff;
+  width: 100%;
+  height: 50px;
   cursor: pointer;
+  background: rgba(0, 0, 0, .4);
 }
 
 .playerMenu>span:hover {
@@ -108,12 +124,15 @@ export default {
 }
 
 .playerMenu>span {
-  display: inline-block;
+  position: absolute;
+  top: 10px;
+  right: 10px;
   height: 30px;
   width: 60px;
-  border-radius: 5px 0 5px 0;
-  margin: 0 0 10px 0;
-  background: #3a3c40;
+}
+
+.playerMenu>span:nth-of-type(1) {
+  right: 80px;
 }
 
 .el-icon-my-leave {
@@ -125,7 +144,8 @@ export default {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 155px;
-  overflow: hidden;
+  height: 80px;
+  padding-top: 10px;
+  background-color: #3a3c40;
 }
 </style>

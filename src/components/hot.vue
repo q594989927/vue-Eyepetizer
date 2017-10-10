@@ -102,7 +102,7 @@ export default {
   height: 40px;
   line-height: 40px;
   font-size: 14px;
-  color: #fff;
+  color: #ccc;
   padding-right: 20px;
 }
 

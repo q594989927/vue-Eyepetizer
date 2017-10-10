@@ -1,7 +1,7 @@
 <template>
   <div class="topBar">
     <div class="searchBar">
-      <input v-model="val" :value="val" placeholder="请输入" type="text">
+      <input v-model="val" :value="val" placeholder="请输入" type="text" @keyup.enter="_submit">
       <span v-if="tap" class="search" @click="_go">搜索</span>
       <span v-else class="search" @click="_search">搜索</span>
     </div>
@@ -55,6 +55,13 @@ export default {
       if (this.val !== '' && this.val.trim() !== '') {
         this.setInput(this.val)
         this.$emit('search', this.val)
+      }
+    },
+    _submit() {
+      if (this.$route.name == 'index') {
+        this._go()
+      } else {
+        this._search()
       }
     }
   },

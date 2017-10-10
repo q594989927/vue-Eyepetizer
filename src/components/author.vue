@@ -4,7 +4,7 @@
       <div class="clearfix">
         <div :class="{'author':!item.text}" class="clearfix" v-for="(item,index)  in lastList" :key="index">
           <h3 class="title" v-if="item.text" v-html="item.text"></h3>
-          <div class="clearfix" @mouseenter="_info(item.id,index)" v-if="item.title">
+          <div class="clearfix" @mouseenter="_info(index)" v-if="item.title">
             <i v-if="item.follow.followed" class="el-icon-my-like"></i>
             <img class="icon" v-lazy="item.icon">
             <div class="text">
@@ -12,8 +12,8 @@
               <p class="txt ellipsis" v-html="item.description"></p>
             </div>
           </div>
-          <transition v-if="!item.text" name="el-fade-in">
-            <div v-show="index==show" @mouseenter="_stay(index)" @mouseleave="_out()" class="introWrap">
+          <transition name="el-fade-in" v-if="!item.text">
+            <div v-show="index==show" @mouseenter="_stay(item.id,index)" @mouseleave="_out()" class="introWrap">
               <div v-if="intro.tabInfo" class="intro">
                 <p v-html="intro.pgcInfo.name"></p>
                 <p class="ellipsis" v-html="intro.pgcInfo.brief"></p>
@@ -46,7 +46,6 @@ export default {
       lastList: [],    //总数据
       newList: [],     //每次获取新数据
       intro: {},       //作者简介
-      id: null,        //作者id
       start: 0,
       count: 15,
       n: 0,            //加载更多计数
@@ -111,11 +110,10 @@ export default {
         }
       })
     },
-    _info(v, index) {
-      this.show = index
+    _info(index) {
+      clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.id = v
-        this._getAuthorDetail(this.id)
+        this.show = index
       }, 20)
     },
     _out() {
@@ -123,10 +121,7 @@ export default {
       this.intro = []
       clearTimeout(this.timer)
     },
-    _stay(index) {
-      this.show = index
-    },
-    _getAuthorDetail(id) {
+    _stay(id, index) {
       apiAuthorDetail(id).then(res => {
         this.intro = res
       })
@@ -149,7 +144,6 @@ export default {
       }, 200)
     },
     _setFollows(id, boo, name) {
-      console.log({ 'itemId': id, 'followed': boo })
       this.setFeedFollowed({ 'itemId': id, 'followed': boo })
       if (!boo) {
         this.setFollowed({ 'itemId': id, 'followed': !boo, 'name': name })
@@ -176,6 +170,15 @@ export default {
   height: 720px;
 }
 
+.conWrapper>div {
+  width: 990px;
+  overflow-x: auto;
+}
+
+.conWrapper>div::-webkit-scrollbar {
+  background-color: #3a3c40;
+}
+
 .author:hover {
   transition: ease-out .2s;
   transform: scale3d(1.02, 1.02, 1.05)
@@ -194,7 +197,8 @@ export default {
 .title {
   float: left;
   height: 30px;
-  margin: 20px;
+  width: 955px;
+  padding: 20px;
   color: #fff;
 }
 
@@ -239,7 +243,12 @@ export default {
   width: 315px;
   height: 130px;
   background: #fff;
-  border-radius: 4px;
+  border-radius: 5px;
+}
+
+.el-fade-in-leave-active,
+.el-fade-in-enter-active {
+  transition: .2s;
 }
 
 .intro {

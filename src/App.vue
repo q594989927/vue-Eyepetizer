@@ -193,15 +193,15 @@ input {
 
 
 .conWrapper {
-  width: 100%;
+  width: 995px;
   height: 655px;
   position: absolute;
   top: 65px;
-  overflow: auto;
+  overflow-x: auto;
 }
 
 .conWrapper::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
   background-color: #3a3c40;
 }
 

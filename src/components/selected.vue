@@ -357,11 +357,13 @@ export default {
   top: 0;
   left: 0;
   z-index: 1;
-  width: 172px;
+  width: 175px;
+  height: 100px;
 }
 
 .video.six {
-  width: 150px;
+  width: 151px;
+  height: 87px;
 }
 
 .desc {

@@ -1,12 +1,6 @@
 <template>
   <div class="vdeoDetail clearfix">
-    <div class="title clearfix">
-      <h3 class="text" v-if="headerText" v-html="headerText"></h3>
-      <span v-if="videoId" class="random" @click="_random">更多
-        <i class="el-icon-my-copy"></i>
-      </span>
-    </div>
-    <transition-group tag="div" name="list" mode="out-in">
+    <transition-group tag="div" name="list" mode="out-in" class="recom">
       <div v-if='tempId.length' key="listTempId">
         <div @click="_play(item)" class="detail" v-for="(item,index) in list" :key="index">
           <div class="cover">
@@ -20,7 +14,13 @@
         </div>
       </div>
     </transition-group>
-
+    <div class="title clearfix">
+      <h3 class="text" v-if="headerText" v-html="headerText"></h3>
+      <span v-if="videoId" class="random" @click="_random">
+        <i class="el-icon-my-copy"></i>
+        更多
+      </span>
+    </div>
   </div>
 </template>
 
@@ -39,8 +39,9 @@ export default {
     }
   },
   computed: {
-    ...mapState(
-      ['videoId'])
+    ...mapState([
+      'videoId'
+    ])
   },
   methods: {
     ...mapMutations([
@@ -82,33 +83,32 @@ export default {
 </script>
 
 <style scoped>
-.vdeoDetail {
-  text-align: center;
+.vdeoDetail>.title {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 130px;
+  color: #f1f1f1;
+  overflow: hidden;
+  vertical-align: top;
 }
 
-.vdeoDetail>.title {
-  overflow: hidden;
-  width: 1080px;
-  height: 30px;
-  margin-left: 20px;
-  color: #f1f1f1
+.recom {
+  display: inline-block;
 }
 
 .text {
-  float: left;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 30px;
+  margin: 10px 0;
 }
 
 .random {
-  float: right;
-  width: 60px;
-  padding: 0 2px;
+  display: inline-block;
   font-size: 14px;
   line-height: 26px;
   cursor: pointer;
   border-radius: 4px;
-  background: #3a3c40;
 }
 
 .random:hover {
@@ -122,9 +122,9 @@ export default {
 
 .detail {
   position: relative;
-  width: 200px;
-  height: 100px;
-  margin: 5px 10px 20px;
+  width: 180px;
+  height: 70px;
+  margin: 0 8px;
   display: inline-block;
   vertical-align: top;
   text-align: left;
@@ -132,8 +132,8 @@ export default {
 
 .cover {
   display: block;
-  width: 200px;
-  height: 100px;
+  width: 180px;
+  height: 70px;
   overflow: hidden;
   border-radius: 4px;
 }
@@ -147,11 +147,11 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
-  width: 200px;
-  height: 100px;
+  width: 180px;
+  height: 70px;
   font-size: 14px;
   background: rgba(0, 0, 0, 0.4);
-  padding: 20px 10px;
+  padding: 8px 10px;
   box-sizing: border-box;
   border-radius: 4px;
 }
@@ -164,7 +164,7 @@ export default {
 }
 
 .author {
-  width: 100px;
+  width: 120px;
   line-height: 30px;
   padding-left: 5px;
   display: inline-block;
