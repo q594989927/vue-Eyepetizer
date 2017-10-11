@@ -78,7 +78,7 @@ export default {
         }
       } else {
         this.lastList = []
-        this.nextPageUrl = null
+        this.isLoadMore = false
       }
     },
     _currentChange() {
@@ -98,7 +98,7 @@ export default {
         this.id = this.follow[0].itemId
       } else {
         this.lastList = []
-        this.nextPageUrl = null
+        this.isLoadMore = false
       }
     }
   },
