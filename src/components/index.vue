@@ -117,7 +117,7 @@ export default {
   height: 40px;
   line-height: 40px;
   border-radius: 50%;
-  background: #fff;
+  background: rgba(255, 255, 255, .9);
   text-align: center;
   margin-left: 10px;
 }
