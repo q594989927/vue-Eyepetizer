@@ -5,10 +5,13 @@ import App from './App'
 import router from './router'
 import store from './store'
 import VueLazyload from 'vue-lazyload'
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-default/index.css'
+import { Tabs, TabPane, Loading, Badge, Card } from 'element-ui'
 import './assets/css/important.css'
-Vue.use(ElementUI)
+Vue.use(Tabs)
+Vue.use(TabPane)
+Vue.use(Loading)
+Vue.use(Badge)
+Vue.use(Card)
 Vue.use(VueLazyload, {
   loading: require('./assets/img/default.gif')
 })

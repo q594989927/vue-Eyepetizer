@@ -8,7 +8,7 @@
       </el-tabs>
       <div class="conWrapper" v-scroll="_currentChange">
         <card :datas="lastList"></card>
-        <load-more v-show="nextPageUrl" :IS="isLoadMore" @currentChange="_currentChange"></load-more>
+        <load-more v-show="isLoadMore" @currentChange="_currentChange"></load-more>
       </div>
     </div>
   </div>
@@ -34,13 +34,11 @@ export default {
       n: 0,
       id: null,
       name: '',
-      nextPageUrl: null,
       isLoadMore: false
     }
   },
   computed: {
     ...mapState([
-      'loading',
       'follow'
     ]),
     ...mapGetters([
@@ -53,27 +51,20 @@ export default {
       'removeFollowed',
       'setLoading'
     ]),
-    _getList(start, count, id) {
-      apiAuthorVideoList(start, count, id).then(res => {
-        this.newList = res.itemList
-        this.lastList = this.lastList.concat(this.newList)
-        this.nextPageUrl = res.nextPageUrl
-        this.isLoadMore = this.nextPageUrl ? true : false
-      })
-      console.log('123', start)
-    },
     _into(start, count, id) {
       apiAuthorVideoList(start, count, id).then(res => {
-        this.lastList = res.itemList
-        this.nextPageUrl = res.nextPageUrl
-        this.isLoadMore = this.nextPageUrl ? true : false
+        if (start == 0) {
+          this.lastList = res.itemList
+        } else {
+          this.newList = res.itemList
+          this.lastList = this.lastList.concat(this.newList)
+        }
+        this.isLoadMore = res.nextPageUrl ? true : false
       })
-      console.log('456')
     },
     _tabClick(tab) {
       this.lastList = []
       this.n = this.start = 0
-      console.log('789', this.start)
       this.id = parseInt(tab.name)
       this._into(this.start, this.count, this.id)
     },
@@ -114,9 +105,7 @@ export default {
 
   watch: {
     start() {
-      if (this.start) {
-        this._getList(this.start, this.count, this.id)
-      }
+      this._into(this.start, this.count, this.id)
     },
     badge() {
       this._badgeChange()

@@ -9,7 +9,7 @@
       <div v-show="id==0" class="clearfix" v-for="(item,index) in lastList" :key="index">
         <card @go='_go' :datas="item.data.itemList" :id="item.data.header.id" :titles="item.data.header.title"></card>
       </div>
-      <load-more v-show="nextPageUrl" :IS="isLoadMore" @currentChange="_currentChange"></load-more>
+      <load-more v-show="isLoadMore" @currentChange="_currentChange"></load-more>
     </div>
   </div>
 </template>
@@ -36,18 +36,16 @@ export default {
       id: 0,
       n: 0,
       idstr: '',
-      nextPageUrl: null,
-      isLoadMore: true
+      isLoadMore: false
     }
   },
   methods: {
     _getList(start, count) {
       apiCategory(start, count).then(res => {
-        this.nextPageUrl = res.nextPageUrl
         this.newList = []
         this.newList = res.itemList
         this.lastList = this.lastList.concat(this.newList)
-        this.isLoadMore = this.nextPageUrl ? true : false
+        this.isLoadMore = res.nextPageUrl ? true : false
       })
     },
     _getNavsId() {
@@ -59,12 +57,11 @@ export default {
     },
     _into(start, count, id) {
       apiDetailCategory(start, count, id).then(res => {
-        this.nextPageUrl = res.nextPageUrl
         this.newList = res.itemList.filter(el => {
           return el.type == "video"
         })
         this.detailCategory = this.detailCategory.concat(this.newList)
-        this.isLoadMore = this.nextPageUrl ? true : false
+        this.isLoadMore = res.nextPageUrl ? true : false
       })
     },
     _changeId(tab) {
@@ -93,7 +90,7 @@ export default {
     }
   },
   watch: {
-    id: function() {
+    id() {
       if (this.id != 0) {
         this._into(this.start, this.count, this.id)
         this.$refs.conWrapper.scrollTop = 0

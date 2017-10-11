@@ -1,6 +1,6 @@
 <template>
   <transition-group name="el-zoom-in-bottom">
-    <div key="b" v-if="IS" @click="_currentChange" class="loadMore">
+    <div key="b" @click="_currentChange" class="loadMore">
       <i class=" el-icon-loading"></i>正在加载</div>
   </transition-group>
 </template>
@@ -20,11 +20,6 @@ Vue.directive('scroll', {
 })
 export default {
   name: 'loadMore',
-  props: {
-    IS: {
-      type: Boolean,
-    }
-  },
   methods: {
     _currentChange() {
       this.$emit('currentChange')

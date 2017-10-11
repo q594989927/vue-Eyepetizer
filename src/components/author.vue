@@ -4,7 +4,7 @@
       <div class="clearfix">
         <div :class="{'author':!item.text}" class="clearfix" v-for="(item,index)  in lastList" :key="index">
           <h3 class="title" v-if="item.text" v-html="item.text"></h3>
-          <div class="clearfix" @mouseenter="_info(index)" v-if="item.title">
+          <div class="clearfix" @mouseenter="_enter(index)" v-if="item.title">
             <i v-if="item.follow.followed" class="el-icon-my-like"></i>
             <img class="icon" v-lazy="item.icon">
             <div class="text">
@@ -13,23 +13,22 @@
             </div>
           </div>
           <transition name="el-fade-in" v-if="!item.text">
-            <div v-show="index==show" @mouseenter="_stay(item.id,index)" @mouseleave="_out()" class="introWrap">
+            <div v-show="index==show" @mouseenter="_stay(item.id)" @mouseleave="_out()" class="introWrap">
               <div v-if="intro.tabInfo" class="intro">
                 <p v-html="intro.pgcInfo.name"></p>
                 <p class="ellipsis" v-html="intro.pgcInfo.brief"></p>
                 <!-- <a class="tabList" href="javasript:;" v-for="(el,index) in  intro.tabInfo.tabList" :key="index" v-html="el.name"></a> -->
                 <transition name="fade" mode="out-in">
-                  <el-button type="text" size="small" class="focusOn" v-if="item.follow.followed" @click="_setFollows(item.id,item.follow.followed,item.title)">已关注</el-button>
-                  <el-button type="text" size="small" class="focusOn" v-else @click="_setFollows(item.id,item.follow.followed,item.title)">关注</el-button>
+                  <span type="text" size="small" class="focusOn" v-if="item.follow.followed" @click="_setFollows(item.id,item.follow.followed,item.title)">已关注</span>
+                  <span type="text" size="small" class="focusOn" v-else @click="_setFollows(item.id,item.follow.followed,item.title)">关注</span>
                 </transition>
-
               </div>
               <loading v-else></loading>
             </div>
           </transition>
         </div>
       </div>
-      <load-more v-show="nextPageUrl" :IS='isLoadMore' @currentChange="_currentChange"></load-more>
+      <load-more v-show="isLoadMore" @currentChange="_currentChange"></load-more>
     </div>
   </div>
 </template>
@@ -47,21 +46,19 @@ export default {
   },
   data() {
     return {
-      isLoadMore: true,
+      isLoadMore: false,
       lastList: [],    //总数据
       newList: [],     //每次获取新数据
       intro: {},       //作者简介
       start: 0,
-      count: 15,
+      count: 16,
       n: 0,            //加载更多计数
       timer: null,
       show: null,
-      nextPageUrl: null
     }
   },
   computed: {
     ...mapState([
-      'loading',
       'follow'
     ]),
   },
@@ -73,29 +70,23 @@ export default {
       'setFeedFollowed',
       'setLoading',
     ]),
-    _getList() {
+    _getIndexList() {
       apiDefaultAuthor().then(res => {
-        this.newList = res.itemList.filter(item => {
-          return item.type != "blankCard"
-        })
-        this.newList.pop()
-        this._getNewList()
-        this.lastList = this.lastList.concat(this.newList)
-        this.nextPageUrl = res.nextPageUrl
+        this._getAuthor(res)
       })
     },
-    _getAuthor(start, count) {
+    _getMoreAuthor(start, count) {
       apiAuthor(start, count).then(res => {
-        this.newList = res.itemList.filter(item => {
-          return item.type != "blankCard"
-        })
-        this._getNewList()
-        this.lastList = this.lastList.concat(this.newList)
-        this.nextPageUrl = res.nextPageUrl
-        if (this.nextPageUrl) {
-          this.isLoadMore = true
-        }
+        this._getAuthor(res)
       })
+    },
+    _getAuthor(res) {
+      this.newList = res.itemList.filter(item => {
+        return item.type != "blankCard"
+      })
+      this._getNewList()
+      this.lastList = this.lastList.concat(this.newList)
+      this.isLoadMore = res.nextPageUrl ? true : false
     },
     _getNewList() {
       let arr = []
@@ -115,18 +106,15 @@ export default {
         }
       })
     },
-    _info(index) {
-      clearTimeout(this.timer)
-      this.timer = setTimeout(() => {
-        this.show = index
-      }, 20)
+    _enter(index) {
+      this.show = index
+
     },
     _out() {
-      this.show = null
       this.intro = []
-      clearTimeout(this.timer)
+      this.show = null
     },
-    _stay(id, index) {
+    _stay(id) {
       apiAuthorDetail(id).then(res => {
         this.intro = res
       })
@@ -139,7 +127,7 @@ export default {
         this.isLoadMore = false
       }
     },
-    _inntFollow() {
+    _initFollow() {
       setTimeout(() => {
         if (this.follow.length) {
           this.follow.forEach(el => {
@@ -158,13 +146,13 @@ export default {
     },
   },
   watch: {
-    start: function() {
-      this._getAuthor(this.start, this.count)
+    start() {
+      this._getMoreAuthor(this.start, this.count)
     },
   },
   created() {
-    this._getList()
-    this._inntFollow()
+    this._getIndexList()
+    this._initFollow()
   },
 }
 </script>
@@ -282,7 +270,7 @@ export default {
 .focusOn {
   font-size: 14px;
   color: #FF920B;
-  ;
+  cursor: pointer;
 }
 
 .tabList {

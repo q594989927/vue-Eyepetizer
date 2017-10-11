@@ -46,6 +46,9 @@ export default {
     ]),
   },
   methods: {
+    ...mapMutations([
+      'setBgSrc'
+    ]),
     getdatelist(res) {
       this.toDate = res.date
       this.nextPageUrlID = this.toDate - this.oneDay
@@ -65,6 +68,7 @@ export default {
           this.titleDate2 = el.data.text.split('-').join('').split(',')[0]
         }
       })
+      this.setBgSrc(this.newList[0].data.cover.blurred)
     },
     _getList() {
       apiSelected().then(res => {

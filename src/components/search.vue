@@ -11,7 +11,7 @@
           没有找到相关内容,试试别的关键词
         </div>
       </div>
-      <load-more :IS="isLoadMore" @currentChange="_currentChange"></load-more>
+      <load-more v-show="isLoadMore" @currentChange="_currentChange"></load-more>
     </div>
   </div>
 </template>
@@ -38,7 +38,7 @@ export default {
       n: 0,
       id: null,
       collection: [], //优先显示
-      isLoadMore: true,
+      isLoadMore: false,
       hint: false,
       total: 0,
     }
@@ -107,7 +107,6 @@ export default {
   },
   created() {
     if (this.input) {
-      console.log('1111111')
       this._getList(this.start, this.count, this.input)
       this.isLoadMore = true
     } else {

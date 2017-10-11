@@ -9,9 +9,10 @@ const store = new Vuex.Store({
     closed: true,
     loading: false,
     feedfollow: [],
-    follow: [],
-    input: '',
-    num: 0
+    follow: [], //本地关注
+    input: '', //搜索栏
+    num: 0,  //用于whatch搜索
+    bgSrc: ''
   },
   mutations: {
     getLocalStorage(state) {
@@ -19,6 +20,9 @@ const store = new Vuex.Store({
     },
     setNum(state) {
       state.num++
+    },
+    setBgSrc(state, res) {
+      state.bgSrc = res
     },
     setInput(state, res) {
       state.input = res

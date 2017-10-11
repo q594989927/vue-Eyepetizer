@@ -5,7 +5,7 @@
     </nav>
     <div class="conWrapper" v-scroll="_currentChange" ref="conWrapper">
       <card :datas="lastList" :rankListNum="true"></card>
-      <load-more v-show="nextPageUrl" :IS="isLoadMore" @currentChange="_currentChange"></load-more>
+      <load-more v-show="isLoadMore" @currentChange="_currentChange"></load-more>
     </div>
 
   </div>
@@ -35,8 +35,7 @@ export default {
       count: 20,
       n: 0,
       active: 0,
-      nextPageUrl: null,
-      isLoadMore: true,
+      isLoadMore: false,
     }
   },
   methods: {
@@ -48,15 +47,13 @@ export default {
       apiHot(start, count).then(res => {
         this.newList = res.itemList
         this.lastList = this.lastList.concat(this.newList)
-        this.nextPageUrl = res.nextPageUrl
-        this.isLoadMore = this.nextPageUrl ? true : false
+        this.isLoadMore = res.nextPageUrl ? true : false
       })
     },
     _getRanklist(v) {
       apiRanklist(v).then(res => {
         this.lastList = res.itemList
-        this.nextPageUrl = res.nextPageUrl
-        this.isLoadMore = this.nextPageUrl ? true : false
+        this.isLoadMore = res.nextPageUrl ? true : false
       })
     },
     _click(i, v) {

@@ -36,13 +36,14 @@ export default {
     ...mapGetters([
       'badge'
     ]),
-    ...mapState({
-      activeIndex: state => state.activeIndex
-    }),
+    ...mapState([
+      'activeIndex',
+      'bgSrc'
+    ]),
   },
   methods: {
     ...mapMutations([
-      'getLocalStorage'
+      'getLocalStorage',
     ]),
     _initMargin() {
       let n = (window.innerHeight - this.$refs.wrapApp.offsetHeight) / 2
@@ -52,6 +53,11 @@ export default {
   },
   components: {
     player
+  },
+  watch: {
+    bgSrc() {
+      document.body.style.backgroundImage = 'url(' + this.bgSrc + ')'
+    }
   },
   mounted() {
     this._initMargin()
@@ -66,6 +72,7 @@ export default {
 body {
   user-select: none;
   margin: 0;
+  background-size: cover
 }
 
 h1,
@@ -166,6 +173,7 @@ input {
   padding: 20px 30px;
   color: #ccc;
   font-size: 14px;
+  cursor: pointer;
 }
 
 .menu>li>i {
