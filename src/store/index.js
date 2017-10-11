@@ -16,13 +16,15 @@ const store = new Vuex.Store({
   },
   mutations: {
     getLocalStorage(state) {
-      state.follow = func.local.get() || []
+      state.follow = func.localFollow.get() || []
+      state.bgSrc = func.localBgSrc.get() || ''
     },
     setNum(state) {
       state.num++
     },
     setBgSrc(state, res) {
       state.bgSrc = res
+      func.localBgSrc.set(state.bgSrc)
     },
     setInput(state, res) {
       state.input = res
@@ -51,13 +53,13 @@ const store = new Vuex.Store({
     },
     setFollowed(state, res) {
       state.follow.push(res)
-      func.local.set(state.follow)
+      func.localFollow.set(state.follow)
     },
     removeFollowed(state, id) {
       state.follow = state.follow.filter(item => {
         return item.itemId != id
       })
-      func.local.set(state.follow)
+      func.localFollow.set(state.follow)
     },
   },
   getters: {
