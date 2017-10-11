@@ -191,7 +191,7 @@ export default {
   float: left;
   height: 30px;
   width: 955px;
-  padding: 20px 0px 20px 20px;
+  padding: 20px 0px 0px 20px;
   color: #fff;
 }
 

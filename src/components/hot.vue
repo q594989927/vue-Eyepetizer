@@ -91,7 +91,6 @@ export default {
 <style scoped>
 .nav {
   padding-top: 10px;
-  background: #3a3c40;
 }
 
 .nav>a {
@@ -100,11 +99,15 @@ export default {
   line-height: 40px;
   font-size: 14px;
   color: #ccc;
-  padding-right: 20px;
+  margin-right: 20px;
 }
 
 .nav>a:hover,
 .nav>a.active {
   color: #FF920B;
+}
+
+.nav>a.active {
+  border-bottom: 1px solid #FF920B
 }
 </style>

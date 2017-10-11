@@ -165,7 +165,7 @@ input {
   float: left;
   width: 125px;
   height: 720px;
-  background: #252525;
+  background: rgba(37, 37, 37, 0.6);
   text-align: center;
 }
 
@@ -182,7 +182,6 @@ input {
 }
 
 .menu>li:hover {
-  background: #252525;
   color: #FF920B;
 }
 
@@ -196,7 +195,7 @@ input {
   height: 720px;
   width: 995px;
   overflow: hidden;
-  background-color: #3a3c40;
+  background: rgba(60, 62, 64, 0.6);
 }
 
 
@@ -210,12 +209,11 @@ input {
 
 
 .conWrapper::-webkit-scrollbar {
-  width: 5px;
-  background-color: #3a3c40;
+  width: 5px
 }
 
 .conWrapper::-webkit-scrollbar-thumb {
-  background: #252525;
+  background: rgba(33, 34, 36, 0.7);
   border-radius: 5px;
 }
 </style>

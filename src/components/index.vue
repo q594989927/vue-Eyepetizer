@@ -109,7 +109,6 @@ export default {
   left: 10px;
   width: 995px;
   height: 50px;
-  background: #3a3c40;
 }
 
 .btn>span {

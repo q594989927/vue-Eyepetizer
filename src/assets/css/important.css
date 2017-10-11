@@ -6,7 +6,7 @@
 }
 
 .el-loading-mask {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.4);
 }
 
 .el-loading-spinner .path {
@@ -24,7 +24,7 @@
 }
 
 .el-tabs {
-    background: #3a3c40;
+    background: rgba(255, 255, 255, 0);
 }
 
 .el-tabs__header {

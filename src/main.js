@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import fetchPolyfill from 'fetch-polyfill'
 import VueLazyload from 'vue-lazyload'
 import { Tabs, TabPane, Loading, Badge, Card } from 'element-ui'
 import './assets/css/important.css'
@@ -12,6 +13,7 @@ Vue.use(TabPane)
 Vue.use(Loading)
 Vue.use(Badge)
 Vue.use(Card)
+Vue.use(fetchPolyfill)
 Vue.use(VueLazyload, {
   loading: require('./assets/img/default.gif')
 })

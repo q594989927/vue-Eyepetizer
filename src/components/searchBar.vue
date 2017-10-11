@@ -82,7 +82,6 @@ export default {
 .topBar {
   position: relative;
   height: 54px;
-  background: #3a3c40;
   overflow: hidden;
 }
 
@@ -101,7 +100,7 @@ export default {
   height: 34px;
   padding: 0 30px 0 20px;
   border: none;
-  background: #212224;
+  background: rgba(33, 34, 36, 0.6);
   border-radius: 50px;
   color: #fff;
 }
@@ -111,12 +110,11 @@ export default {
   right: 0;
   top: 0;
   width: 78px;
-  height: 32px;
+  height: 34px;
   border-radius: 50px;
   background: #494b4f;
   color: #e4e4e4;
   text-align: center;
-  border: 1px solid #424242;
   cursor: pointer;
 }
 
