@@ -70,7 +70,7 @@ export default {
     _play(url, id) {
       this.setVideoSrc(url)
       this.setVideoId(id)
-      this.setTap(false)
+      this.setTap(true)
       clearTimeout(this.timer)
     },
 

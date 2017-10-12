@@ -1,7 +1,7 @@
 <template>
-  <div class="play" v-if="!closed">
-    <div class="playVideo" @mousemove="_show" @mouseleave="_hidden">
-      <video controls="controls" :src="videoSrc" ref="video" @click="_play"></video>
+  <div class="play" v-if="closed">
+    <div class="playVideo" @mousemove="_show" @mouseleave="_hidden" ref="playVideo">
+      <video :src="videoSrc" ref="video" @click="_play" @timeupdate='_timeupdate'></video>
       <transition tag="div" name="slide" class="clearfix">
         <div v-if="tap" class="playerMenu" key="a">
           <!-- <span @click='_closed'><i class="el-icon-my-sand"></i> 收藏</span> -->
@@ -10,13 +10,62 @@
             关闭</span>
         </div>
       </transition>
+      <transition tag="div" name="controlsWrap" class="clearfix">
+        <div v-show="tap" class="controls" key="b">
+          <div class="progressWarp" ref="progressWarp" @mousedown="_progress">
+            <div class="progressBar" ref="progressBar" :style="{width: currentTimePWitdh }">
+              <span class="circle" v-drag="_drag"></span>
+            </div>
+            <div class="bufferBar" :style="{width: bufferedPWitdh }"></div>
+          </div>
+          <div class="controlsMenu clearfix">
+            <span :class="playIcon" @click="_play"></span>
+            <div class="time">
+              <span v-html="_currentTime"></span> /
+              <span v-html="_duration"></span>
+            </div>
+            <div class="adjust">
+              <span :class="volumeIcon" @click="_volumeShow"></span>
+              <span v-html="selectedPlaybackRate" @click="_playbackRateShow"></span>
+              <span class="el-icon-my-stop" @click="_fullscreen"></span>
+            </div>
+          </div>
+          <div class="volume" v-show="volumeShow">
+            <div class="volumeProgress" @mousedown.stop="_volume">
+              <div class="volumeProgressbar" ref="volumeProgressbar">
+                <span class="circle" v-drag='_volume'></span>
+              </div>
+            </div>
+            <span :class="volumeIcon"></span>
+          </div>
+          <div class="playbackRate" v-show="playbackRateShow">
+            <span v-for="el in playbackRate" :key="el" @click="_playbackRate(el)">{{el}}</span>
+          </div>
+        </div>
+      </transition>
     </div>
     <vdeoDetail></vdeoDetail>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
+Vue.directive('drag', {
+  inserted: function(el, binding) {
+    el.onmousedown = function() {
+      document.onmousemove = function(event) {
+        binding.value()
+      }
+      document.onmouseup = function() {
+        document.onmousemove = null;
+        document.onmouseup = null;
+      }
+      return false;
+    }
+  }
+})
 import { mapGetters, mapState, mapMutations } from 'vuex'
+import { add2Zero } from '@/assets/js/calc'
 import vdeoDetail from './vdeoDetail'
 export default {
   name: 'play',
@@ -26,41 +75,142 @@ export default {
   data() {
     return {
       tap: false,
-      timer: null
+      musicPlaying: true,
+      muted: false,
+      timer: null,
+      duration: 0,
+      buffered: 0,
+      currentTime: 0,
+      fullscreen: true,
+      volume: 0.6,
+      playbackRate: ['0.5', '1.0', '1.5', '2.0'],
+      selectedPlaybackRate: '1.0',
+      volumeShow: false,
+      playbackRateShow: false
     }
   },
   computed: {
-    ...mapState(['closed', 'videoSrc'])
+    ...mapState(['closed', 'videoSrc']),
+    bufferedPWitdh() {
+      return 100 * this.buffered / this.duration + '%'
+    },
+    currentTimePWitdh() {
+      return 100 * this.currentTime / this.duration + '%'
+    },
+    _duration() {
+      return add2Zero(Math.floor(this.duration))
+    },
+    _currentTime() {
+      return add2Zero(Math.floor(this.currentTime))
+    },
+    playIcon() {
+      return this.musicPlaying ? 'el-icon-my-play' : 'el-icon-my-pause'
+    },
+    volumeIcon() {
+      return this.muted ? 'el-icon-my-soundminus' : 'el-icon-my-soundplus'
+    },
+  },
+  watch: {
+    videoSrc() {
+      if (this.closed) {
+        setTimeout(() => {
+          this._play()
+          this._setVolume()
+        }, 20)
+      }
+    },
   },
   methods: {
     ...mapMutations([
       'setTap'
     ]),
+    _closed() {
+      this.setTap(false)
+    },
     _show() {
       clearTimeout(this.timer)
       this.tap = true
       this.timer = setTimeout(() => {
-        this.tap = false
+        this.tap = this.volumeShow = this.playbackRateShow = false
       }, 5000)
     },
     _hidden() {
-      this.tap = false
-    },
-    _closed() {
-      this.setTap(true)
+      this.tap = this.volumeShow = this.playbackRateShow = false
     },
     _play() {
       if (this.$refs.video.paused) {
         this.$refs.video.play()
+        this.musicPlaying = false
       } else {
         this.$refs.video.pause()
+        this.musicPlaying = true
       }
-
+    },
+    _timeupdate() {
+      if (this.closed) {
+        this.duration = this.$refs.video.duration
+        this.currentTime = this.$refs.video.currentTime
+        if (this.$refs.video.buffered.length != 0) {
+          this.buffered = this.$refs.video.buffered.end(0)
+        }
+      }
+    },
+    _progress() {
+      let x = event.clientX - document.body.firstElementChild.offsetLeft
+      this.$refs.progressBar.style.width = x + "px"
+      this.$refs.video.currentTime = x / this.$refs.progressWarp.clientWidth * this.duration
+    },
+    _drag() {
+      let x = event.clientX - document.body.firstElementChild.offsetLeft
+      this.$refs.progressBar.style.width = x + "px"
+      let w = x / this.$refs.progressWarp.clientWidth
+      this.$refs.video.currentTime = w * this.duration
+      this._timeupdate()
+    },
+    _volumeShow() {
+      this.playbackRateShow = false
+      this.volumeShow = !this.volumeShow
+    },
+    _volume() {
+      let x = event.clientY - this.$refs.volumeProgressbar.offsetHeight
+      if (event.target.tagName == 'DIV') {
+        this.volume = (event.offsetY / this.$refs.volumeProgressbar.parentNode.offsetHeight)
+        this.volume = this.volume >= 1 ? 1 : this.volume
+        this.$refs.volumeProgressbar.style.height = this.volume * 100 + '%'
+        this.$refs.video.volume = 1 - this.volume.toFixed(1)
+        this.muted = this.$refs.video.volume == 0 ? true : false
+      }
+    },
+    _setVolume() {
+      this.$refs.video.volume = this.volume
+      this.$refs.volumeProgressbar.style.height = this.volume * 100 + '%'
+    },
+    _fullscreen() {
+      if (this.fullscreen) {
+        this.$refs.playVideo.style.width = window.innerWidth + 'px'
+        this.$refs.playVideo.style.height = window.innerHeight + 'px'
+        this.$refs.video.style.width = window.innerWidth + 'px'
+        this.$refs.video.style.height = window.innerHeight + 'px'
+        this.$refs.playVideo.webkitRequestFullscreen()
+        this.fullscreen = false
+      } else {
+        this.$refs.playVideo.style.width = '1120px'
+        this.$refs.playVideo.style.height = '630px'
+        this.$refs.video.style.width = '1120px'
+        this.$refs.video.style.height = '630px'
+        document.webkitCancelFullScreen()
+        this.fullscreen = true
+      }
+    },
+    _playbackRateShow() {
+      this.volumeShow = false
+      this.playbackRateShow = !this.playbackRateShow
+    },
+    _playbackRate(v) {
+      this.$refs.video.playbackRate = v
+      this.selectedPlaybackRate = v
     }
   },
-  watch: {
-
-  }
 }
 </script>
 
@@ -83,6 +233,7 @@ export default {
   top: 0px;
   height: 630px;
   overflow: hidden;
+  background: #000;
 }
 
 .playVideo>video {
@@ -104,21 +255,46 @@ export default {
   transform: translateY(0);
 }
 
-.playVideo .playerMenu {
+.controlsWrap-enter-active {
+  transform: translateY(0);
+  transition: all .4s linear;
+}
+
+.controlsWrap-enter {
+  transition: .1s;
+  transform: translateY(100%);
+}
+
+.controlsWrap-leave {
+  transform: translateY(0);
+}
+
+.controls {
+  position: relative;
+}
+
+.playVideo .playerMenu,
+.playVideo .controls {
   position: absolute;
-  top: 0px;
   left: 0px;
   font-size: 14px;
   line-height: 30px;
   color: #fff;
   width: 100%;
   height: 50px;
-  cursor: pointer;
   background: rgba(0, 0, 0, .4);
 }
 
-.playerMenu>span:hover {
+.playVideo .playerMenu {
+  top: 0px;
+}
+
+.adjust>span:hover,
+.controlsMenu>span:hover,
+.playerMenu>span:hover,
+.playbackRate>span:hover {
   color: #FF920B;
+  cursor: pointer;
 }
 
 .playerMenu>span {
@@ -127,6 +303,124 @@ export default {
   right: 10px;
   height: 30px;
   width: 60px;
+}
+
+.playVideo .controls {
+  bottom: 0px;
+  height: 60px;
+  font-size: 16px;
+  line-height: 40px;
+}
+
+.progressWarp {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, .4);
+  margin-bottom: 10px;
+}
+
+.progressBar,
+.bufferBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  background: #FF920B;
+  z-index: 2;
+}
+
+.progressBar .circle {
+  position: absolute;
+  top: -4px;
+  right: -1px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #FF920B;
+  opacity: .9;
+}
+
+.bufferBar {
+  z-index: 1;
+  background: rgba(255, 255, 255, .8);
+}
+
+.controlsMenu>span {
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.time {
+  display: inline-block;
+  width: 200px;
+  margin-left: 20px;
+}
+
+.adjust {
+  float: right;
+  margin-right: 20px;
+}
+
+.adjust>span {
+  margin: 0 10px;
+  width: 20px;
+  cursor: pointer;
+}
+
+.volume,
+.playbackRate {
+  position: absolute;
+  top: -170px;
+  right: 105px;
+  width: 50px;
+  height: 160px;
+  background: rgba(255, 255, 255, .2);
+  border-radius: 5px;
+}
+
+.volumeProgress {
+  margin: 10px 22px 0;
+  width: 6px;
+  height: 120px;
+  background: #FF920B;
+  border-radius: 5px;
+}
+
+.volumeProgressbar {
+  position: relative;
+  width: 6px;
+  background: #fff;
+  border-radius: 5px;
+}
+
+
+.volumeProgressbar .circle {
+  position: absolute;
+  bottom: -6px;
+  right: -3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: .9;
+}
+
+.volume>span {
+  margin: 10px 0 0 20px;
+  vertical-align: top;
+  font-size: 14px;
+}
+
+.playbackRate {
+  right: 60px;
+}
+
+.playbackRate>span {
+  font-size: 18px;
+  display: block;
+  margin-left: 10px;
+  width: 40px;
 }
 
 .el-icon-my-leave {

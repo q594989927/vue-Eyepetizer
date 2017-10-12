@@ -6,7 +6,7 @@ const store = new Vuex.Store({
   state: {
     videoSrc: '',
     videoId: null,
-    closed: true,
+    closed: false,
     loading: false,
     feedfollow: [],
     follow: [], //本地关注
