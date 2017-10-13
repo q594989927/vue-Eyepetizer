@@ -202,6 +202,7 @@ export default {
 .txt {
   font-size: 14px;
   height: 50px;
+  line-height: 24px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
