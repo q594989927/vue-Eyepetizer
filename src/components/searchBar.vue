@@ -96,9 +96,9 @@ export default {
 
 .searchBar>input {
   vertical-align: top;
-  width: 350px;
+  width: 290px;
   height: 34px;
-  padding: 0 30px 0 20px;
+  padding: 0 90px 0 20px;
   border: none;
   background: rgba(33, 34, 36, 0.6);
   border-radius: 50px;
