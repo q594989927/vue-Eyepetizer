@@ -96,7 +96,7 @@ export default {
 
 .searchBar>input {
   vertical-align: top;
-  width: 300px;
+  width: 350px;
   height: 34px;
   padding: 0 30px 0 20px;
   border: none;
@@ -112,7 +112,7 @@ export default {
   width: 78px;
   height: 34px;
   border-radius: 50px;
-  background: #494b4f;
+  background: rgba(255, 255, 255, 0.1);
   color: #e4e4e4;
   text-align: center;
   cursor: pointer;
