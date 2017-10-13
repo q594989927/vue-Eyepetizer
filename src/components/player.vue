@@ -1,7 +1,7 @@
 <template>
   <div class="play" v-if="closed">
-    <div class="playVideo" @mousemove="_show" @mouseleave="_hidden" ref="playVideo">
-      <video :src="videoSrc" ref="video" @click="_play" @timeupdate='_timeupdate'></video>
+    <div class="playVideo" @mousemove="_show" @mouseleave="_hidden" ref="playVideo" :style="styleObject">
+      <video :src="videoSrc" ref="video" @canplay='_play' @dblclick="_fullscreen" @click="_play" @timeupdate='_timeupdate' :style="styleObject"></video>
       <transition tag="div" name="slide" class="clearfix">
         <div v-if="tap" class="playerMenu" key="a">
           <!-- <span @click='_closed'><i class="el-icon-my-sand"></i> 收藏</span> -->
@@ -86,8 +86,26 @@ export default {
       playbackRate: ['0.5', '1.0', '1.5', '2.0'],
       selectedPlaybackRate: '1.0',
       volumeShow: false,
-      playbackRateShow: false
+      playbackRateShow: false,
+      defualtHeight: 630,
+      defualtWeight: 1120,
+      defualMargin: 0,
     }
+  },
+  mounted() {
+    document.onkeyup = (() => {
+      if (this.closed && event.keyCode == 32) {
+        this._play()
+      }
+    }),
+      document.onwebkitfullscreenchange = ((e) => {
+        if (!e.currentTarget.webkitIsFullScreen) {
+          this.defualtHeight = 630
+          this.defualtWeight = 1120
+          this.defualMargin = 0
+          this.fullscreen = true
+        }
+      })
   },
   computed: {
     ...mapState(['closed', 'videoSrc']),
@@ -109,12 +127,14 @@ export default {
     volumeIcon() {
       return this.muted ? 'el-icon-my-soundminus' : 'el-icon-my-soundplus'
     },
+    styleObject() {
+      return { 'width': this.defualtWeight + 'px', 'height': this.defualtHeight + 'px', 'margin-top': this.defualMargin + 'px' }
+    }
   },
   watch: {
     videoSrc() {
       if (this.closed) {
         setTimeout(() => {
-          this._play()
           this._setVolume()
         }, 20)
       }
@@ -187,19 +207,17 @@ export default {
     },
     _fullscreen() {
       if (this.fullscreen) {
-        this.$refs.playVideo.style.width = window.innerWidth + 'px'
-        this.$refs.playVideo.style.height = window.innerHeight + 'px'
-        this.$refs.video.style.width = window.innerWidth + 'px'
-        this.$refs.video.style.height = window.innerHeight + 'px'
+        this.defualtHeight = window.innerHeight
+        this.defualtWeight = window.innerWidth
+        this.defualMargin = 55
         this.$refs.playVideo.webkitRequestFullscreen()
         this.fullscreen = false
       } else {
-        this.$refs.playVideo.style.width = '1120px'
-        this.$refs.playVideo.style.height = '630px'
-        this.$refs.video.style.width = '1120px'
-        this.$refs.video.style.height = '630px'
-        document.webkitCancelFullScreen()
+        this.defualtHeight = 630
+        this.defualtWeight = 1120
+        this.defualMargin = 0
         this.fullscreen = true
+        document.webkitCancelFullScreen()
       }
     },
     _playbackRateShow() {
@@ -434,6 +452,5 @@ export default {
   width: 100%;
   height: 80px;
   padding-top: 10px;
-  background-color: #3a3c40;
 }
 </style>

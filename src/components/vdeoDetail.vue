@@ -14,9 +14,9 @@
         </div>
       </div>
     </transition-group>
-    <div class="title clearfix">
+    <div class="title clearfix" v-if="tempId.length">
       <h3 class="text" v-if="headerText" v-html="headerText"></h3>
-      <span v-if="videoId" class="random" @click="_random">
+      <span class="random" @click="_random">
         <i class="el-icon-my-copy"></i>
         更多
       </span>
@@ -71,8 +71,6 @@ export default {
       let n = this.tempId[parseInt(Math.random() * 5)]
       this._show(n)
     }
-  },
-  whatch: {
   },
   created() {
     if (this.videoId) {

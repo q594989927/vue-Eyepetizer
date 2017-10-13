@@ -21,10 +21,10 @@
         <i class="el-icon-my-search"></i>搜索
       </router-link>
     </ul>
-    <player></player>
     <keep-alive>
       <router-view class="container"></router-view>
     </keep-alive>
+    <player></player>
   </div>
 </template>
 <script>
