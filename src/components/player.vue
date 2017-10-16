@@ -138,6 +138,7 @@ export default {
           this._setVolume()
         }, 20)
       }
+      this.selectedPlaybackRate = '1.0'
     },
   },
   methods: {
