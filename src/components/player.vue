@@ -228,7 +228,7 @@ export default {
     _playbackRate(v) {
       this.$refs.video.playbackRate = v
       this.selectedPlaybackRate = v
-      this.volumeShow = false
+      this.playbackRateShow = false
     }
   },
 }
