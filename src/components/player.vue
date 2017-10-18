@@ -109,7 +109,7 @@ export default {
       })
   },
   computed: {
-    ...mapState(['closed', 'videoSrc']),
+    ...mapState(['closed', 'videoSrc', 'videoId', 'videoTitle', 'videoCover']),
     bufferedPWitdh() {
       return 100 * this.buffered / this.duration + '%'
     },
@@ -147,10 +147,13 @@ export default {
       'setTap',
       'setCollect'
     ]),
-    _collect(n, src) {
+    _collect() {
       let time = new Date().toLocaleString()
-      console.log(time)
-      this.setCollect()
+      let id = this.videoId
+      let title = this.videoTitle
+      let src = this.videoSrc
+      let cover = this.videoCover
+      this.setCollect({ id, title, src, cover, time })
     },
     _closed() {
       this.setTap(false)

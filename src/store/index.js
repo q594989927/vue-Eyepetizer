@@ -6,6 +6,8 @@ const store = new Vuex.Store({
   state: {
     videoSrc: '',
     videoId: null,
+    videoTitle: '',
+    videoCover: '',
     closed: false,
     loading: false,
     feedfollow: [],
@@ -25,8 +27,16 @@ const store = new Vuex.Store({
       state.num++
     },
     setCollect(state, res) {
-      state.collect = res
+      let id = res.id
+      if (!state.collect[0]) {
+        state.collect = res
+      } else {
+        state.collect = state.collect.filter = (el => {
+          return el.id != id
+        })
+      }
       func.localCollect.set(state.collect)
+      console.log(state.collect)
     },
     setBgSrc(state, res) {
       state.bgSrc = res
@@ -35,14 +45,14 @@ const store = new Vuex.Store({
     setInput(state, res) {
       state.input = res
     },
-    setVideoId(state, res) {
-      state.videoId = res
-    },
     setTap(state, res) {
       state.closed = res
     },
-    setVideoSrc(state, res) {
-      state.videoSrc = res
+    setVideoInfo(state, res) {
+      state.videoId = res.id
+      state.videoTitle = res.title
+      state.videoSrc = res.src
+      state.videoCover = res.cover
     },
     setLoading(state, res) {
       state.loading = res

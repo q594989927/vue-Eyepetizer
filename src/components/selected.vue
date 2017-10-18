@@ -3,7 +3,7 @@
     <div class="slide clearfix">
       <transition-group tag="div" class="carouselWrap" ref="carouselWrap" name='image' @click="_change">
         <div class="carousel" :class="{active:index==active}" v-show='index==active' v-for="(item,index) in newList" :key="index">
-          <div class="cover" @click='_play(item.data.playUrl,item.data.id)'>
+          <div class="cover" @click='_play(item.data)'>
             <h3 class="title" v-html="titleDate1"></h3>
             <img :src='item.data.cover.feed'>
             <h4>{{item.data.title}}</h4>
@@ -28,7 +28,7 @@
       <div class="list" v-if="lastList.length" key="indexlist">
         <h3 class="title" v-html="titleDate2"></h3>
         <el-card class="card" :class="{six:lastList.length==6}" :body-style="{ padding: '0px'}" v-for="(item,index) in lastList" :key="index">
-          <div @click='_play(item.data.playUrl,item.data.id)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
+          <div @click='_play(item.data)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
             <div :class="{six:lastList.length==6}" class="image">
               <video v-if="index===num" :class="{six:lastList.length==6}" class="video" autoplay muted="muted" :src="src"></video>
               <img v-else :src="item.data.cover.detail">
@@ -83,9 +83,8 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'setVideoSrc',
+      'setVideoInfo',
       'setTap',
-      'setVideoId'
     ]),
     _change(n) {
       this.active = n
@@ -98,9 +97,12 @@ export default {
         this.active = this.active % this.newList.length
       }, this.interval)
     },
-    _play(url, id) {
-      this.setVideoSrc(url)
-      this.setVideoId(id)
+    _play(item) {
+      let id = item.id
+      let title = item.title
+      let src = item.playUrl
+      let cover = item.cover.detail
+      this.setVideoInfo({ id, title, src, cover })
       this.setTap(true)
       clearTimeout(this.timer)
     },

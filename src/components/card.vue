@@ -7,7 +7,7 @@
       </h3>
     </div>
     <el-card class="card" :body-style="{ padding: '0px'}" v-for="(item,index) in datas" :key="index">
-      <div class="video" @click='_play(item.data.playUrl,item.data.id)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
+      <div class="video" @click='_play(item.data)' @mouseenter="_mouseEnter(item,index)" @mouseleave="_mouseOut">
         <video v-if="index===num" class="video" autoplay muted="muted" :src="src"></video>
         <img v-else-if="item.data" class="image" v-lazy='item.data.cover.detail'>
         <strong v-if='rankListNum' class="rankList" v-html="index+1"></strong>
@@ -71,13 +71,14 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'setVideoSrc',
+      'setVideoInfo',
       'setTap',
-      'setVideoId'
     ]),
-    _play(url, id, i) {
-      this.setVideoSrc(url)
-      this.setVideoId(id)
+    _play(item) {
+      let id = item.id
+      let title = item.title
+      let src = item.playUrl
+      this.setVideoInfo({ id, title, src })
       this.setTap(true)
       clearTimeout(this.timer)
     },
