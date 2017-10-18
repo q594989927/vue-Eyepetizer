@@ -11,4 +11,5 @@ const localEvent = function (item) {
 }
 export const localFollow = new localEvent('follow')
 export const localBgSrc = new localEvent('bgSrc')
+export const localCollect = new localEvent('collect')
 

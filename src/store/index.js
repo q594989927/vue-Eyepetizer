@@ -12,15 +12,21 @@ const store = new Vuex.Store({
     follow: [], //本地关注
     input: '', //搜索栏
     num: 0,  //用于whatch搜索
-    bgSrc: ''
+    bgSrc: '',
+    collect: []
   },
   mutations: {
     getLocalStorage(state) {
       state.follow = func.localFollow.get() || []
       state.bgSrc = func.localBgSrc.get() || ''
+      state.collect = func.localCollect.get() || []
     },
     setNum(state) {
       state.num++
+    },
+    setCollect(state, res) {
+      state.collect = res
+      func.localCollect.set(state.collect)
     },
     setBgSrc(state, res) {
       state.bgSrc = res

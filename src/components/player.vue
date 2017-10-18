@@ -144,8 +144,14 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'setTap'
+      'setTap',
+      'setCollect'
     ]),
+    _collect(n, src) {
+      let time = new Date().toLocaleString()
+      console.log(time)
+      this.setCollect()
+    },
     _closed() {
       this.setTap(false)
     },
@@ -324,6 +330,10 @@ export default {
   right: 10px;
   height: 30px;
   width: 60px;
+}
+
+.playerMenu>span:nth-of-type(1) {
+  right: 80px;
 }
 
 .playVideo .controls {
