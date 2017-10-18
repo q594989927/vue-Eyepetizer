@@ -4,7 +4,8 @@
       <video :src="videoSrc" ref="video" @canplay='_play' @dblclick="_fullscreen" @click="_play" @timeupdate='_timeupdate' :style="styleObject"></video>
       <transition tag="div" name="slide" class="clearfix">
         <div v-if="tap" class="playerMenu" key="a">
-          <!-- <span @click='_closed'><i class="el-icon-my-sand"></i> 收藏</span> -->
+          <span @click='_collect'>
+            <i class="el-icon-my-sand"></i> 收藏</span>
           <span @click='_closed'>
             <i class="el-icon-my-leave"></i>
             关闭</span>
