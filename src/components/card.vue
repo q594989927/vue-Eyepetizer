@@ -39,19 +39,19 @@
 </template>
 
 <script>
-import { add2Zero, timeDiff } from '@/assets/js/calc'
-import { mapMutations } from 'vuex'
+import { add2Zero, timeDiff } from "@/assets/js/calc";
+import { mapMutations } from "vuex";
 export default {
-  name: 'card',
+  name: "card",
   props: {
     id: {
-      type: Number,
+      type: Number
     },
     titles: {
-      type: String,
+      type: String
     },
     subTitle: {
-      type: String,
+      type: String
     },
     datas: {
       type: Array,
@@ -65,57 +65,55 @@ export default {
     return {
       show: null,
       num: null,
-      src: '',
-      timer: null,
-    }
+      src: "",
+      timer: null
+    };
   },
   methods: {
-    ...mapMutations([
-      'setVideoInfo',
-      'setTap',
-    ]),
+    ...mapMutations(["setVideoInfo", "setTap"]),
     _play(item) {
-      let id = item.id
-      let title = item.title
-      let src = item.playUrl
-      this.setVideoInfo({ id, title, src })
-      this.setTap(true)
-      clearTimeout(this.timer)
+      let id = item.id;
+      let title = item.title;
+      let src = item.playUrl;
+      let cover = item.cover.detail;
+      this.setVideoInfo({ id, title, src, cover });
+      this.setTap(true);
+      clearTimeout(this.timer);
     },
     _mouseEnter(item, index) {
-      clearTimeout(this.timer)
+      clearTimeout(this.timer);
       this.timer = setTimeout(() => {
-        this.num = index
-        this.src = item.data.playUrl
-      }, 1000)
+        this.num = index;
+        this.src = item.data.playUrl;
+      }, 1000);
     },
     _mouseOut() {
-      clearTimeout(this.timer)
-      this.num = null
+      clearTimeout(this.timer);
+      this.num = null;
     },
     _enter(index) {
-      this.show = index
+      this.show = index;
     },
     _out() {
-      this.show = null
+      this.show = null;
     },
     _go(id) {
-      this.$emit('go', id)
+      this.$emit("go", id);
     },
     _duration(v) {
-      return add2Zero(v)
+      return add2Zero(v);
     },
     _time(v) {
-      return timeDiff(v)
-    },
+      return timeDiff(v);
+    }
   }
-}
+};
 </script>
 
 <style scoped>
 .card:hover {
-  transition: ease-out .2s;
-  transform: scale3d(1.05, 1.05, 1.05)translateY(-5px)
+  transition: ease-out 0.2s;
+  transform: scale3d(1.05, 1.05, 1.05)translateY(-5px);
 }
 
 .card {
@@ -131,7 +129,7 @@ export default {
   right: 10px;
   bottom: 10px;
   font-size: 24px;
-  font-family: 'Lobster';
+  font-family: "Lobster";
 }
 
 .video {
@@ -139,9 +137,9 @@ export default {
   height: 100px;
 }
 
-.titles>span:hover,
-.titles>h3:hover {
-  color: #FF920B;
+.titles > span:hover,
+.titles > h3:hover {
+  color: #ff920b;
 }
 
 .titles {
@@ -151,7 +149,7 @@ export default {
   color: #fff;
 }
 
-.titles>h3 {
+.titles > h3 {
   font-size: 18px;
   height: 40px;
   display: inline-block;
@@ -183,7 +181,7 @@ export default {
   background: #fff;
 }
 
-.under>p {
+.under > p {
   font-size: 13px;
   line-height: 20px;
   overflow: hidden;
@@ -244,7 +242,7 @@ export default {
 }
 
 .desc .author {
-  font-size: 14px
+  font-size: 14px;
 }
 
 .desc .author {

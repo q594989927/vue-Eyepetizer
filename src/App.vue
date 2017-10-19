@@ -17,6 +17,9 @@
         <el-badge :value="badge" :max="99" class="item">
           <i class="el-icon-my-follow"></i>关注</el-badge>
       </router-link>
+      <router-link tag="li" to="/collect">
+        <i class="el-icon-my-sand"></i>收藏
+      </router-link>
       <router-link tag="li" to="/search">
         <i class="el-icon-my-search"></i>搜索
       </router-link>

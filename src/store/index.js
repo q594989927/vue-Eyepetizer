@@ -28,15 +28,16 @@ const store = new Vuex.Store({
     },
     setCollect(state, res) {
       let id = res.id
-      if (!state.collect[0]) {
-        state.collect = res
-      } else {
-        state.collect = state.collect.filter = (el => {
-          return el.id != id
-        })
+      let is = true
+      state.collect.forEach(el => {
+        if (el.id == id) {
+          is = false
+        }
+      })
+      if (is) {
+        state.collect.push(res)
       }
       func.localCollect.set(state.collect)
-      console.log(state.collect)
     },
     setBgSrc(state, res) {
       state.bgSrc = res
@@ -53,6 +54,9 @@ const store = new Vuex.Store({
       state.videoTitle = res.title
       state.videoSrc = res.src
       state.videoCover = res.cover
+    },
+    setVideoSrc(state, res) {
+      state.videoSrc = res
     },
     setLoading(state, res) {
       state.loading = res
