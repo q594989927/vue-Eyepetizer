@@ -1,21 +1,31 @@
-# vue
+#### 开眼app的pc版，估计全网仅此一家。
 
-> A Vue.js project
+##### 如有雷同，纯属巧合。
 
-## Build Setup
+##### 该项目只为交流学习
 
-``` bash
-# install dependencies
+
+[Demo](http://undefine.space:8082)
+ 
+### 项目运行
+
+```
+git clone https://github.com/firimar/vue-Eyepetizer.git 
+
+cd vue-Eyepetizer
+
 npm install
 
-# serve with hot reload at localhost:8080
 npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+#### 目前实现：
+
+- [x] 主页
+- [x] 热门
+- [x] 分类
+- [x] 作者
+- [x] 关注
+- [x] 收藏
+- [x] 搜索
+
