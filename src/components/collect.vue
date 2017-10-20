@@ -6,11 +6,12 @@
          @mouseenter="_mouseEnter(item,index)" 
          @mouseleave="_mouseOut">
         <video v-if="index===num" class="video" autoplay muted="muted" :src="src"></video>
-        <img v-else-if="item" class="image" v-lazy='item.cover'>
-        <div class="desc">
-           	<p> 收藏于：</p><span>{{item.time}}</span>
-        </div>
+        <img v-else-if="item" class="image" v-lazy='item.cover'>   
       </div>
+      <div class="desc">
+        <p> 收藏于：</p><span>{{item.time}}</span>
+      </div> 
+      <p @click="_remove(item.id)">删除</p>
     </el-card>
   </div>
 </div>
@@ -33,7 +34,7 @@ export default {
     ...mapState(["closed", "collect"])
   },
   methods: {
-    ...mapMutations(["setVideoInfo", "setTap", "setVideoSrc"]),
+    ...mapMutations(["setVideoInfo", "setTap", "setVideoSrc", "removeCollect"]),
     _play(src) {
       this.setVideoSrc(src);
       this.setTap(true);
@@ -55,6 +56,10 @@ export default {
     },
     _out() {
       this.show = null;
+    },
+    _remove(id) {
+      console.log(id);
+      this.removeCollect(id);
     }
   }
 };
@@ -69,7 +74,7 @@ export default {
 .card {
   position: relative;
   width: 175px;
-  height: 155px;
+  height: 180px;
   margin: 20px 0 20px 20px;
   float: left;
 }

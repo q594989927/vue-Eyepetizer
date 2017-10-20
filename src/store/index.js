@@ -39,6 +39,12 @@ const store = new Vuex.Store({
       }
       func.localCollect.set(state.collect)
     },
+    removeCollect(state, id) {
+      state.collect = state.collect.filter(el => {
+        return el.id !== id
+      })
+      func.localCollect.set(state.collect)
+    },
     setBgSrc(state, res) {
       state.bgSrc = res
       func.localBgSrc.set(state.bgSrc)
