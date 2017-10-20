@@ -11,7 +11,7 @@
       <div class="desc">
         <p> 收藏于：</p><span>{{item.time}}</span>
       </div> 
-      <p @click="_remove(item.id)">删除</p>
+      <p class="del" @click="_remove(item.id)"><i class="el-icon-my-delete"></i>删除 </p>
     </el-card>
   </div>
 </div>
@@ -104,5 +104,15 @@ export default {
 }
 .desc > p {
   margin: 5px 0;
+}
+.del {
+  margin: 10px 5px;
+  font-size: 16px;
+  cursor: pointer;
+  height: 20px;
+  line-height: 20px;
+}
+.del:hover {
+  color: #ff920b;
 }
 </style>
