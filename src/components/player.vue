@@ -222,11 +222,12 @@ export default {
         x / this.$refs.progressWarp.clientWidth * this.duration
     },
     _drag() {
+      //TODO: 拖动有bug 待修复
       let x = event.clientX - document.body.firstElementChild.offsetLeft
       this.$refs.progressBar.style.width = x + 'px'
       let w = x / this.$refs.progressWarp.clientWidth
       this.$refs.video.currentTime = w * this.duration
-      this._timeupdate()
+      // this._timeupdate()
     },
     _volumeShow() {
       this.playbackRateShow = false
