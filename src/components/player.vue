@@ -37,7 +37,7 @@
                 <span class="circle" v-drag='_volume'></span>
               </div>
             </div>
-            <span :class="volumeIcon" @click="_mute"></span>
+            <span :class="volumeIcon"></span>
           </div>
           <div class="playbackRate" v-show="playbackRateShow">
             <span v-for="el in playbackRate" :key="el" @click="_playbackRate(el)">{{el}}</span>
@@ -156,7 +156,6 @@ export default {
       }
       this.selectedPlaybackRate = '1.0'
       this._getCollectState()
-      if (this.$refs.video) this.$refs.video.volume = 1 - this.volume.toFixed(1)
     }
   },
   methods: {
@@ -244,7 +243,7 @@ export default {
       }
     },
     _setVolume() {
-      this.$refs.video.volume = this.volume
+      this.$refs.video.volume = 1 - this.volume.toFixed(1)
       this.$refs.volumeProgressbar.style.height = this.volume * 100 + '%'
     },
     _fullscreen() {
