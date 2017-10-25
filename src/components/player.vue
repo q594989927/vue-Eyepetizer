@@ -5,7 +5,7 @@
       <transition tag="div" name="slide" class="clearfix">
         <div v-if="tap" class="playerMenu" key="a">
           <span @click='_collect'>
-            <i class="el-icon-my-sand"></i> 收藏</span>
+            <i class="el-icon-my-sand"></i> {{collectState}}</span>
           <span @click='_closed'>
             <i class="el-icon-my-leave"></i>
             关闭</span>
@@ -37,7 +37,7 @@
                 <span class="circle" v-drag='_volume'></span>
               </div>
             </div>
-            <span :class="volumeIcon"></span>
+            <span :class="volumeIcon" @click="_mute"></span>
           </div>
           <div class="playbackRate" v-show="playbackRateShow">
             <span v-for="el in playbackRate" :key="el" @click="_playbackRate(el)">{{el}}</span>
@@ -58,10 +58,10 @@ Vue.directive('drag', {
         binding.value()
       }
       document.onmouseup = function() {
-        document.onmousemove = null;
-        document.onmouseup = null;
+        document.onmousemove = null
+        document.onmouseup = null
       }
-      return false;
+      return false
     }
   }
 })
@@ -71,7 +71,7 @@ import vdeoDetail from './vdeoDetail'
 export default {
   name: 'play',
   components: {
-    vdeoDetail,
+    vdeoDetail
   },
   data() {
     return {
@@ -83,7 +83,7 @@ export default {
       buffered: 0,
       currentTime: 0,
       fullscreen: true,
-      volume: 0.6,
+      volume: 0.9, //真实音量为0.1
       playbackRate: ['0.5', '1.0', '1.5', '2.0'],
       selectedPlaybackRate: '1.0',
       volumeShow: false,
@@ -91,15 +91,16 @@ export default {
       defualtHeight: 630,
       defualtWeight: 1120,
       defualMargin: 0,
+      collected: false
     }
   },
   mounted() {
-    document.onkeyup = (() => {
+    ;(document.onkeyup = () => {
       if (this.closed && event.keyCode == 32) {
         this._play()
       }
     }),
-      document.onwebkitfullscreenchange = ((e) => {
+      (document.onwebkitfullscreenchange = e => {
         if (!e.currentTarget.webkitIsFullScreen) {
           this.defualtHeight = 630
           this.defualtWeight = 1120
@@ -109,7 +110,14 @@ export default {
       })
   },
   computed: {
-    ...mapState(['closed', 'videoSrc', 'videoId', 'videoTitle', 'videoCover']),
+    ...mapState([
+      'closed',
+      'videoSrc',
+      'videoId',
+      'videoTitle',
+      'videoCover',
+      'collect'
+    ]),
     bufferedPWitdh() {
       return 100 * this.buffered / this.duration + '%'
     },
@@ -128,8 +136,15 @@ export default {
     volumeIcon() {
       return this.muted ? 'el-icon-my-soundminus' : 'el-icon-my-soundplus'
     },
+    collectState() {
+      return this.collected ? '已收藏' : '收藏'
+    },
     styleObject() {
-      return { 'width': this.defualtWeight + 'px', 'height': this.defualtHeight + 'px', 'margin-top': this.defualMargin + 'px' }
+      return {
+        width: this.defualtWeight + 'px',
+        height: this.defualtHeight + 'px',
+        'margin-top': this.defualMargin + 'px'
+      }
     }
   },
   watch: {
@@ -140,20 +155,35 @@ export default {
         }, 20)
       }
       this.selectedPlaybackRate = '1.0'
-    },
+      this._getCollectState()
+      if (this.$refs.video) this.$refs.video.volume = 1 - this.volume.toFixed(1)
+    }
   },
   methods: {
-    ...mapMutations([
-      'setTap',
-      'setCollect'
-    ]),
+    ...mapMutations(['setTap', 'setCollect', 'removeCollect']),
     _collect() {
       let time = new Date().toLocaleString()
       let id = this.videoId
       let title = this.videoTitle
       let src = this.videoSrc
       let cover = this.videoCover
-      this.setCollect({ id, title, src, cover, time })
+      if (!this.collected) {
+        this.setCollect({ id, title, src, cover, time })
+        this.collected = true
+      } else {
+        this.removeCollect(id)
+        this.collected = false
+      }
+    },
+    _getCollectState() {
+      this.collect.forEach(el => {
+        if (this.videoId == el.id) {
+          this.collected = true
+          return
+        } else {
+          this.collected = false
+        }
+      })
     },
     _closed() {
       this.setTap(false)
@@ -188,12 +218,13 @@ export default {
     },
     _progress() {
       let x = event.clientX - document.body.firstElementChild.offsetLeft
-      this.$refs.progressBar.style.width = x + "px"
-      this.$refs.video.currentTime = x / this.$refs.progressWarp.clientWidth * this.duration
+      this.$refs.progressBar.style.width = x + 'px'
+      this.$refs.video.currentTime =
+        x / this.$refs.progressWarp.clientWidth * this.duration
     },
     _drag() {
       let x = event.clientX - document.body.firstElementChild.offsetLeft
-      this.$refs.progressBar.style.width = x + "px"
+      this.$refs.progressBar.style.width = x + 'px'
       let w = x / this.$refs.progressWarp.clientWidth
       this.$refs.video.currentTime = w * this.duration
       this._timeupdate()
@@ -203,9 +234,9 @@ export default {
       this.volumeShow = !this.volumeShow
     },
     _volume() {
-      let x = event.clientY - this.$refs.volumeProgressbar.offsetHeight
       if (event.target.tagName == 'DIV') {
-        this.volume = (event.offsetY / this.$refs.volumeProgressbar.parentNode.offsetHeight)
+        this.volume =
+          event.offsetY / this.$refs.volumeProgressbar.parentNode.offsetHeight
         this.volume = this.volume >= 1 ? 1 : this.volume
         this.$refs.volumeProgressbar.style.height = this.volume * 100 + '%'
         this.$refs.video.volume = 1 - this.volume.toFixed(1)
@@ -240,7 +271,7 @@ export default {
       this.selectedPlaybackRate = v
       this.playbackRateShow = false
     }
-  },
+  }
 }
 </script>
 
@@ -266,18 +297,18 @@ export default {
   background: #000;
 }
 
-.playVideo>video {
+.playVideo > video {
   width: 1120px;
   height: 630px;
 }
 
 .slide-enter-active {
   transform: translateY(0);
-  transition: all .4s linear;
+  transition: all 0.4s linear;
 }
 
 .slide-enter {
-  transition: .1s;
+  transition: 0.1s;
   transform: translateY(-100%);
 }
 
@@ -287,11 +318,11 @@ export default {
 
 .controlsWrap-enter-active {
   transform: translateY(0);
-  transition: all .4s linear;
+  transition: all 0.4s linear;
 }
 
 .controlsWrap-enter {
-  transition: .1s;
+  transition: 0.1s;
   transform: translateY(100%);
 }
 
@@ -312,30 +343,29 @@ export default {
   color: #fff;
   width: 100%;
   height: 50px;
-  background: rgba(0, 0, 0, .4);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .playVideo .playerMenu {
   top: 0px;
 }
 
-.adjust>span:hover,
-.controlsMenu>span:hover,
-.playerMenu>span:hover,
-.playbackRate>span:hover {
-  color: #FF920B;
+.adjust > span:hover,
+.controlsMenu > span:hover,
+.playerMenu > span:hover,
+.playbackRate > span:hover {
+  color: #ff920b;
   cursor: pointer;
 }
 
-.playerMenu>span {
+.playerMenu > span {
   position: absolute;
   top: 10px;
   right: 10px;
   height: 30px;
-  width: 60px;
 }
 
-.playerMenu>span:nth-of-type(1) {
+.playerMenu > span:nth-of-type(1) {
   right: 80px;
 }
 
@@ -350,7 +380,7 @@ export default {
   position: relative;
   width: 100%;
   height: 6px;
-  background: rgba(255, 255, 255, .4);
+  background: rgba(255, 255, 255, 0.4);
   margin-bottom: 10px;
 }
 
@@ -360,7 +390,7 @@ export default {
   top: 0;
   left: 0;
   height: 6px;
-  background: #FF920B;
+  background: #ff920b;
   z-index: 2;
 }
 
@@ -371,16 +401,16 @@ export default {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: #FF920B;
-  opacity: .9;
+  background: #ff920b;
+  opacity: 0.9;
 }
 
 .bufferBar {
   z-index: 1;
-  background: rgba(255, 255, 255, .8);
+  background: rgba(255, 255, 255, 0.8);
 }
 
-.controlsMenu>span {
+.controlsMenu > span {
   margin-left: 20px;
   cursor: pointer;
 }
@@ -396,7 +426,7 @@ export default {
   margin-right: 20px;
 }
 
-.adjust>span {
+.adjust > span {
   margin: 0 10px;
   width: 20px;
   cursor: pointer;
@@ -409,7 +439,7 @@ export default {
   right: 105px;
   width: 50px;
   height: 160px;
-  background: rgba(255, 255, 255, .2);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 5px;
 }
 
@@ -417,7 +447,7 @@ export default {
   margin: 10px 22px 0;
   width: 6px;
   height: 120px;
-  background: #FF920B;
+  background: #ff920b;
   border-radius: 5px;
 }
 
@@ -428,7 +458,6 @@ export default {
   border-radius: 5px;
 }
 
-
 .volumeProgressbar .circle {
   position: absolute;
   bottom: -6px;
@@ -437,10 +466,10 @@ export default {
   height: 12px;
   border-radius: 50%;
   background: #fff;
-  opacity: .9;
+  opacity: 0.9;
 }
 
-.volume>span {
+.volume > span {
   margin: 10px 0 0 20px;
   vertical-align: top;
   font-size: 14px;
@@ -450,7 +479,7 @@ export default {
   right: 60px;
 }
 
-.playbackRate>span {
+.playbackRate > span {
   font-size: 18px;
   display: block;
   margin-left: 10px;
@@ -458,7 +487,7 @@ export default {
 }
 
 .el-icon-my-leave {
-  vertical-align: text-top
+  vertical-align: text-top;
 }
 
 .vdeoDetail {

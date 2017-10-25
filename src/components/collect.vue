@@ -11,58 +11,58 @@
       <div class="desc">
         <p> 收藏于：</p><span>{{item.time}}</span>
       </div> 
-      <p class="del" @click="_remove(item.id)"><i class="el-icon-my-delete"></i>删除 </p>
+      <p class="del" @click="_remove(item.id)"><i class="el-icon-my-delete"></i></p>
     </el-card>
   </div>
 </div>
 </template>
 
 <script>
-import { add2Zero, timeDiff } from "@/assets/js/calc";
-import { mapState, mapMutations } from "vuex";
+import { add2Zero, timeDiff } from '@/assets/js/calc'
+import { mapState, mapMutations } from 'vuex'
 export default {
-  name: "collect",
+  name: 'collect',
   data() {
     return {
       show: null,
       num: null,
-      src: "",
+      src: '',
       timer: null
-    };
+    }
   },
   computed: {
-    ...mapState(["closed", "collect"])
+    ...mapState(['closed', 'collect'])
   },
   methods: {
-    ...mapMutations(["setVideoInfo", "setTap", "setVideoSrc", "removeCollect"]),
+    ...mapMutations(['setVideoInfo', 'setTap', 'setVideoSrc', 'removeCollect']),
     _play(src) {
-      this.setVideoSrc(src);
-      this.setTap(true);
-      clearTimeout(this.timer);
+      this.setVideoSrc(src)
+      this.setTap(true)
+      clearTimeout(this.timer)
     },
     _mouseEnter(item, index) {
-      clearTimeout(this.timer);
+      clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.num = index;
-        this.src = item.src;
-      }, 1000);
+        this.num = index
+        this.src = item.src
+      }, 1000)
     },
     _mouseOut() {
-      clearTimeout(this.timer);
-      this.num = null;
+      clearTimeout(this.timer)
+      this.num = null
     },
     _enter(index) {
-      this.show = index;
+      this.show = index
     },
     _out() {
-      this.show = null;
+      this.show = null
     },
     _remove(id) {
-      console.log(id);
-      this.removeCollect(id);
+      console.log(id)
+      this.removeCollect(id)
     }
   }
-};
+}
 </script>
 
 <style scoped>
