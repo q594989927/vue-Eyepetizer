@@ -60,7 +60,6 @@ export default {
       })
     },
     _play(item) {
-      console.log(item)
       let id = item.id
       let title = item.title
       let src = item.playUrl
