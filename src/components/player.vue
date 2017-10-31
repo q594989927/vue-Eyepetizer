@@ -178,6 +178,7 @@ export default {
       this.collect.forEach(el => {
         if (this.videoId == el.id) {
           this.collected = true
+          console.log(this.videoId)
           return
         } else {
           this.collected = false

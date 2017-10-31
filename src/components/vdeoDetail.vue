@@ -2,7 +2,7 @@
   <div class="vdeoDetail clearfix">
     <transition-group tag="div" name="list" mode="out-in" class="recom">
       <div v-if='tempId.length' key="listTempId">
-        <div @click="_play(item)" class="detail" v-for="(item,index) in list" :key="index">
+        <div @click="_play(item.data)" class="detail" v-for="(item,index) in list" :key="index">
           <div class="cover">
             <img v-lazy='item.data.cover.detail'>
           </div>
@@ -35,37 +35,37 @@ export default {
       timer: null,
       list: [],
       headerText: null,
-      tempId: [],
+      tempId: []
     }
   },
   computed: {
-    ...mapState([
-      'videoId'
-    ])
+    ...mapState(['videoId'])
   },
   methods: {
-    ...mapMutations([
-      'setVideoId',
-      'setVideoSrc',
-    ]),
+    ...mapMutations(['setVideoInfo']),
     _show(id) {
       this.tempId = []
       apiVdeoDetail(id).then(res => {
         res.itemList = res.itemList.splice(0, 6)
         res.itemList.forEach(el => {
-          if (el.type == "textCard") {
+          if (el.type == 'textCard') {
             this.headerText = el.data.text
           } else {
             this.tempId.push(el.data.id)
           }
         })
         this.list = res.itemList.filter(el => {
-          return el.type == "videoSmallCard"
+          return el.type == 'videoSmallCard'
         })
       })
     },
-    _play(i) {
-      this.setVideoSrc(i.data.playUrl)
+    _play(item) {
+      console.log(item)
+      let id = item.id
+      let title = item.title
+      let src = item.playUrl
+      let cover = item.cover.detail
+      this.setVideoInfo({ id, title, src, cover })
     },
     _random() {
       let n = this.tempId[parseInt(Math.random() * 5)]
@@ -81,7 +81,7 @@ export default {
 </script>
 
 <style scoped>
-.vdeoDetail>.title {
+.vdeoDetail > .title {
   position: absolute;
   right: 0;
   top: 0;
@@ -110,12 +110,12 @@ export default {
 }
 
 .random:hover {
-  color: #FF920B;
+  color: #ff920b;
 }
 
 .detail:hover {
-  transition: ease-out .2s;
-  transform: scale3d(1.05, 1.05, 1.05) translateY(-10px)
+  transition: ease-out 0.2s;
+  transform: scale3d(1.05, 1.05, 1.05) translateY(-10px);
 }
 
 .detail {
@@ -136,7 +136,7 @@ export default {
   border-radius: 4px;
 }
 
-.cover>img {
+.cover > img {
   display: block;
   width: 100%;
 }
@@ -169,7 +169,7 @@ export default {
   color: #f1f1f1;
 }
 
-.intro>.title {
+.intro > .title {
   font-size: 16px;
   width: 100%;
   height: 20px;
