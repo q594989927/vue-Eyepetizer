@@ -36,18 +36,11 @@ import { mapState, mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'app',
   computed: {
-    ...mapGetters([
-      'badge'
-    ]),
-    ...mapState([
-      'activeIndex',
-      'bgSrc'
-    ]),
+    ...mapGetters(['badge']),
+    ...mapState(['activeIndex', 'bgSrc'])
   },
   methods: {
-    ...mapMutations([
-      'getLocalStorage',
-    ]),
+    ...mapMutations(['getLocalStorage']),
     _initMargin() {
       let n = (window.innerHeight - this.$refs.wrapApp.offsetHeight) / 2
       n = n < 0 ? 0 : n
@@ -75,7 +68,7 @@ export default {
 body {
   user-select: none;
   margin: 0;
-  background-size: cover
+  background-size: cover;
 }
 
 h1,
@@ -83,11 +76,11 @@ h2,
 h3,
 h4 {
   font-weight: normal;
-  margin: 0
+  margin: 0;
 }
 
 p {
-  margin: 0
+  margin: 0;
 }
 
 ul {
@@ -110,11 +103,11 @@ input {
 .clearfix:before,
 .clearfix:after {
   display: table;
-  content: "";
+  content: '';
 }
 
 .clearfix:after {
-  clear: both
+  clear: both;
 }
 
 .ellipsis {
@@ -134,8 +127,8 @@ input {
 
 .hint {
   position: absolute;
-  top: calc( 50% - 100px);
-  left: calc( 50% - 150px);
+  top: calc(50% - 100px);
+  left: calc(50% - 150px);
   width: 300px;
   height: 200px;
   font-size: 16px;
@@ -146,7 +139,7 @@ input {
 
 .list-enter-active,
 .list-leave-active {
-  transition: all .5s;
+  transition: all 0.5s;
 }
 
 .list-enter,
@@ -172,24 +165,24 @@ input {
   text-align: center;
 }
 
-.menu>li {
+.menu > li {
   padding: 20px 30px;
   color: #ccc;
   font-size: 14px;
   cursor: pointer;
 }
 
-.menu>li>i {
+.menu > li > i {
   margin-right: 5px;
   font-size: 16px;
 }
 
-.menu>li:hover {
-  color: #FF920B;
+.menu > li:hover {
+  color: #ff920b;
 }
 
-.menu>li.router-link-active {
-  color: #FF920B;
+.menu > li.router-link-active {
+  color: #ff920b;
 }
 
 .container {
@@ -201,7 +194,6 @@ input {
   background: rgba(60, 62, 64, 0.6);
 }
 
-
 .conWrapper {
   width: 995px;
   height: 655px;
@@ -210,9 +202,8 @@ input {
   overflow-x: auto;
 }
 
-
 .conWrapper::-webkit-scrollbar {
-  width: 5px
+  width: 5px;
 }
 
 .conWrapper::-webkit-scrollbar-thumb {
