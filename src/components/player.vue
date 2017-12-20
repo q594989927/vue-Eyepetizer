@@ -122,7 +122,8 @@ export default {
       'videoId',
       'videoTitle',
       'videoCover',
-      'collect'
+      'collect',
+      'volumeValue'
     ]),
     bufferedPWitdh() {
       return 100 * this.buffered / this.duration + '%'
@@ -165,7 +166,12 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['setTap', 'setCollect', 'removeCollect']),
+    ...mapMutations([
+      'setTap',
+      'setCollect',
+      'removeCollect',
+      'setVolumeValue'
+    ]),
     _collect() {
       let time = new Date().toLocaleString()
       let id = this.videoId
@@ -184,7 +190,6 @@ export default {
       this.collect.forEach(el => {
         if (this.videoId == el.id) {
           this.collected = true
-          console.log(this.videoId)
           return
         } else {
           this.collected = false
@@ -252,11 +257,14 @@ export default {
         this.volume = this.volume >= 1 ? 1 : this.volume
         this.$refs.volumeProgressbar.style.height = this.volume * 100 + '%'
         this.$refs.video.volume = 1 - this.volume.toFixed(1)
+        console.log(this.$refs.video.volume)
+        this.setVolumeValue(this.$refs.video.volume)
         this.muted = this.$refs.video.volume == 0 ? true : false
       }
     },
     _setVolume() {
-      this.$refs.video.volume = 1 - this.volume.toFixed(1)
+      this.$refs.video.volume = this.volumeValue
+      // console.log(this.$refs.video)
       this.$refs.volumeProgressbar.style.height = this.volume * 100 + '%'
     },
     _fullscreen() {

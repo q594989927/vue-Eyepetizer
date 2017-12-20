@@ -15,12 +15,14 @@ const store = new Vuex.Store({
     input: '', //搜索栏
     num: 0,  //用于whatch搜索
     bgSrc: '',
-    collect: []
+    collect: [],
+    volumeValue: '',//音量
   },
   mutations: {
     getLocalStorage(state) {
       state.follow = func.localFollow.get() || []
       state.bgSrc = func.localBgSrc.get() || ''
+      state.volume = func.localVolume.get() || ''
       state.collect = func.localCollect.get() || []
     },
     setNum(state) {
@@ -48,6 +50,10 @@ const store = new Vuex.Store({
     setBgSrc(state, res) {
       state.bgSrc = res
       func.localBgSrc.set(state.bgSrc)
+    },
+    setVolumeValue(state, res) {
+      state.volumeValue = res
+      func.localVolume.set(state.volumeValue)
     },
     setInput(state, res) {
       state.input = res
