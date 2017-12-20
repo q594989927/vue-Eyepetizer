@@ -1,7 +1,13 @@
 <template>
   <div class="play" v-if="closed">
     <div class="playVideo" @mousemove="_show" @mouseleave="_hidden" ref="playVideo" :style="styleObject">
-      <video :src="videoSrc" ref="video" @canplay='_play' @dblclick="_fullscreen" @click="_play" @timeupdate='_timeupdate' :style="styleObject"></video>
+      <video :src="videoSrc" ref="video" 
+              @canplay='_play' 
+              @dblclick="_fullscreen" 
+              @click="_play" 
+              @timeupdate='_timeupdate' 
+              :style="styleObject">
+      </video>
       <transition tag="div" name="slide" class="clearfix">
         <div v-if="tap" class="playerMenu" key="a">
           <span @click='_collect'>
@@ -217,18 +223,23 @@ export default {
       }
     },
     _progress() {
+      if (!this.$refs.video.paused) {
+        this.$refs.video.pause()
+      }
       let x = event.clientX - document.body.firstElementChild.offsetLeft
       this.$refs.progressBar.style.width = x + 'px'
       this.$refs.video.currentTime =
         x / this.$refs.progressWarp.clientWidth * this.duration
     },
     _drag() {
-      //TODO: 拖动有bug 待修复
+      if (!this.$refs.video.paused) {
+        this.$refs.video.pause()
+      }
       let x = event.clientX - document.body.firstElementChild.offsetLeft
       this.$refs.progressBar.style.width = x + 'px'
       let w = x / this.$refs.progressWarp.clientWidth
       this.$refs.video.currentTime = w * this.duration
-      // this._timeupdate()
+      this._timeupdate()
     },
     _volumeShow() {
       this.playbackRateShow = false
@@ -299,6 +310,7 @@ export default {
 }
 
 .playVideo > video {
+  position: relative;
   width: 1120px;
   height: 630px;
 }
@@ -329,10 +341,6 @@ export default {
 
 .controlsWrap-leave {
   transform: translateY(0);
-}
-
-.controls {
-  position: relative;
 }
 
 .playVideo .playerMenu,
@@ -372,7 +380,7 @@ export default {
 
 .playVideo .controls {
   bottom: 0px;
-  height: 60px;
+  height: 80px;
   font-size: 16px;
   line-height: 40px;
 }
@@ -382,7 +390,7 @@ export default {
   width: 100%;
   height: 6px;
   background: rgba(255, 255, 255, 0.4);
-  margin-bottom: 10px;
+  margin: 10px 0;
 }
 
 .progressBar,
